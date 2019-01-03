@@ -15,7 +15,7 @@
                   <el-form-item v-for="(value, key) of todo" :key="key" :label= "key" :label-width="formLabelWidth">
                     <el-input :value="value" autocomplete="off" />
                   </el-form-item>
-                  <el-form-item size="large" center>
+                  <el-form-item size="large" class="dialog-footer">
                     <el-button @click="handleClose">取 消</el-button>
                     <el-button type="primary" @click="onSubmit">保 存</el-button>
                   </el-form-item>
@@ -31,7 +31,6 @@
 
 <script>
 import { getConfigMsg } from '@/api/configItem'
-// import { Message } from 'element-ui'
 export default {
   data() {
     return {
@@ -64,6 +63,11 @@ export default {
       }
     })
   },
+  watch: {
+    form: function(val, oldVal) {
+      console.log(val, oldVal)
+    }
+  },
   methods: {
     open(item) { // 打开弹框处理函数
       this.dialogFormVisible = true
@@ -91,16 +95,11 @@ export default {
     //   })
     //   this.dialogFormVisible = false
     // },
-    onSubmit(path) {
-      console.info(path)
+    onSubmit(value) {
+      this.dialogFormVisible = false
     },
     handleClose(done) { // 取消保存处理函数，参数见element-ui
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.dialogFormVisible = false
-          done()
-        })
-        .catch(_ => {})
+      this.dialogFormVisible = false;
     }
   }
 }
@@ -130,5 +129,8 @@ export default {
       right: 20px;
       top:10px;
     }
+  }
+  .dialog-footer {
+    text-align: right;
   }
 </style>

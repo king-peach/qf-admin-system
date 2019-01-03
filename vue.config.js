@@ -13,6 +13,19 @@ module.exports = {
     }
   },
   chainWebpack: config => {
+    // 配置svg路径
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule
+      .include
+      .add(resolve('src/icons'))
+      .end()
+      .test(/\.svg$/)
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
     // 配置路径别名
     config.resolve.alias
       .set('@', resolve('src'))
