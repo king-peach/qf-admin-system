@@ -20,7 +20,7 @@
       <el-table-column label="邮箱" prop="email" align="center" />
     </el-table>
     <span slot="footer" class="dialog-footer">
-      <el-button type="warning" @click="addUserVisible = false">取消</el-button>
+      <el-button @click="addUserVisible = false">取消</el-button>
       <el-button type="primary" @click="add">添加</el-button>
     </span>
     <!-- 分页器 -->

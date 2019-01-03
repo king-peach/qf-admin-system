@@ -13,8 +13,8 @@
       </el-table-column>
     </el-table>
     <span slot="footer" class="dialog-footer">
-      <el-button type="warning" @click="editRoleVisible = false">取 消</el-button>
-      <el-button type="info" @click="addUser">添加用户</el-button>
+      <el-button @click="editRoleVisible = false">取 消</el-button>
+      <el-button @click="addUser">添加用户</el-button>
       <el-button type="primary" @click="confirm">确 定</el-button>
     </span>
     <!-- 分页器 -->

@@ -24,7 +24,7 @@
           <i :class="['icon', scope.row.status? 'iconTrue' : 'iconFalse']" />
         </template>
       </el-table-column>
-      <el-table-column prop="group" label="所属机构" align="center"/>
+      <el-table-column prop="group" label="所属机构" align="center" />
       <el-table-column prop="role" label="所属角色" align="center" />
       <el-table-column label="操作" width="150" align="center">
         <template slot-scope="scope">
@@ -43,7 +43,8 @@
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
       @size-page="getPageSize"
-      @current-change="getCurrentPage"/>
+      @current-change="getCurrentPage"
+    />
   </div>
 </template>
 
@@ -69,7 +70,7 @@ export default {
       inputValue: '', // 搜索框值
       filterValue: '', // 模糊搜索值
       delUserVisible: false, // 删除提示框开关
-      multipleDel: [] // 存储删除行
+      delIndex: 0 // 存储删除索引
     }
   },
   computed: {
@@ -109,16 +110,18 @@ export default {
     getCurrentPage(val) { // 当前页码改变时触发，获取当前野马
       this.currentPage = val
     },
-    del() { // 打开删除提示框
+    del(index) { // 打开删除提示框
       this.delUserVisible = true
+      this.delIndex = index
+      console.info(this.delIndex)
     },
-    delUser(index) { // 确定删除
+    delUser() { // 确定删除
       this.delUserVisible = false
       Message({
         type: 'success',
         message: '删除成功'
       })
-      this.userList.splice(index, 1)
+      this.userList.splice(this.delIndex, 1)
     },
     selected(row) { // 选中复选框触发回调
       console.log(row)

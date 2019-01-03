@@ -25,8 +25,8 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope" >
           <el-button size="mini" @click="editRole">编辑</el-button>
+          <el-button size="mini" small>权限设置</el-button>
           <el-button type="danger" size="mini" @click.native.prevent="openDel(scope.$index)">删除</el-button>
-          <el-button type="info" size="mini" small>权限设置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -44,7 +44,8 @@
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
       @current-change="handleCurrentChange"
-      @size-change="handleSizeChange" />
+      @size-change="handleSizeChange"
+    />
   </div>
 </template>
 
@@ -94,12 +95,13 @@ export default {
       ],
       roles: { id: '', name: '', group: '', ramark: '' },
       roleList: [],
-      pageSize: 5, // 页面包含选项个数
+      pageSize: 10, // 页面包含选项个数
       currentPage: 1, // 当前页码
       delRoleVisible: false, // 删除角色开关
       addRoleVisible: false, // 新增角色开关
       editRoleVisible: false, // 编辑角色开关
-      userList: [] // 用户列表
+      userList: [], // 用户列表
+      delIndex: 0 // 存储删除索引
     }
   },
   computed: {
@@ -134,12 +136,13 @@ export default {
     handleCurrentChange(currentChange) { // currentPage改变时触发的回调
       this.currentPage = currentChange
     },
-    openDel() { // 打开删除弹出框
+    openDel(index) { // 打开删除弹出框
       this.delRoleVisible = true
+      this.delIndex = index
     },
-    delRole(index) { // 确认删除操作
+    delRole() { // 确认删除操作
       this.delRoleVisible = false
-      this.tables.splice(index, 1)
+      this.tables.splice(this.delIndex, 1)
       Message({
         type: 'success',
         message: '删除成功'
@@ -154,8 +157,6 @@ export default {
     currentSelected(row, event) { // 点击当前行触发
       const index = row.index
       this.userList = this.tableData[index].data
-      console.log('index++++' + index)
-      console.log('this.tableData.data ++++' + this.tableData[index].data)
     },
     openAdd() { // 打开新增用户弹出框
       this.addRoleVisible = true
