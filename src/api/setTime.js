@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getList() {
+export function getSetTimeData() {
   return request({
-    url: '/api/sys/info',
+    url: '',
     method: 'post'
   })
 }

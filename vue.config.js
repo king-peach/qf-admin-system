@@ -37,7 +37,7 @@ module.exports = {
     // 开发环境下设置跨域解决方案
     proxy: {
       '/api': {
-        target: 'http://dev.huario.com:8080/api',
+        target: 'https://www.easy-mock.com/mock/5c3342df0be8d31904699ac3/oa.admin.com',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

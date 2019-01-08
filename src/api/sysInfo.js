@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getInfo() {
   return request({
-    url: '/sys/info',
+    url: '/api/sys/info',
     method: 'post'
   })
 }

@@ -4,8 +4,7 @@
       <el-col :sm="22" :md="18" :lg="13">
         <el-input v-model="inputValue" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search" @keyup.enter.native="search" />
         <el-button type="primary" @click="search">搜索</el-button>
-        <el-button type="primary">+ 添加</el-button>
-        <el-button type="primary">修改密码</el-button>
+        <el-button type="primary" @click="createUser">+ 添加</el-button>
       </el-col>
     </el-row>
 
@@ -26,15 +25,20 @@
       </el-table-column>
       <el-table-column prop="group" label="所属机构" align="center" />
       <el-table-column prop="role" label="所属角色" align="center" />
-      <el-table-column label="操作" width="150" align="center">
+      <el-table-column label="操作" width="260" align="center">
         <template slot-scope="scope">
-          <el-button size="small">编辑</el-button>
+          <el-button size="mini" @click="editUser">编辑</el-button>
+          <el-button size="mini" @click="edit">修改密码</el-button>
           <el-button size="mini" type="danger" @click="del(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 删除弹出框 -->
+    <!-- 确认删除组件 -->
     <del-user :show.sync="delUserVisible" @confirmDel="delUser" />
+    <!-- 修改密码组件 -->
+    <edit-password :show.sync="editPasswordVisible" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
+    <!-- 新建/编辑用户组件 -->
+    <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" @confirmAdd="addUser" @closeDialog="cancel" />
 
     <el-pagination
       :page-size="pageSize"
@@ -49,11 +53,15 @@
 </template>
 
 <script>
-import DelUser from './components/DelUser'
+import DelUser from '@/components/confirmDel/index'
+import EditPassword from './components/EditPassword'
+import UserInfo from './components/UserInfo'
 import { Message } from 'element-ui'
 export default {
   components: {
-    DelUser
+    DelUser,
+    EditPassword,
+    UserInfo
   },
   data() {
     return {
@@ -69,8 +77,36 @@ export default {
       currentPage: 1, // 当前页码
       inputValue: '', // 搜索框值
       filterValue: '', // 模糊搜索值
-      delUserVisible: false, // 删除提示框开关
-      delIndex: 0 // 存储删除索引
+      delUserVisible: false, // 确认删除组件开关
+      editPasswordVisible: false, // 修改密码组件开发
+      isCreate: false, // 是否新增用户标识
+      userinfoVisible: false, // 编辑、新增用户组件开关
+      delIndex: 0, // 存储删除索引
+      editUserForm: { // 编辑用户数据
+        username: 'admin',
+        name: '管理员',
+        password: '',
+        repeatPass: '',
+        department: '总公司',
+        email: 'www.2223131@164.com',
+        telephone: '0731-292912',
+        mobphone: '13512342255',
+        startDate: '',
+        remark: ''
+      },
+      defaultForm: { // 新增用户数据
+        username: '',
+        name: '',
+        password: '',
+        repeatPass: '',
+        department: '',
+        email: '',
+        telephone: '',
+        mobphone: '',
+        startDate: '',
+        remark: ''
+      },
+      userinfoData: {} // 存放userinfo组件数据
     }
   },
   computed: {
@@ -94,9 +130,6 @@ export default {
       return this.tableData
     }
   },
-  watch: {
-
-  },
   methods: {
     search() { // 搜索框的值赋给过滤器
       this.filterValue = this.inputValue
@@ -110,21 +143,45 @@ export default {
     getCurrentPage(val) { // 当前页码改变时触发，获取当前野马
       this.currentPage = val
     },
-    del(index) { // 打开删除提示框
+    del(index) { // 打开删除弹出框
       this.delUserVisible = true
       this.delIndex = index
-      console.info(this.delIndex)
     },
     delUser() { // 确定删除
       this.delUserVisible = false
       Message({
-        type: 'success',
+        type: 'info',
         message: '删除成功'
       })
       this.userList.splice(this.delIndex, 1)
     },
+    edit() { // 打开修改密码弹出框
+      this.editPasswordVisible = true
+    },
+    editPass() { // 修改密码成功
+      this.editPasswordVisible = false
+    },
+    cancelEditPass() { // 取消修改密码
+      this.editPasswordVisible = false
+    },
     selected(row) { // 选中复选框触发回调
       console.log(row)
+    },
+    addUser() { // 确认新建用户
+      this.userinfoVisible = false
+    },
+    createUser() { // 打开新增/新建用户组件
+      this.userinfoVisible = true
+      this.isCreate = true
+      this.userinfoData = Object.assign({}, this.defaultForm) 
+    },
+    editUser() { // 新增/编辑用户组件确认
+      this.userinfoVisible = true
+      this.isCreate = false
+      this.userinfoData = Object.assign({}, this.editUserForm)
+    },
+    cancel() { // 取消新增/编辑用户
+      this.userinfoVisible = false
     }
   }
 }
@@ -151,7 +208,7 @@ export default {
   background-size: cover;
 }
 .iconFalse{
-  background: url('~@/assets/userManage_images/stop.png') center center no-repeat;
+  background: url('~@/assets/userManage_images/false.png') center center no-repeat;
   background-size: cover;
 }
 .pagination-style{

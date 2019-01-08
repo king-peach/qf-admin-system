@@ -1,13 +1,12 @@
 <template>
   <div class="main">
     <el-row :gutter="24" class="btn-content">
-      <el-col :xl="12" :lg="14" :md="12" :xs="6">
+      <el-col :xl="6" :lg="4" :md="4" :xs="6">
         <el-select v-model="value" placeholder="请选择机构">
           <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
-      <el-col :xl="12" :lg="10" :md="12" :xs="18">
-        <span class="search-text">搜索: </span>
+      <el-col :xl="18" :lg="20" :md="20" :xs="18" class="col-right">
         <el-input v-model="inputValue" placeholder="请输入角色名称" class="search-input" suffix-icon="el-icon-search" @keyup.enter.native="searchRole"/>
         <el-button type="primary" @click="searchRole">搜索</el-button>
         <el-button type="primary" @click="openAdd">+ 添加</el-button>
@@ -31,7 +30,7 @@
       </el-table-column>
     </el-table>
     <!-- 删除角色 -->
-    <del-role :show.sync="delRoleVisible" @confirmDel="delRole" @cancel="cancelDel" />
+    <del-role :show.sync="delRoleVisible" @confirmDel="delRole" />
     <!-- 新增角色 -->
     <add-role :show.sync="addRoleVisible" :role="roles" @confirmAdd="addRole" @cancel="cancelAdd" />
     <!-- 编辑用户 -->
@@ -50,7 +49,7 @@
 </template>
 
 <script>
-import DelRole from './components/DelRole'
+import DelRole from '@/components/confirmDel/index'
 import AddRole from './components/AddRole'
 import EditRole from './components/EditRole'
 import { Message } from 'element-ui'
@@ -107,7 +106,6 @@ export default {
   computed: {
     tables() { // 模糊搜索功能
       const roleFilter = this.roleFilter
-      console.log(roleFilter)
       if (roleFilter !== '') {
         const reg = /^[\u4e00-\u9fa5]+$/ // 匹配中文
         if (!reg.test(roleFilter)) {
@@ -144,12 +142,9 @@ export default {
       this.delRoleVisible = false
       this.tables.splice(this.delIndex, 1)
       Message({
-        type: 'success',
+        type: 'info',
         message: '删除成功'
       })
-    },
-    cancelDel() { // 取消删除操作
-      this.delRoleVisible = false
     },
     getRowIndex({ row, rowIndex }) { // 获取当前行索引
       row.index = rowIndex
@@ -164,7 +159,7 @@ export default {
     addRole() { // 确认新增用户
       this.addRoleVisible = false
       Message({
-        type: 'success',
+        type: 'info',
         message: '新增用户成功'
       })
     },
@@ -187,13 +182,12 @@ export default {
 <style lang="scss" scoped>
 .btn-content{
   padding-bottom: 20px;
-}
-.search-text{
-  color:grey;
-  margin-right: 10px;
+  .col-right {
+    text-align: right;
+  }
 }
 .search-input{
-  width: 45%;
+  width:35%;
 }
 .right{
   float: right;

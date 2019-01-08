@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="addRoleVisible" :show="show" :append-to-body="true" title="新增角色" center @close="cancelAdd">
-    <el-form :label-position="labelPosition" :model="role" label-width="80px">
+    <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" :model="role" label-width="80px">
       <el-form-item label="角色代码" prop="id">
         <el-input v-model="role.id" />
       </el-form-item>
@@ -14,12 +14,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="role.remark"/>
+        <el-input type="textarea" v-model="role.remark"/>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="addRoleVisible = false">取 消</el-button>
-      <el-button type="primary" @click="confirm">确 定</el-button>
+      <el-button type="primary" @click="onSubmit('ruleForm')">立即创建</el-button>
+      <el-button @click="resetForm('ruleForm')">重 置</el-button>
     </span>
   </el-dialog>
 </template>
@@ -39,7 +39,18 @@ export default {
   data() {
     return {
       labelPosition: 'right', // 新增表单的位置
-      addRoleVisible: this.show
+      addRoleVisible: this.show,
+      rules: {
+        id: [
+          { required: true, message: '请输入角色代码', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ],
+        group: [
+          { required: true, message: '请选择所属机构', trigger: 'change' }
+        ]
+      }
     }
   },
   watch: {
@@ -48,8 +59,19 @@ export default {
     }
   },
   methods: {
-    confirm() {
-      this.$emit('confirmAdd')
+    onSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('success submit!')
+          this.$emit('confirmAdd')
+        } else {
+          console.log('error submit!')
+          return false
+        }
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
     cancelAdd() {
       this.$emit('cancel')

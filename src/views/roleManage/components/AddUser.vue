@@ -108,7 +108,7 @@ export default {
   background-size: cover;
 }
 .iconFalse{
-  background: url('~@/assets/userManage_images/stop.png') center center no-repeat;
+  background: url('~@/assets/userManage_images/false.png') center center no-repeat;
   background-size: cover;
 }
 </style>

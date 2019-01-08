@@ -37,8 +37,7 @@ export const constantRouterMap = [
     }]
   },
 
-  /** 系统信息 **/
-  {
+  { /** 系统信息 **/
     path: '/sysInfo',
     component: Layout,
     children: [
@@ -50,8 +49,8 @@ export const constantRouterMap = [
       }
     ]
   },
-  /** 配置项管理 **/
-  {
+
+  { /** 配置项管理 **/
     path: '/configItem',
     component: Layout,
     children: [
@@ -166,7 +165,6 @@ export const constantRouterMap = [
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
-  // base: process.env.BASE_URL,
   routes: constantRouterMap
 })
 
@@ -183,6 +181,7 @@ export const asyncRouterMap = [
       }
     ]
   },
+
   { /** 用户管理 **/
     path: '/userManage',
     component: Layout,
@@ -192,6 +191,19 @@ export const asyncRouterMap = [
         component: () => import('@/views/userManage/index'),
         name: 'userManage',
         meta: { title: '用户管理', icon: 'roleManage', roles: ['admin'] }
+      }
+    ]
+  },
+
+  { /* 定时任务 */
+    path: '/setTime',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/setTime/index'),
+        name: 'setTime',
+        meta: { title: '定时任务', icon: 'setTime', roles: ['admin'] }
       }
     ]
   },

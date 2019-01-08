@@ -71,7 +71,7 @@ export default {
     delUser(index) { // 删除用户
       this.user.splice(index, 1)
       Message({
-        type: 'success',
+        type: 'info',
         message: '删除成功'
       })
     },
@@ -81,7 +81,7 @@ export default {
     confirmAdd() { // 确认添加用户操作
       this.addUserVisible = false
       Message({
-        type: 'success',
+        type: 'info',
         message: '添加用户成功'
       })
     },
