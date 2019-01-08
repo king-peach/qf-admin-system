@@ -27,9 +27,9 @@
       <el-table-column prop="role" label="所属角色" align="center" />
       <el-table-column label="操作" width="260" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" @click="editUser">编辑</el-button>
-          <el-button size="mini" @click="edit">修改密码</el-button>
-          <el-button size="mini" type="danger" @click="del(scope.$index)">删除</el-button>
+          <el-button size="medium" type="text" @click="editUser">编辑</el-button>
+          <el-button size="medium" type="text" @click="edit">修改密码</el-button>
+          <el-button size="medium" type="text" style="color: #f56c6c;" @click="del(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,11 +113,11 @@ export default {
     userList() {
       const filterValue = this.filterValue
       if (filterValue !== '') {
-        const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/ // 匹配中英文和数字
+        const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
         if (!reg.test(filterValue)) {
           Message({
             type: 'error',
-            message: '请输入正确检索条件!'
+            message: '请输入中、英文、数字类型的关键词!'
           })
         } else {
           return this.tableData.filter(dataNews => {
@@ -177,7 +177,7 @@ export default {
     createUser() { // 打开新增用户组件
       this.userinfoVisible = true
       this.isCreate = true
-      this.userinfoData = Object.assign({}, this.defaultForm) 
+      this.userinfoData = Object.assign({}, this.defaultForm)
     },
     editUser() { // 打开编辑用户组件
       this.userinfoVisible = true

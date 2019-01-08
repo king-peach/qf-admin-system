@@ -45,7 +45,7 @@
 <script>
 export default {
   props: {
-    flag: { // 控制编辑/新增功能标识
+    flag: { // 编辑/新增功能标识
       type: Boolean,
       default: true
     },

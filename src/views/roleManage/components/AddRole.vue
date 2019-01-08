@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="addRoleVisible" :show="show" :append-to-body="true" title="新增角色" center @close="cancelAdd">
+  <el-dialog :visible.sync="addRoleVisible" :show="show" :append-to-body="true" title="新增角色" center @close="cancelAdd('ruleForm')">
     <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" :model="role" label-width="80px">
       <el-form-item label="角色代码" prop="id">
         <el-input v-model="role.id" />
@@ -18,8 +18,8 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
+      <el-button @click="cancelAdd('ruleForm')">取 消</el-button>
       <el-button type="primary" @click="onSubmit('ruleForm')">立即创建</el-button>
-      <el-button @click="resetForm('ruleForm')">重 置</el-button>
     </span>
   </el-dialog>
 </template>
@@ -70,10 +70,8 @@ export default {
         }
       })
     },
-    resetForm(formName) {
+    cancelAdd(formName) {
       this.$refs[formName].resetFields();
-    },
-    cancelAdd() {
       this.$emit('cancel')
     }
   }

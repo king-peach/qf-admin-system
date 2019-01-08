@@ -8,7 +8,7 @@
       <el-table-column label="邮箱" prop="email" />
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="delUser(scope.$index)">删除</el-button>
+          <el-button type="text" size="medium" style="color: #f56c6c;" @click="delUser(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
