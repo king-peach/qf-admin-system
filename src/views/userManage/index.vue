@@ -169,13 +169,17 @@ export default {
     },
     addUser() { // 确认新建用户
       this.userinfoVisible = false
+      Message({
+        type: 'success',
+        message: this.isCreate ? '新建用户成功' : '编辑用户成功'
+      })
     },
-    createUser() { // 打开新增/新建用户组件
+    createUser() { // 打开新增用户组件
       this.userinfoVisible = true
       this.isCreate = true
       this.userinfoData = Object.assign({}, this.defaultForm) 
     },
-    editUser() { // 新增/编辑用户组件确认
+    editUser() { // 打开编辑用户组件
       this.userinfoVisible = true
       this.isCreate = false
       this.userinfoData = Object.assign({}, this.editUserForm)
