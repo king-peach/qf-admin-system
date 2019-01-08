@@ -17,6 +17,15 @@ import '@/permission' // 权限控制
 Vue.config.productionTip = false
 Vue.use(ElementUI, { locale })
 
+// 全局异常捕获// 全局异常捕获
+const errorHandler = (error, vm) => {
+  console.error('抛出全局错误')
+  console.error(error)
+  console.error(vm)
+}
+Vue.config.errorHandler = errorHandler
+Vue.prototype.$throw = (error) => errorHandler(error, this)
+
 new Vue({
   router,
   store,
