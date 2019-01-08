@@ -37,7 +37,7 @@ export default {
           this.$refs.editPassForm.validateField('newPass')
         } 
         console.log(regUsername.test(value))
-        regUsername.test(value) === true ? callback() : callback(new Error('请输入由字母数字和下划线组成的4-16位原始密码'))  
+        regUsername.test(value) === true ? callback() : callback(new Error('请输入含有字母、数字或下划线的4-16位原始密码'))  
       }
     }
     const validateNewPass = (rule, value, callback) => {
@@ -47,7 +47,7 @@ export default {
       } else if (value === this.user.oldPass) {
         callback(new Error('新密码与原始密码不能相同'))
       } else {
-        regValidate.test(this.user.newPass) ? callback() : callback(new Error('请输入由字母、数字、下划线组成的4-16位新密码'))
+        regValidate.test(this.user.newPass) ? callback() : callback(new Error('请输入含有字母、数字或下划线的4-16位新密码'))
       }
     }
     return {
