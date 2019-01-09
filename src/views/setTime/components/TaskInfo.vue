@@ -1,28 +1,31 @@
 <template>
   <el-dialog :visible.sync="taskinfoVisible" :show="show" center @close="cancel" :title="flag ? '新建任务' : '编辑任务'">
-    <el-form label-width="80px" :model="formData">
-      <el-form-item label="任务名称">
+    <el-form ref="ruleForm" :model="formData" label-width="80px">
+      <el-form-item label="任务名称" prop="taskName">
         <el-input v-model="formData.taskName" />
       </el-form-item>
-      <el-form-item label="任务类别">
+      <el-form-item label="任务类别" prop="taskClass">
         <el-input v-model="formData.taskClass" />
       </el-form-item>
-      <el-form-item label="起始时间">
+      <el-form-item label="起始时间" prop="startDate">
         <el-date-picker v-model="formData.startDate" type="datetime" placeholder="选择日期"></el-date-picker>
       </el-form-item>
-      <el-form-item label="执行周期">
-        <el-radio v-model="radio" label="1">
-          每隔&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-cascader expand-trigger="hover" :options="options" v-model="formData.setTime1" :disabled="radio === '2'"  @change="handleChange" />
-        </el-radio>
-        <div style="height: 20px;" />
-        <el-radio v-model="radio" label="2" style="display: block;">
-          使用Cron表达式 <br />
-          <el-input v-model="formData.setTime2" style="margin-top: 10px;" :disabled="radio === '1'"/>
-        </el-radio>
+      <el-form-item label="执行周期" prop="setTime">
+        <el-radio-group v-model="radio">
+          <el-radio :label="1">
+            每隔&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-cascader expand-trigger="hover" :options="options" :disabled="radio === 2"  @change="handleChange" />
+          </el-radio>
+          <div style="height: 20px;" />
+          <el-radio :label="2" style="display: block;">
+            使用Cron表达式 <br />
+            <el-input style="margin-top: 10px;" @change="handleChange" :disabled="radio === 1"/>
+          </el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="备注">
+      <el-form-item label="备注" prop="remark">
         <el-input type="textarea" v-model="formData.remark" />
+        <el-button @click="valid">校验</el-button>
       </el-form-item>
       <el-form-item align="right">
         <el-button @click="cancel">取消</el-button>
@@ -33,6 +36,7 @@
 </template>
 
 <script>
+import { cronValidate } from '@/utils/cornValid'
 export default {
   props: {
     show: {
@@ -129,7 +133,7 @@ export default {
           ]
         }
       ],
-      radio: '1',
+      radio: 1,
       taskinfoVisible: this.show
     }
   },
@@ -140,13 +144,20 @@ export default {
   },
   methods: {
     confirm() {
-      this.$emit('confirmAdd')
+      const newFormData = JSON.parse(JSON.stringify(this.formData))
+      // this.$emit('update:formData', newFormData)
+      this.$emit('confirmAdd', newFormData)
     },
     cancel() {
       this.$emit('closeDialog')
     },
-    handleChange(value) {
-      console.info(value)
+    handleChange(value) { // 执行周期赋值
+      this.formData.setTime = value
+    },
+    valid() {
+      console.info(this.formData.remark)
+      const message = cronValidate(this.formData.remark)
+      console.info(message)
     }
   }
 }

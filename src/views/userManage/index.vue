@@ -167,12 +167,13 @@ export default {
     selected(row) { // 选中复选框触发回调
       console.log(row)
     },
-    addUser() { // 确认新建用户
+    addUser(newFormData) { // 确认新建用户
       this.userinfoVisible = false
       Message({
         type: 'success',
         message: this.isCreate ? '新建用户成功' : '编辑用户成功'
       })
+      console.info(newFormData)
     },
     createUser() { // 打开新增用户组件
       this.userinfoVisible = true

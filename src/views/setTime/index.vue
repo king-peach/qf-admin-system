@@ -53,48 +53,47 @@ export default {
   data() {
     return {
         tableData: [{
-          type: '系统任务',
-          name: 'Framework Cron Task',
-          status: '启用',
-          nextDate: '2019-01-04 16:30:30',
-          timeout: '-1 ms',
-          startDate: '2019-01-05 11:00:00',
-          endDate: '2019-01-06 10:00:00',
-          descript: 'com.framework.cn.frameworkTask'
+            type: '系统任务',
+            name: 'Framework Cron Task',
+            status: '启用',
+            nextDate: '2019-01-04 16:30:30',
+            timeout: '-1 ms',
+            startDate: '2019-01-05 11:00:00',
+            endDate: '2019-01-06 10:00:00',
+            descript: 'com.framework.cn.frameworkTask'
         }, {
-          type: '系统任务1',
-          name: 'Framework Cron Task',
-          status: '启用',
-          nextDate: '2019-01-04 16:30:30',
-          timeout: '1 ms',
-          startDate: '2019-01-05 11:00:00',
-          endDate: '2019-01-06 10:00:00',
-          descript: 'com.framework.cn.frameworkTask'
+            type: '系统任务1',
+            name: 'Framework Cron Task',
+            status: '启用',
+            nextDate: '2019-01-04 16:30:30',
+            timeout: '1 ms',
+            startDate: '2019-01-05 11:00:00',
+            endDate: '2019-01-06 10:00:00',
+            descript: 'com.framework.cn.frameworkTask'
         },{
-          type: '系统任务',
-          name: 'Framework Cron Task',
-          status: '禁用',
-          nextDate: '2019-01-04 16:30:30',
-          timeout: '-1 ms',
-          startDate: '2019-01-05 11:00:00',
-          endDate: '2019-01-06 10:00:00',
-          descript: 'com.framework.cn.frameworkTask'
+            type: '系统任务',
+            name: 'Framework Cron Task',
+            status: '禁用',
+            nextDate: '2019-01-04 16:30:30',
+            timeout: '-1 ms',
+            startDate: '2019-01-05 11:00:00',
+            endDate: '2019-01-06 10:00:00',
+            descript: 'com.framework.cn.frameworkTask'
         },{
-          type: '系统任务',
-          name: 'Framework Cron Task',
-          status: '启用',
-          nextDate: '2019-01-04 16:30:30',
-          timeout: '-1 ms',
-          startDate: '2019-01-05 11:00:00',
-          endDate: '2019-01-06 10:00:00',
-          descript: 'com.framework.cn.frameworkTask'
+            type: '系统任务',
+            name: 'Framework Cron Task',
+            status: '启用',
+            nextDate: '2019-01-04 16:30:30',
+            timeout: '-1 ms',
+            startDate: '2019-01-05 11:00:00',
+            endDate: '2019-01-06 10:00:00',
+            descript: 'com.framework.cn.frameworkTask'
         }],
       formData: {
         taskName: '',
         taskClass: '',
         startDate: '',
-        setTime1: [],
-        setTime2: [],
+        setTime: [],
         remark: ''
       },
       delRow: {},
@@ -103,37 +102,6 @@ export default {
       delTaskVisible: false,
       taskinfoVisible: false,
       isCreate: true
-    }
-  },
-  methods: {
-    searchTask() { // enter触发模糊搜索
-      this.taskFilter = this.searchValue
-    },
-    handlerDel(row) { // 删除项
-      this.delRow = Object.assign({}, row)
-      this.delTaskVisible = true
-    },
-    delTask() { //  确认删除
-      this.delTaskVisible = false
-      console.info(this.delRow)
-      Message({
-        type: 'info',
-        message: '删除成功'
-      })
-    },
-    addTask() { // 确认新增/编辑任务
-      this.taskinfoVisible = false
-    },
-    cancel() { // 取消新增/编辑任务
-      this.taskinfoVisible = false
-    },
-    createTask() { // 打开新增任务组件
-      this.isCreate = true
-      this.taskinfoVisible = true
-    },
-    editTask() { // 打开编辑任务组件
-      this.isCreate = false
-      this.taskinfoVisible = true
     }
   },
   computed: {
@@ -156,6 +124,37 @@ export default {
       }
 
       return this.tableData
+    }
+  },
+  methods: {
+    searchTask() { // enter触发模糊搜索
+      this.taskFilter = this.searchValue
+    },
+    handlerDel(row) { // 删除项
+      this.delRow = Object.assign({}, row)
+      this.delTaskVisible = true
+    },
+    delTask() { //  确认删除
+      this.delTaskVisible = false
+      Message({
+        type: 'info',
+        message: '删除成功'
+      })
+    },
+    addTask(newFromData) { // 确认新增/编辑任务
+      this.taskinfoVisible = false
+      console.info(newFromData)
+    },
+    cancel() { // 取消新增/编辑任务
+      this.taskinfoVisible = false
+    },
+    createTask() { // 打开新增任务组件
+      this.isCreate = true
+      this.taskinfoVisible = true
+    },
+    editTask() { // 打开编辑任务组件
+      this.isCreate = false
+      this.taskinfoVisible = true
     }
   }
 }

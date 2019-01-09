@@ -134,7 +134,10 @@ export default {
     confirm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$emit('confirmAdd')
+          let newFormData = JSON.parse(JSON.stringify(this.formData))
+          console.info(newFormData)
+          // this.$emit('update:formData', newFormData)
+          this.$emit('confirmAdd', newFormData)
           this.$refs[formName].resetFields()
         } else {
           return false
