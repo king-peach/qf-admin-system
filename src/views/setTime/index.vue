@@ -52,50 +52,64 @@ export default {
   },
   data() {
     return {
-        tableData: [{
-            type: '系统任务',
-            name: 'Framework Cron Task',
-            status: '启用',
-            nextDate: '2019-01-04 16:30:30',
-            timeout: '-1 ms',
-            startDate: '2019-01-05 11:00:00',
-            endDate: '2019-01-06 10:00:00',
-            descript: 'com.framework.cn.frameworkTask'
-        }, {
-            type: '系统任务1',
-            name: 'Framework Cron Task',
-            status: '启用',
-            nextDate: '2019-01-04 16:30:30',
-            timeout: '1 ms',
-            startDate: '2019-01-05 11:00:00',
-            endDate: '2019-01-06 10:00:00',
-            descript: 'com.framework.cn.frameworkTask'
-        },{
-            type: '系统任务',
-            name: 'Framework Cron Task',
-            status: '禁用',
-            nextDate: '2019-01-04 16:30:30',
-            timeout: '-1 ms',
-            startDate: '2019-01-05 11:00:00',
-            endDate: '2019-01-06 10:00:00',
-            descript: 'com.framework.cn.frameworkTask'
-        },{
-            type: '系统任务',
-            name: 'Framework Cron Task',
-            status: '启用',
-            nextDate: '2019-01-04 16:30:30',
-            timeout: '-1 ms',
-            startDate: '2019-01-05 11:00:00',
-            endDate: '2019-01-06 10:00:00',
-            descript: 'com.framework.cn.frameworkTask'
-        }],
-      formData: {
+      tableData: [{
+        type: '系统任务',
+        name: 'Framework Cron Task',
+        status: '启用',
+        nextDate: '2019-01-04 16:30:30',
+        timeout: '-1 ms',
+        startDate: '2019-01-05 11:00:00',
+        endDate: '2019-01-06 10:00:00',
+        descript: 'com.framework.cn.frameworkTask'
+      }, {
+        type: '系统任务1',
+        name: 'Framework Cron Task',
+        status: '启用',
+        nextDate: '2019-01-04 16:30:30',
+        timeout: '1 ms',
+        startDate: '2019-01-05 11:00:00',
+        endDate: '2019-01-06 10:00:00',
+        descript: 'com.framework.cn.frameworkTask'
+      }, {
+        type: '系统任务',
+        name: 'Framework Cron Task',
+        status: '禁用',
+        nextDate: '2019-01-04 16:30:30',
+        timeout: '-1 ms',
+        startDate: '2019-01-05 11:00:00',
+        endDate: '2019-01-06 10:00:00',
+        descript: 'com.framework.cn.frameworkTask'
+      }, {
+        type: '系统任务',
+        name: 'Framework Cron Task',
+        status: '启用',
+        nextDate: '2019-01-04 16:30:30',
+        timeout: '-1 ms',
+        startDate: '2019-01-05 11:00:00',
+        endDate: '2019-01-06 10:00:00',
+        descript: 'com.framework.cn.frameworkTask'
+      }],
+      createForm: {
         taskName: '',
-        taskClass: '',
+        taskType: '',
         startDate: '',
-        setTime: [],
+        radio: 1,
+        // setTime1: [],
+        setTime: '',
+        status: true,
         remark: ''
       },
+      editForm: {
+        taskName: 'Framework Cron Task',
+        taskType: '系统任务',
+        startDate: new Date('2019-01-09T03:00:00.000Z'),
+        // setTime1: ['Minutes', '2'],
+        setTime: '0 26,29,33 * * * ?',
+        radio: 2,
+        status: true,
+        remark: 'com.framework.cn.frameworkTask'
+      },
+      formData: {}, // 存储新增/编辑表单数据
       delRow: {},
       searchValue: '', // 搜索框值
       taskFilter: '', // 存储模糊搜索值
@@ -143,7 +157,6 @@ export default {
     },
     addTask(newFromData) { // 确认新增/编辑任务
       this.taskinfoVisible = false
-      console.info(newFromData)
     },
     cancel() { // 取消新增/编辑任务
       this.taskinfoVisible = false
@@ -151,10 +164,12 @@ export default {
     createTask() { // 打开新增任务组件
       this.isCreate = true
       this.taskinfoVisible = true
+      this.formData = Object.assign({}, this.createForm)
     },
     editTask() { // 打开编辑任务组件
       this.isCreate = false
       this.taskinfoVisible = true
+      this.formData = Object.assign({}, this.editForm)
     }
   }
 }

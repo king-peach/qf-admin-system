@@ -13,7 +13,6 @@ export function cronValidate(cronExpression) {
   var message = ''
   // 先将cron表达式进行分割
   var cronParams = cronExpression.split(' ')
-  console.info(cronParams)
   // 判断cron表达式是否具有该具有的属性长度，没有年份的长度为6，带年份的长度为7，其他情况都是错误的
   if (cronParams.length < 6 || cronParams.length > 7) {
     return 'cron表达式需要输入6-7位参数，请重新输入'

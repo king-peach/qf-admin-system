@@ -1,42 +1,47 @@
 <template>
-  <el-dialog :visible.sync="taskinfoVisible" :show="show" center @close="cancel" :title="flag ? '新建任务' : '编辑任务'">
-    <el-form ref="ruleForm" :model="formData" label-width="80px">
+  <el-dialog :visible.sync="taskinfoVisible" :show="show" center @close="cancel('ruleForm')" :title="flag ? '新建任务' : '编辑任务'">
+    <el-form ref="ruleForm" :rules="rule" :model="formData" label-width="150px">
       <el-form-item label="任务名称" prop="taskName">
         <el-input v-model="formData.taskName" />
       </el-form-item>
-      <el-form-item label="任务类别" prop="taskClass">
-        <el-input v-model="formData.taskClass" />
+      <el-form-item label="任务类别" prop="taskType">
+        <el-input v-model="formData.taskType" />
       </el-form-item>
       <el-form-item label="起始时间" prop="startDate">
-        <el-date-picker v-model="formData.startDate" type="datetime" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="formData.startDate" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
-      <el-form-item label="执行周期" prop="setTime">
-        <el-radio-group v-model="radio">
-          <el-radio :label="1">
+      <el-form-item label="执行表达式(cron)" prop="setTime">
+        <!-- <el-radio-group v-model="formData.radio">
+          <el-radio :label="1" prop="setTime1">
             每隔&nbsp;&nbsp;&nbsp;&nbsp;
-            <el-cascader expand-trigger="hover" :options="options" :disabled="radio === 2"  @change="handleChange" />
+            <el-cascader expand-trigger="hover" v-model="formData.setTime1" :options="options" :disabled="formData.radio === 2" />
           </el-radio>
           <div style="height: 20px;" />
-          <el-radio :label="2" style="display: block;">
-            使用Cron表达式 <br />
-            <el-input style="margin-top: 10px;" @change="handleChange" :disabled="radio === 1"/>
-          </el-radio>
+          <el-radio :label="2" prop="setTime2" style="display: block;">
+            使用Cron表达式 <br /> -->
+            <el-input v-model="formData.setTime" @change="handlerChange" style="margin-top: 10px;"/>
+          <!-- </el-radio> -->
+        <!-- </el-radio-group> -->
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-radio-group v-model="formData.status">
+          <el-radio :label="true">启用</el-radio>
+          <el-radio :label="false">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input type="textarea" v-model="formData.remark" />
-        <el-button @click="valid">校验</el-button>
       </el-form-item>
       <el-form-item align="right">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="confirm">确定</el-button>
+        <el-button @click="cancel('ruleForm')">取消</el-button>
+        <el-button type="primary" @click="confirm('ruleForm')">确定</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
 
 <script>
-import { cronValidate } from '@/utils/cornValid'
+import { cronValidate } from '@/utils/cronValid'
 export default {
   props: {
     show: {
@@ -53,6 +58,9 @@ export default {
     }
   },
   data() {
+    var cronValidate = (rule, value, callback) => {
+      !value ? callback(new Error('cron表达式内容不能为空')) : this.cronValid === true ? callback() : callback(new Error(this.cronValid))
+    }
     return {
       options: [
         { // 执行周期选择数据
@@ -133,9 +141,26 @@ export default {
           ]
         }
       ],
-      radio: 1,
-      taskinfoVisible: this.show
+      taskinfoVisible: this.show,
+      cronValid: '',
+      rule: {
+        taskName: [
+          { required: true, message: '请填写任务名', trigger: 'blur' }
+        ],
+        taskType: [
+          { required: true, message: '请填写任务类型', trigger: 'blur' }
+        ],
+        startDate: [
+          { type: 'date', required: true, meessage: '请选择起始时间', trigger: 'blur' }
+        ],
+        setTime: [
+          { validator: cronValidate , trigger: 'blur' }
+        ]
+      }
     }
+  },
+  updated() { // 虚拟DOM渲染更新以后进行corn校验并赋值给cronValid
+    this.cronValid = cronValidate(this.formData.setTime)
   },
   watch: {
     show() {
@@ -143,21 +168,24 @@ export default {
     }
   },
   methods: {
-    confirm() {
-      const newFormData = JSON.parse(JSON.stringify(this.formData))
-      // this.$emit('update:formData', newFormData)
-      this.$emit('confirmAdd', newFormData)
+    confirm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const newFormData = JSON.parse(JSON.stringify(this.formData))
+          // newFormData.radio === 1 ? newFormData.setTime2 = '' : newFormData.setTime1 = []
+          this.$emit('confirmAdd', newFormData)
+        } else {
+          return false
+        }
+      })
+      
     },
-    cancel() {
+    cancel(formName) {
       this.$emit('closeDialog')
+      this.$refs[formName].resetFields()
     },
-    handleChange(value) { // 执行周期赋值
-      this.formData.setTime = value
-    },
-    valid() {
-      console.info(this.formData.remark)
-      const message = cronValidate(this.formData.remark)
-      console.info(message)
+    handlerChange(value) { // setTime字段变化时校验corn值，并赋给cornValid
+      this.cronValid = cronValidate(value)
     }
   }
 }
