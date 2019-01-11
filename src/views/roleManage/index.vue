@@ -1,12 +1,12 @@
 <template>
   <div class="main">
-    <el-row type="flex" class="btn-content" justify="space-between">
+    <el-row type="flex" justify="space-between">
       <el-col :span="6">
         <el-select v-model="value" placeholder="请选择机构">
           <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
-      <el-col :span="12" class="col-right">
+      <el-col :span="18" class="col-right">
         <el-input v-model="searchValue" placeholder="请输入角色名称" class="search-input" suffix-icon="el-icon-search" @keyup.enter.native="searchRole"/>
         <el-button type="primary" @click="searchRole">搜索</el-button>
         <el-button type="primary" @click="openAdd">+ 添加</el-button>
@@ -14,7 +14,7 @@
     </el-row>
 
     <el-table
-      :data="tables.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
       :row-style="getRowIndex"
       highlight-current-row
       style="100%"
@@ -38,7 +38,7 @@
     <!-- 分页器 -->
     <el-pagination
       :page-size="pageSize"
-      :total="tableData.length"
+      :total="tables.length"
       small
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
@@ -180,17 +180,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-content{
+.el-row{
   padding-bottom: 20px;
   .col-right {
     text-align: right;
   }
 }
 .search-input{
-  width:60%;
-}
-.right{
-  float: right;
+  width:40%;
 }
 .pagination-style{
   margin-top: 20px;

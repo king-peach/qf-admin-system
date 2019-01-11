@@ -10,7 +10,7 @@
 
     <el-table
       ref="userChecked"
-      :data="userList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="userList.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
       stripe
       @row-click="checkBox"
       @select-change="selected">
@@ -39,11 +39,11 @@
     <edit-password :show.sync="editPasswordVisible" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
     <!-- 新建/编辑用户组件 -->
     <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" @confirmAdd="addUser" @closeDialog="cancel" />
-
+    <!-- 分页器 -->
     <el-pagination
       :page-size="pageSize"
       :current-page="currentPage"
-      :total="tableData.length"
+      :total="userList.length"
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
       @size-page="getPageSize"
@@ -140,7 +140,7 @@ export default {
     getPageSize(val) { // pageSize改变时触发，获取页面元素个数
       this.pageSize = val
     },
-    getCurrentPage(val) { // 当前页码改变时触发，获取当前野马
+    getCurrentPage(val) { // 当前页码改变时触发，获取当前页码
       this.currentPage = val
     },
     del(index) { // 打开删除弹出框
@@ -199,7 +199,7 @@ export default {
     float: right;
     text-align: right;
     .search{
-      width: 50%;
+      width: 55%;
     }
   }
 }

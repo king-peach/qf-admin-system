@@ -4,7 +4,7 @@
       <el-col :span="4">
         <el-button type="primary" icon="el-icon-arrow-right">手动执行</el-button>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="18" class="col-right">
         <el-input v-model="searchValue" placeholder="请输入搜索关键字" @keyup.enter.native="searchTask" suffix-icon="el-icon-search" class="search-input" />
         <el-button type="primary" @click="searchTask">搜索</el-button>
         <el-button type="primary" @click="createTask">+ 添加</el-button>
@@ -13,7 +13,7 @@
     <!-- 定时任务表单 -->
     <el-table
       ref="setTimeForm"
-      :data="tables"
+      :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
       tooltip-effect="dark"
       style="width: 100%">
       <el-table-column type="index" width="30" />
@@ -37,6 +37,16 @@
     <del-task :show.sync="delTaskVisible" @confirmDel="delTask"/>
     <!-- 新增/编辑任务组件 -->
     <task-info :show.sync="taskinfoVisible" :flag="isCreate" :formData="formData" @confirmAdd="addTask" @closeDialog="cancel"/>
+    <!-- 分页器 -->
+    <el-pagination
+      :page-size="pageSize"
+      :current-page="currentPage"
+      :total="tables.length"
+      layout="total, prev, pager, next, jumper"
+      @size-page="getPageSize"
+      @current-change="getCurrentPage"
+      style="margin-top: 20px;"
+    />
   </div>
 </template>
 
@@ -53,7 +63,7 @@ export default {
   data() {
     return {
       tableData: [{
-        type: '系统任务',
+        type: '系统任务1',
         name: 'Framework Cron Task',
         status: '启用',
         nextDate: '2019-01-04 16:30:30',
@@ -62,7 +72,7 @@ export default {
         endDate: '2019-01-06 10:00:00',
         descript: 'com.framework.cn.frameworkTask'
       }, {
-        type: '系统任务1',
+        type: '系统任务2',
         name: 'Framework Cron Task',
         status: '启用',
         nextDate: '2019-01-04 16:30:30',
@@ -71,7 +81,7 @@ export default {
         endDate: '2019-01-06 10:00:00',
         descript: 'com.framework.cn.frameworkTask'
       }, {
-        type: '系统任务',
+        type: '系统任务3',
         name: 'Framework Cron Task',
         status: '禁用',
         nextDate: '2019-01-04 16:30:30',
@@ -80,7 +90,7 @@ export default {
         endDate: '2019-01-06 10:00:00',
         descript: 'com.framework.cn.frameworkTask'
       }, {
-        type: '系统任务',
+        type: '系统任务4',
         name: 'Framework Cron Task',
         status: '启用',
         nextDate: '2019-01-04 16:30:30',
@@ -115,7 +125,9 @@ export default {
       taskFilter: '', // 存储模糊搜索值
       delTaskVisible: false,
       taskinfoVisible: false,
-      isCreate: true
+      isCreate: true,
+      pageSize: 2,
+      currentPage: 1
     }
   },
   computed: {
@@ -170,6 +182,12 @@ export default {
       this.isCreate = false
       this.taskinfoVisible = true
       this.formData = Object.assign({}, this.editForm)
+    },
+    getPageSize(val) { // pageSize改变时触发，获取页面元素个数
+      this.pageSize = val
+    },
+    getCurrentPage(val) { // 当前页码改变时触发，获取当前页码
+      this.currentPage = val
     }
   }
 }
@@ -178,12 +196,11 @@ export default {
 <style lang="scss" scoped>
   .el-row {
     margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
+    .col-right {
+      text-align: right;
     }
   }
-
   .search-input {
-    width: 63%;
+    width: 40%;
   }
 </style>
