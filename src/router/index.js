@@ -208,5 +208,39 @@ export const asyncRouterMap = [
     ]
   },
 
+  { // 系统日志
+    path: '/systemLog',
+    component: Layout,
+    name: 'systemLog',
+    meta: { title: '系统日志', icon: 'systemLog', role: ['admin'] },
+    children: [
+      {
+        path: 'loginLog',
+        component: () => import('@/views/systemLog/loginLog/index'),
+        name: 'loginLog',
+        meta: { title: '登陆日志', icon: 'logItem', role: ['admin'] }
+      },
+      {
+        path: 'consoleLog',
+        component: () => import('@/views/systemLog/consoleLog/index'),
+        name: 'consoleLog',
+        meta: { title: '控制台日志', icon: 'logItem', role: ['admin'] }
+      }
+    ]
+  },
+
+  { // 组织机构
+    path: '/department',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/department/index'),
+        name: 'department',
+        meta: { title: '组织机构', icon: 'tree', roles: ['admin'] }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]

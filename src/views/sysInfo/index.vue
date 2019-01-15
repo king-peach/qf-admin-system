@@ -2,7 +2,7 @@
   <div class="main">
     <div class="title">
       <el-button type="warning">禁止登陆</el-button>
-      <el-button type="danger">强行注销所有会话</el-button>
+      <el-button type="danger">强制注销所有会话</el-button>
     </div>
     <el-collapse v-model="activeName" :data="list" accordion>
       <!-- 遍历取到的数据，进行数据绑定 -->

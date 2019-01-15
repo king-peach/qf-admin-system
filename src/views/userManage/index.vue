@@ -1,11 +1,11 @@
 <template>
   <div class="main">
-    <el-row :span="24">
-      <el-col :sm="22" :md="18" :lg="13">
+    <el-row>
+      <!-- <el-col :sm="22" :md="18" :lg="13"> -->
         <el-input v-model="inputValue" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search" @keyup.enter.native="search" />
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button type="primary" @click="createUser">+ 添加</el-button>
-      </el-col>
+      <!-- </el-col> -->
     </el-row>
 
     <el-table
@@ -194,14 +194,14 @@ export default {
 
 <style lang="scss" scoped>
 .el-row{
-  margin-bottom: 30px;
-  .el-col{
-    float: right;
-    text-align: right;
+  margin-bottom: 20px;
+  // .el-col{
+  //   float: right;
+  //   text-align: right;
     .search{
-      width: 55%;
+      width: 30%;
     }
-  }
+  // }
 }
 .icon{
   display: inline-block;

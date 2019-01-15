@@ -1,23 +1,24 @@
 <template>
   <div class="main">
-    <el-row type="flex" justify="space-between">
-      <el-col :span="4">
-        <el-button type="primary" icon="el-icon-arrow-right">手动执行</el-button>
-      </el-col>
-      <el-col :span="18" class="col-right">
+    <el-row>
+      <!-- <el-col :span="4"> -->
+        <el-button icon="el-icon-arrow-right" style="margin-right: 10px;">手动执行</el-button>
+      <!-- </el-col>
+      <el-col :span="18" class="col-right"> -->
         <el-input v-model="searchValue" placeholder="请输入搜索关键字" @keyup.enter.native="searchTask" suffix-icon="el-icon-search" class="search-input" />
         <el-button type="primary" @click="searchTask">搜索</el-button>
         <el-button type="primary" @click="createTask">+ 添加</el-button>
-      </el-col>
+      <!-- </el-col> -->
     </el-row>
     <!-- 定时任务表单 -->
     <el-table
       ref="setTimeForm"
+      border
       :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
       tooltip-effect="dark"
       style="width: 100%">
-      <el-table-column type="index" width="30" />
-      <el-table-column type="selection" width="30" align="center"/>
+      <el-table-column type="index" width="30" align="center" />
+      <el-table-column type="selection" width="40" align="center"/>
       <el-table-column prop="type" label="类别" align="center" />
       <el-table-column prop="name" label="任务名称" show-overflow-tooltip width="120" align="center"/>
       <el-table-column prop="status" label="任务状态" align="center" />
@@ -201,6 +202,6 @@ export default {
     }
   }
   .search-input {
-    width: 40%;
+    width: 30%;
   }
 </style>

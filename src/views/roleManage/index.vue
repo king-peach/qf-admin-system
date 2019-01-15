@@ -1,20 +1,21 @@
 <template>
   <div class="main">
-    <el-row type="flex" justify="space-between">
-      <el-col :span="6">
-        <el-select v-model="value" placeholder="请选择机构">
+    <el-row>
+      <!-- <el-col :span="6"> -->
+        <el-select v-model="value" placeholder="请选择机构" style="margin-right: 10px;">
           <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value" />
         </el-select>
-      </el-col>
-      <el-col :span="18" class="col-right">
+      <!-- </el-col> -->
+      <!-- <el-col :span="18" class="col-right"> -->
         <el-input v-model="searchValue" placeholder="请输入角色名称" class="search-input" suffix-icon="el-icon-search" @keyup.enter.native="searchRole"/>
         <el-button type="primary" @click="searchRole">搜索</el-button>
         <el-button type="primary" @click="openAdd">+ 添加</el-button>
-      </el-col>
+      <!-- </el-col> -->
     </el-row>
 
     <el-table
       :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
+      border
       :row-style="getRowIndex"
       highlight-current-row
       style="100%"
@@ -187,7 +188,7 @@ export default {
   }
 }
 .search-input{
-  width:40%;
+  width:30%;
 }
 .pagination-style{
   margin-top: 20px;
