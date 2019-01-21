@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import DelRole from '@/components/confirmDel/index'
+import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import EditRole from './components/EditRole'
 import { Message } from 'element-ui'

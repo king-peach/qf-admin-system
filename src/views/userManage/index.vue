@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import DelUser from '@/components/confirmDel/index'
+import DelUser from '@/components/ConfirmDel/index'
 import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import { Message } from 'element-ui'

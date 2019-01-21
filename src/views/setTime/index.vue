@@ -53,7 +53,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import DelTask from '@/components/confirmDel/index'
+import DelTask from '@/components/ConfirmDel/index'
 import TaskInfo from './components/TaskInfo'
 // import { getSetTimeData } from '@/api/setTime'
 export default {
