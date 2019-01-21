@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.4.11",
     "js-cookie": "^2.2.0",
+    "lodash": "^4.17.11",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^2.4.0",
     "vue": "^2.5.17",

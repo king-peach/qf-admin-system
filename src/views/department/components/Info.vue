@@ -4,9 +4,15 @@
       <el-form-item label="上级部门" prop="parent">
         <el-popover
           placement="bottom"
-          v-model="parentVisible">
+          v-model="parentVisible"
+          title="部门列表"
+          visible-arrow
+          width="400">
           <el-tree :data="treeData" :props="defaultProps" accordion @node-click="handleNodeClick"/>
-          <el-button size="mini" @click="parentVisible = false">确定</el-button>
+          <div align="right" style="margin-top: 1em">
+            <el-button size="mini" @click="parentVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="selected">确定</el-button>
+          </div>
           <el-input v-model="formData.parent" slot="reference" class="parent-department"/>
         </el-popover>
       </el-form-item>
@@ -70,8 +76,9 @@ export default {
       parentVisible: false, // 选择parent值弹出框开关
       defaultProps: {
         children: 'children',
-        label: '一级 2'
+        label: 'name'
       },
+      parentDepart: '', // 存放选取上级部门值
       rule: {
         parent: [
           { required: true, message: '请选择上级部门', trigger: 'change' }
@@ -114,8 +121,12 @@ export default {
       this.$emit('cancelAdd')
       this.$refs[formName].resetFields()
     },
-    handleNodeClick(data) { // parent树节点被选择时
-      console.info(data)
+    handleNodeClick(data) { // parent树节点被选择时回调函数
+      this.parentDepart = data.name
+    },
+    selected() { // 确定选中上级部门
+      this.formData.parent = this.parentDepart
+      this.parentVisible = false
     }
   }
 }

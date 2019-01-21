@@ -110,41 +110,7 @@ export default {
         fax: '',
         tel: ''
       },
-      parentTree: [{
-        label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-      }],
+      parentTree: [],
       formData: {},
       args: [null, null, 'timeLine'],
       delItemVisible: false,
@@ -161,16 +127,19 @@ export default {
       this.delItemVisible = false
     },
     add(row) { // 新增机构
+    console.info(row)
       this.infoVisible = true
       this.isCreate = true
       this.formData = { ...this.defaultForm }
       this.formData.parent = row.name
+      this.parentTree = [this.data]
     },
     edit(row) { // 编辑机构
       this.infoVisible = true
       this.isCreate = false
       this.formData = { ...row }
       this.formData.parent = row.parent.name
+      this.parentTree = [this.data]
     },
     confirm(newFormData) { // 确定新增/编辑
       this.infoVisible = false
@@ -178,7 +147,7 @@ export default {
     },
     cancel() { // 取消新增/编辑
       this.infoVisible = false
-    },
+    }
   }
 }
 </script>
