@@ -1,6 +1,7 @@
 <template>
   <div class="main">
-
+    <search-box :formData="searchForm" @search="search" />
+    <!-- 部门treeTable -->
     <tree-table :data="data" :eval-func="func" :eval-args="args" :expand-all="expandAll" border>
       <el-table-column label="部门名称">
         <template slot-scope="scope">
@@ -33,10 +34,10 @@
       </el-table-column>
     </tree-table>
 
-   <!-- 删除提示框 -->
-   <del-item :show.sync="delItemVisible" @confirmDel="delItem"/>
-   <!-- 新增机构组件 -->
-   <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel"/>
+    <!-- 删除提示框 -->
+    <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
+    <!-- 新增机构组件 -->
+    <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
   </div>
 </template>
 
@@ -49,13 +50,15 @@ import treeTable from '@/components/TreeTable'
 import treeToArray from './customEval'
 import DelItem from '@/components/ConfirmDel'
 import InfoDialog from './components/Info'
+import SearchBox from '@/components/SearchBox'
 
 export default {
   name: 'Department',
   components: {
     treeTable,
     DelItem,
-    InfoDialog
+    InfoDialog,
+    SearchBox
   },
   data() {
     return {
@@ -103,6 +106,12 @@ export default {
           }
         ]
       },
+      searchForm: { // 条件搜索数据
+        name: { label: '部门名称', value: '' },
+        leader: { label: '部门主管', value: '' },
+        tel: { label: '电话', value: '' },
+        fax: { label: '传真', value: '' }
+      },
       defaultForm: {
         parent: '',
         name: '',
@@ -127,7 +136,7 @@ export default {
       this.delItemVisible = false
     },
     add(row) { // 新增机构
-    console.info(row)
+      console.info(row)
       this.infoVisible = true
       this.isCreate = true
       this.formData = { ...this.defaultForm }
@@ -147,6 +156,9 @@ export default {
     },
     cancel() { // 取消新增/编辑
       this.infoVisible = false
+    },
+    search(searchForm) {
+      console.info(searchForm)
     }
   }
 }
