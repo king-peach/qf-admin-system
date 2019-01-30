@@ -31,7 +31,7 @@ module.exports = {
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
   },
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',
   lintOnSave: process.env.NODE_ENV !== 'production',
   devServer: {
     // 开发环境下设置跨域解决方案
