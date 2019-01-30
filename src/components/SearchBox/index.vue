@@ -42,7 +42,7 @@ export default {
 .box {
   padding: 20px 0 0 20px;
   margin-bottom: 20px;
-  -webkit-box-shadow: 1px 1px 2px 2px #ebeef5;
-  box-shadow: 1px 1px 2px 2px #ebeef5;
+  -webkit-box-shadow: 1px 1px 2px 2px #ddd;
+  box-shadow: 1px 1px 2px 2px #ddd;
 }
 </style>
