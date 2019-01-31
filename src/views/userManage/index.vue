@@ -34,7 +34,7 @@
       </el-table-column>
     </el-table>
     <!-- 确认删除组件 -->
-    <del-user :show.sync="delUserVisible" @confirmDel="delUser" />
+    <!-- <del-user :show.sync="delUserVisible" @confirmDel="delUser" /> -->
     <!-- 修改密码组件 -->
     <edit-password :show.sync="editPasswordVisible" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
     <!-- 新建/编辑用户组件 -->

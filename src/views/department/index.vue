@@ -35,7 +35,7 @@
     </tree-table>
 
     <!-- 删除提示框 -->
-    <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
+    <!-- <del-item :show.sync="delItemVisible" @confirmDel="delItem" /> -->
     <!-- 新增机构组件 -->
     <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
   </div>
@@ -48,7 +48,7 @@
 */
 import treeTable from '@/components/TreeTable'
 import treeToArray from './customEval'
-import DelItem from '@/components/ConfirmDel'
+import DelItem from '@/components/ConfirmDel/index'
 import InfoDialog from './components/Info'
 import SearchBox from '@/components/SearchBox'
 

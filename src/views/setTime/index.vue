@@ -35,7 +35,7 @@
       </el-table-column>
     </el-table>
     <!-- 确认删除任务组件 -->
-    <del-task :show.sync="delTaskVisible" @confirmDel="delTask"/>
+    <!-- <del-task :show.sync="delTaskVisible" @confirmDel="delTask"/> -->
     <!-- 新增/编辑任务组件 -->
     <task-info :show.sync="taskinfoVisible" :flag="isCreate" :formData="formData" @confirmAdd="addTask" @closeDialog="cancel"/>
     <!-- 分页器 -->
