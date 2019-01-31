@@ -88,8 +88,12 @@ export default {
   }
 
   .box-card {
-    width: 480px;
+    width: 31%;
+    min-width: 400px;
     display: inline-block;
     margin: 0 2em 2em 0;
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
   }
 </style>

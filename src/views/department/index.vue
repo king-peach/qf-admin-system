@@ -35,7 +35,7 @@
     </tree-table>
 
     <!-- 删除提示框 -->
-    <!-- <del-item :show.sync="delItemVisible" @confirmDel="delItem" /> -->
+    <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
     <!-- 新增机构组件 -->
     <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
   </div>

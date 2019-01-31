@@ -31,7 +31,7 @@
       </el-table-column>
     </el-table>
     <!-- 确认删除角色组件 -->
-    <!-- <del-role :show.sync="delRoleVisible" @confirmDel="delRole" /> -->
+    <del-role :show.sync="delRoleVisible" @confirmDel="delRole" />
     <!-- 新增角色组件 -->
     <add-role :show.sync="addRoleVisible" :role="roles" @confirmAdd="addRole" @cancel="cancelAdd" />
     <!-- 编辑用户组件 -->
