@@ -1,20 +1,18 @@
 <template>
-  <div class="main">
+  <div class="main clearfix">
     <div class="title">
       <el-button type="warning">禁止登陆</el-button>
       <el-button type="danger">强制注销所有会话</el-button>
     </div>
-    <el-collapse v-model="activeName" :data="list" accordion>
-      <!-- 遍历取到的数据，进行数据绑定 -->
-      <template v-for="(value,index) in list">
-        <el-collapse-item :title="key[index]" :key="index">
-          <el-table :data="value" style="width:100%">
-            <el-table-column prop="name" label="数据项" min-width="500" />
-            <el-table-column prop="value" label="值" min-width="500" />
-          </el-table>
-        </el-collapse-item>
-      </template>
-    </el-collapse>
+    <el-card v-for="(value, key, index) in list" :key="key" :class="['info-box', index < 2 ? 'half' : 'all']">
+      <div slot="header">
+        <span>{{ key }}</span>
+      </div>
+      <el-table :data="value">
+        <el-table-column prop="name" label="数据项" />
+        <el-table-column prop="value" label="属性值" />
+      </el-table>
+    </el-card>
   </div>
 </template>
 
@@ -24,8 +22,7 @@ export default {
   data() {
     return {
       activeName: '',
-      list: [],
-      key: []
+      list: {}
     }
   },
   created() {
@@ -34,10 +31,7 @@ export default {
   methods: {
     getData() {
       getInfo().then(response => {
-        for (const i in response.data) {
-          this.list.push(response.data[i]) // 将返回的对象转化成数组
-        }
-        this.key = Object.keys(response.data)
+        this.list = response.data
       })
     }
   }
@@ -47,5 +41,30 @@ export default {
 <style lang="scss" scoped>
   .title{
     padding-bottom:20px;
+  }
+  .info-box {
+    display: inline-block;
+    min-height: 385px;
+    margin-bottom: 20px;
+  }
+  .clearfix {
+    clear: both;
+  }
+  .clearfix::before,
+  .clearfix::after {
+    display: table;
+    content: '';
+  }
+  .half {
+    width: 48%;
+    @media screen and (max-width: 980px) {
+      width: 100%;
+    }
+    &:nth-of-type(2) {
+      float: right;
+    }
+  }
+  .all {
+    width: 100%;
   }
 </style>
