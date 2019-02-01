@@ -44,5 +44,8 @@ export default {
   margin-bottom: 20px;
   -webkit-box-shadow: 1px 1px 2px 2px #ddd;
   box-shadow: 1px 1px 2px 2px #ddd;
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
 }
 </style>

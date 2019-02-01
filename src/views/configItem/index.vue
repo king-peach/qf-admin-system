@@ -92,6 +92,16 @@ export default {
     min-width: 400px;
     display: inline-block;
     margin: 0 2em 2em 0;
+    @media screen and (max-width: 1600px) {
+      width: 45%;
+      &:nth-child(2n) {
+        margin-left: 0;
+      }
+    }
+    @media screen and (max-width: 1150px) {
+      width: 100%;
+      margin-right: 0;
+    }
     &:nth-child(3n) {
       margin-right: 0;
     }
