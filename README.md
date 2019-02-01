@@ -1,26 +1,26 @@
 # qf-admin-system
 
-## Project setup
+## 项目构建、安装依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 开发环境下热重载命令
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 生产环境文件打包命令
 ```
 npm run build
 ```
 
-### Run your tests
+### 单元测试命令
 ```
 npm run test
 ```
 
-### Lints and fixes files
+### 使用lint检测或修复文件命令
 ```
 npm run lint
 ```
