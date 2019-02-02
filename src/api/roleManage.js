@@ -10,3 +10,15 @@ export function getRoleInfo(pageNum, pageSize) {
     }
   })
 }
+
+export function addRole(data) {
+  return request({
+    url: '/role/addRole',
+    methods: 'post',
+    data: {
+      roleKey: data.roleKey,
+      roleName: data.rolename,
+      status: data.status
+    }
+  })
+}

@@ -2,10 +2,10 @@
   <el-dialog :visible.sync="addRoleVisible" :show="show" :append-to-body="true" title="新增角色" center @close="cancelAdd('ruleForm')">
     <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" :model="role" label-width="80px">
       <el-form-item label="角色代码" prop="roleKey">
-        <el-input v-model="role.id" />
+        <el-input v-model="role.roleKey" />
       </el-form-item>
       <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="role.name" />
+        <el-input v-model="role.roleName" />
       </el-form-item>
       <!-- <el-form-item label="所属机构" prop="group">
         <el-select v-model="role.group" placeholder="所属机构">
@@ -39,7 +39,7 @@ export default {
     },
     role: {
       type: Object,
-      default: () => {}
+      required: true
     }
   },
   data() {
@@ -68,7 +68,8 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const createRole = { ...role }
+          console.info(this.role)
+          const createRole = { ...this.role }
           this.$emit('confirmAdd', createRole)
         } else {
           console.log('error submit!')

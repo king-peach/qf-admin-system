@@ -50,7 +50,7 @@
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import EditRole from './components/EditRole'
-import { getRoleInfo } from '@/api/roleManage'
+import { getRoleInfo, addRole } from '@/api/roleManage'
 import { Message } from 'element-ui'
 export default {
   components: {
@@ -147,9 +147,12 @@ export default {
     openAdd() { // 打开新增用户弹出框
       this.addRoleVisible = true
     },
-    addRole(createRole) { // 确认新增用户
+    addRole(data) { // 确认新增用户
       this.addRoleVisible = false
-      console.info(createRole)
+      addRole(data).then(response => {
+        console.info(response)
+      })
+      console.info(data)
       Message({
         type: 'info',
         message: '新增用户成功'
