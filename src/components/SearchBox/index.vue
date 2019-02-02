@@ -4,8 +4,12 @@
       <el-input v-model="item.value" />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="medium" icon="el-icon-search" @click="submit" round>搜 索</el-button>
-      <el-button size="medium" icon="el-icon-refresh" @click="reset" round>重 置</el-button>
+      <el-button type="primary" size="medium" icon="el-icon-search" round @click="submit">
+        搜索
+      </el-button>
+      <el-button size="medium" icon="el-icon-refresh" round @click="reset">
+        重 置
+      </el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -20,7 +24,7 @@ export default {
   },
   methods: {
     submit() {
-      const searchForm = new Object
+      const searchForm = {}
       for (const i in this.formData) {
         Object.defineProperty(searchForm, i, {
           value: this.formData[i].value
@@ -36,7 +40,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .box {

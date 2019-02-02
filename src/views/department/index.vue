@@ -51,6 +51,7 @@ import treeToArray from './customEval'
 import DelItem from '@/components/ConfirmDel/index'
 import InfoDialog from './components/Info'
 import SearchBox from '@/components/SearchBox'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Department',
@@ -158,6 +159,14 @@ export default {
       this.infoVisible = false
     },
     search(searchForm) {
+      const regTel = /^$|^[\d]{0,11}$/
+      if (!regTel.test(searchForm.tel)) {
+        Message({
+          type: 'error',
+          message: '请填写不超过11位数字的电话'
+        })
+        return false
+      }
       console.info(searchForm)
     }
   }
