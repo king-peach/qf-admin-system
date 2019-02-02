@@ -36,13 +36,9 @@ module.exports = {
   devServer: {
     // 开发环境下设置跨域解决方案
     proxy: {
-      '/api': {
-        target: 'https://f641fd9d-e6d3-4deb-8dc0-e6382e84ebeb.mock.pstmn.io/api/',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+      '/': {
+        target: 'http://94.191.36.181/',
+        changeOrigin: true
       }
     }
   }

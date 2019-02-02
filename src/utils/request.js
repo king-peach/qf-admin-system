@@ -8,9 +8,6 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   timeout: 5000 // 请求超时时间
-  // headers: {
-  //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-  // }
 })
 
 // request拦截器
@@ -22,6 +19,9 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
+    // if (config.method === 'get') {
+    //   config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    // }
     return config
   },
   error => {
@@ -37,10 +37,10 @@ service.interceptors.response.use(
   response => {
     /** 处理返回值 **/
     const res = response.data
-    if (res.status !== 1) {
+    if (res.success !== true) {
       /** 内置提醒框 **/
       Message({
-        message: res.msg,
+        message: res.errmsg,
         type: 'error',
         duration: 5 * 1000
       })

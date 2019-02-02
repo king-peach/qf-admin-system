@@ -1,27 +1,24 @@
 <template>
   <div class="main">
     <el-row>
-      <!-- <el-col :span="6"> -->
-        <el-select v-model="value" placeholder="请选择机构" style="margin-right: 10px;">
-          <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value" />
-        </el-select>
-      <!-- </el-col> -->
-      <!-- <el-col :span="18" class="col-right"> -->
-        <el-input v-model="searchValue" placeholder="请输入角色名称" class="search-input" suffix-icon="el-icon-search" @keyup.enter.native="searchRole"/>
-        <el-button type="primary" @click="searchRole">搜索</el-button>
-        <el-button type="primary" @click="openAdd">+ 添加</el-button>
-      <!-- </el-col> -->
+      <el-select v-model="value" placeholder="请选择机构" style="margin-right: 10px;">
+        <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-input v-model="searchValue" placeholder="请输入角色名称" class="search-input" suffix-icon="el-icon-search" @keyup.enter.native="searchRole"/>
+      <el-button type="primary" @click="searchRole">搜索</el-button>
+      <el-button type="primary" @click="openAdd">+ 添加</el-button>
     </el-row>
 
     <el-table
-      :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
+      :data="tableData.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
       border
       :row-style="getRowIndex"
       highlight-current-row
       style="100%"
       @row-click="currentSelected">
-      <el-table-column type="index" />
-      <el-table-column label="角色名称" prop="name" align="center" />
+      <el-table-column label="ID" prop="roleId" align="center" />
+      <el-table-column label="角色名称" prop="roleName" align="center" />
+      <el-table-column label="上级主管" prop="createBy" align="center" />
       <el-table-column label="操作" align="center">
         <template slot-scope="scope" >
           <el-button size="mini" @click="editRole">编辑</el-button>
@@ -39,7 +36,7 @@
     <!-- 分页器 -->
     <el-pagination
       :page-size="pageSize"
-      :total="tables.length"
+      :total="total"
       small
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
@@ -53,6 +50,7 @@
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import EditRole from './components/EditRole'
+import { getRoleInfo } from '@/api/roleManage'
 import { Message } from 'element-ui'
 export default {
   components: {
@@ -69,34 +67,12 @@ export default {
       value: '', // 选择框值
       searchValue: '', // 搜索框值
       roleFilter: '', // 存储模糊搜索值
-      tableData: [
-        {
-          name: '管理员',
-          data: [
-            { username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' },
-            { username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' },
-            { username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' },
-            { username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }
-          ]
-        },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '编辑', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] },
-        { name: '测试', data: [{ username: 'admin', name: '管理员', status: '禁用', email: 'www.google.com' }] }
-      ],
-      roles: { id: '', name: '', group: '', ramark: '' },
+      tableData: [], // 存储所有角色数据
+      roles: { roleKey: '', roleName: '', status: 1, menuIds: [], ramark: '' },
       roleList: [],
       pageSize: 10, // 页面包含选项个数
       currentPage: 1, // 当前页码
+      total: 10, // 总页数
       delRoleVisible: false, // 删除角色开关
       addRoleVisible: false, // 新增角色开关
       editRoleVisible: false, // 编辑角色开关
@@ -125,6 +101,14 @@ export default {
       return this.tableData
     }
   },
+  created() { // 获取所有角色
+    const pageNum = this.currentPage
+    const pageSize = this.pageSize
+    getRoleInfo(pageNum, pageSize).then(response => {
+      this.tableData = response.data.list
+      this.total = response.data.total
+    })
+  },
   methods: {
     searchRole() { // enter触发模糊搜索
       this.roleFilter = this.searchValue
@@ -133,7 +117,12 @@ export default {
       this.pageSize = size
     },
     handleCurrentChange(currentChange) { // currentPage改变时触发的回调
-      this.currentPage = currentChange
+      // this.currentPage = currentChange
+      const pageSize = this.pageSize
+      getRoleInfo(currentChange, pageSize).then(response => {
+        this.tableData = response.data.list
+        this.total = response.data.total
+      })
     },
     openDel(index) { // 打开删除弹出框
       this.delRoleVisible = true
@@ -152,13 +141,15 @@ export default {
     },
     currentSelected(row, event) { // 点击当前行触发
       const index = row.index
-      this.userList = this.tableData[index].data
+      this.userList.push(this.tableData[index])
+      console.info(this.userList)
     },
     openAdd() { // 打开新增用户弹出框
       this.addRoleVisible = true
     },
-    addRole() { // 确认新增用户
+    addRole(createRole) { // 确认新增用户
       this.addRoleVisible = false
+      console.info(createRole)
       Message({
         type: 'info',
         message: '新增用户成功'
@@ -172,9 +163,11 @@ export default {
     },
     editSuccess() { // 编辑角色成功
       this.editRoleVisible = false
+      this.userList.length = 0
     },
     cancelEdit() { // 取消编辑角色
       this.editRoleVisible = false
+      this.userList.length = 0
     }
   }
 }

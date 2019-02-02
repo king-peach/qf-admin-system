@@ -1,11 +1,11 @@
 <template>
   <el-dialog :visible.sync="editRoleVisible" :show="show" title="角色列表" @close="cancelEdit">
     <el-table :data="user.slice((currentPage-1)*pageSize,currentPage*pageSize)" highlight-current-row>
-      <el-table-column type="index" />
-      <el-table-column label="用户名" prop="username" align="center" />
-      <el-table-column label="真实姓名" prop="name" align="center" />
-      <el-table-column label="用户状态" prop="status" align="center" />
-      <el-table-column label="邮箱" prop="email" />
+      <el-table-column label="角色ID" prop="roleId" align="center" />
+      <el-table-column label="角色名称" prop="roleName" align="center" />
+      <el-table-column label="上级主管" prop="createBy" align="center" />
+      <el-table-column label="状态" prop="status" align="center" />
+      <el-table-column label="创建时间" prop="createBy" />
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="medium" style="color: #f56c6c;" @click="delUser(scope.$index)">删除</el-button>
@@ -40,7 +40,7 @@ export default {
   props: {
     user: {
       type: Array,
-      default: () => []
+      require: true
     },
     show: {
       type: Boolean,

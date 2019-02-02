@@ -1,17 +1,23 @@
 <template>
   <el-dialog :visible.sync="addRoleVisible" :show="show" :append-to-body="true" title="新增角色" center @close="cancelAdd('ruleForm')">
     <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" :model="role" label-width="80px">
-      <el-form-item label="角色代码" prop="id">
+      <el-form-item label="角色代码" prop="roleKey">
         <el-input v-model="role.id" />
       </el-form-item>
-      <el-form-item label="角色名称" prop="name">
+      <el-form-item label="角色名称" prop="roleName">
         <el-input v-model="role.name" />
       </el-form-item>
-      <el-form-item label="所属机构" prop="group">
+      <!-- <el-form-item label="所属机构" prop="group">
         <el-select v-model="role.group" placeholder="所属机构">
           <el-option label="总公司" value="header" />
           <el-option label="分公司" value="branch" />
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="role.status">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input type="textarea" v-model="role.remark"/>
@@ -41,14 +47,14 @@ export default {
       labelPosition: 'right', // 新增表单的位置
       addRoleVisible: this.show,
       rules: {
-        id: [
+        roleKey: [
           { required: true, message: '请输入角色代码', trigger: 'blur' }
         ],
-        name: [
+        roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
         ],
-        group: [
-          { required: true, message: '请选择所属机构', trigger: 'change' }
+        status: [
+          { required: true, message: '请选择状态', trigger: 'change' }
         ]
       }
     }
@@ -62,8 +68,8 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('success submit!')
-          this.$emit('confirmAdd')
+          const createRole = { ...role }
+          this.$emit('confirmAdd', createRole)
         } else {
           console.log('error submit!')
           return false
