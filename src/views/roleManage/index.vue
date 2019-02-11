@@ -10,7 +10,7 @@
     </el-row>
 
     <el-table
-      :data="tableData.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
+      :data="tableData"
       border
       :row-style="getRowIndex"
       highlight-current-row
@@ -19,6 +19,11 @@
       <el-table-column label="ID" prop="roleId" align="center" />
       <el-table-column label="角色名称" prop="roleName" align="center" />
       <el-table-column label="上级主管" prop="createBy" align="center" />
+      <el-table-column label="状态" align="center" width="100">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope" >
           <el-button size="mini" @click="editRole">编辑</el-button>
@@ -29,19 +34,17 @@
     </el-table>
     <!-- 确认删除角色组件 -->
     <del-role :show.sync="delRoleVisible" @confirmDel="delRole" />
-    <!-- 新增角色组件 -->
-    <add-role :show.sync="addRoleVisible" :role="roles" @confirmAdd="addRole" @cancel="cancelAdd" />
-    <!-- 编辑用户组件 -->
-    <edit-role :show.sync="editRoleVisible" :user="userList" @confirmEdit="editSuccess" @cancel="cancelEdit" />
+    <!-- 新增/编辑角色组件 -->
+    <add-role :show.sync="roleInfoVisible" :role="roles" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
     <!-- 分页器 -->
     <el-pagination
       :page-size="pageSize"
       :total="total"
+      :current-page="currentPage"
       small
       layout="total, prev, pager, next, jumper"
       class="pagination-style"
       @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -49,14 +52,12 @@
 <script>
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
-import EditRole from './components/EditRole'
-import { getRoleInfo, addRole } from '@/api/roleManage'
+import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/roleManage'
 import { Message } from 'element-ui'
 export default {
   components: {
     DelRole,
-    AddRole,
-    EditRole
+    AddRole
   },
   data() {
     return {
@@ -68,16 +69,16 @@ export default {
       searchValue: '', // 搜索框值
       roleFilter: '', // 存储模糊搜索值
       tableData: [], // 存储所有角色数据
-      roles: { roleKey: '', roleName: '', status: 1, menuIds: [], ramark: '' },
+      roles: {}, // 新增/编辑角色表单数据
+      createRoles: { roleKey: '', roleName: '', status: true, createBy: '', roleSort: null, menuIds: [], ramark: '' }, // 新增角色信息
       roleList: [],
       pageSize: 10, // 页面包含选项个数
       currentPage: 1, // 当前页码
       total: 10, // 总页数
       delRoleVisible: false, // 删除角色开关
-      addRoleVisible: false, // 新增角色开关
-      editRoleVisible: false, // 编辑角色开关
-      userList: [], // 用户列表
-      delIndex: 0 // 存储删除索引
+      roleInfoVisible: false, // 新增角色开关
+      delIndex: 0, // 存储删除索引
+      isCreate: true // 是否新建角色
     }
   },
   computed: {
@@ -102,26 +103,36 @@ export default {
     }
   },
   created() { // 获取所有角色
-    const pageNum = this.currentPage
-    const pageSize = this.pageSize
-    getRoleInfo(pageNum, pageSize).then(response => {
-      this.tableData = response.data.list
-      this.total = response.data.total
-    })
+    this.getData()
   },
   methods: {
     searchRole() { // enter触发模糊搜索
       this.roleFilter = this.searchValue
     },
-    handleSizeChange(size) { // pageSize改变时触发的回调函数
-      this.pageSize = size
-    },
-    handleCurrentChange(currentChange) { // currentPage改变时触发的回调
-      // this.currentPage = currentChange
-      const pageSize = this.pageSize
-      getRoleInfo(currentChange, pageSize).then(response => {
+    getData() { // 获取表格数据
+      getRoleInfo(this.currentPage, this.pageSize).then(response => {
         this.tableData = response.data.list
+        this.tableData.forEach(element => {
+          element.status === 1 ? element.status = true : element.status = false
+        })
         this.total = response.data.total
+      })
+    },
+    handleCurrentChange(val) { // currentPage改变时触发的回调
+      this.currentPage = val
+      this.getData()
+    },
+    handleStatus(index) { // 状态改变时触发回调
+      const roleId = this.tableData[index].roleId
+      let status = this.tableData[index].status
+      status === true ? status = 1 : status = 0
+      editStatus(roleId, status).then(response => {
+        if (response.success === true) {
+          Message({
+            type: 'info',
+            message: '状态修改成功'
+          })
+        }
       })
     },
     openDel(index) { // 打开删除弹出框
@@ -130,10 +141,14 @@ export default {
     },
     delRole() { // 确认删除操作
       this.delRoleVisible = false
-      this.tables.splice(this.delIndex, 1)
-      Message({
-        type: 'info',
-        message: '删除成功'
+      delRole(this.tableData[this.delIndex].roleId).then(response => {
+        if (response.success === true) {
+          this.tableData.splice(this.delIndex, 1)
+          Message({
+            type: 'info',
+            message: '删除成功'
+          })
+        }
       })
     },
     getRowIndex({ row, rowIndex }) { // 获取当前行索引
@@ -141,36 +156,49 @@ export default {
     },
     currentSelected(row, event) { // 点击当前行触发
       const index = row.index
-      this.userList.push(this.tableData[index])
-      console.info(this.userList)
+      this.roles = {}
+      this.roles = { ...this.tableData[index] }
+      // console.info(this.editRoles)
     },
     openAdd() { // 打开新增用户弹出框
-      this.addRoleVisible = true
+      this.roleInfoVisible = true
+      this.isCreate = true
+      this.roles = {}
+      this.roles = { ...this.createRoles }
     },
     addRole(data) { // 确认新增用户
-      this.addRoleVisible = false
+      this.roleInfoVisible = false
+      data.status = data.status === true ? 1 : 0
       addRole(data).then(response => {
-        console.info(response)
-      })
-      console.info(data)
-      Message({
-        type: 'info',
-        message: '新增用户成功'
+        if (response.success === true) {
+          Message({
+            type: 'info',
+            message: '新增用户成功'
+          })
+          this.getData()
+        }
       })
     },
     cancelAdd() { // 取消新增用户操作
-      this.addRoleVisible = false
+      this.roleInfoVisible = false
     },
     editRole() { // 打开编辑角色弹出框
-      this.editRoleVisible = true
+      this.roleInfoVisible = true
+      this.isCreate = false
+      this.roles = {}
     },
-    editSuccess() { // 编辑角色成功
-      this.editRoleVisible = false
-      this.userList.length = 0
-    },
-    cancelEdit() { // 取消编辑角色
-      this.editRoleVisible = false
-      this.userList.length = 0
+    editSuccess(editRoles) { // 编辑角色成功
+      editRoles.status = editRoles.status === true ? 1 : 0
+      editRole(editRoles).then(response => {
+        if (response.success === true) {
+          Message({
+            type: 'info',
+            message: '角色信息提交成功'
+          })
+          this.getData()
+        }
+      })
+      this.roleInfoVisible = false
     }
   }
 }

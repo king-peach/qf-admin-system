@@ -19,8 +19,9 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
-    // if (config.method === 'get') {
+    // if (config.method === 'delete') {
     //   config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    //   config.params = qs.stringify(config.params)
     // }
     return config
   },
