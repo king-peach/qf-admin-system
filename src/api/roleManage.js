@@ -1,12 +1,13 @@
 import request from '@/utils/request'
 
-export function getRoleInfo(pageNum, pageSize) {
+export function getRoleInfo(pageNum, pageSize, status = null) {
   return request({
     url: '/role/getAllRoles',
     method: 'get',
     params: {
-      pageNum: pageNum,
-      pageSize: pageSize
+      pageNum,
+      pageSize,
+      status
     }
   })
 }

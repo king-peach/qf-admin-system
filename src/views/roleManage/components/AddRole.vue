@@ -22,7 +22,7 @@
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>
           </div>
-          <el-input v-model="role.createBy" slot="reference" class="parent-department"/>
+          <el-input v-model="role.createBy" slot="reference"/>
         </el-popover>
       </el-form-item>
       <el-form-item label="角色排序" prop="roleSort">
@@ -76,7 +76,7 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
         roleSort: [
-          { required: true, message: '请输入角色排序', trigger: ['blur', 'change'] },
+          { required: true, message: '请输入角色排序', trigger: ['blur'] },
           { type: 'number', message: '请输入数字类型的角色排序', trigger: 'blur' }
         ]
       },

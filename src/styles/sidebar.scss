@@ -132,7 +132,9 @@
   }
 }
 
-//布局主体样式
-.main{
-  padding: 20px 50px;
+// 页面主题布局
+.main {
+  height: 100%;
+  overflow: hidden;
+  padding: 20px 30px;
 }

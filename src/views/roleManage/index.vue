@@ -15,10 +15,13 @@
       :row-style="getRowIndex"
       highlight-current-row
       style="100%"
-      @row-click="currentSelected">
-      <el-table-column label="ID" prop="roleId" align="center" />
+      @row-click="currentSelected"
+      :default-sort="{prop: 'roleId', order: 'ascending'}">
+      <el-table-column type="index" label="ID" sortable align="center" width="100" />
+      <el-table-column label="角色代码" prop="roleKey" sortable align="center" width="120" />
       <el-table-column label="角色名称" prop="roleName" align="center" />
       <el-table-column label="上级主管" prop="createBy" align="center" />
+      <el-table-column label="创建时间" prop="createTime" sortable align="center" />
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
@@ -27,7 +30,7 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope" >
           <el-button size="mini" @click="editRole">编辑</el-button>
-          <el-button size="mini" small>权限设置</el-button>
+          <!-- <el-button size="mini" small>权限设置</el-button> -->
           <el-button type="danger" size="mini" @click.native.prevent="openDel(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
@@ -53,6 +56,7 @@
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/roleManage'
+import { parseTime } from '@/utils/index'
 import { Message } from 'element-ui'
 export default {
   components: {
@@ -65,6 +69,7 @@ export default {
         { value: 'header', label: '总公司' },
         { value: 'branch', label: '分公司' }
       ],
+      loading: true,
       value: '', // 选择框值
       searchValue: '', // 搜索框值
       roleFilter: '', // 存储模糊搜索值
@@ -114,6 +119,7 @@ export default {
         this.tableData = response.data.list
         this.tableData.forEach(element => {
           element.status === 1 ? element.status = true : element.status = false
+          element.createTime = parseTime(element.createTime)
         })
         this.total = response.data.total
       })
