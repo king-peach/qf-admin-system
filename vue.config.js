@@ -1,13 +1,30 @@
 // vue.config.js
 const path = require('path')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
 function resolve(dir) {
-  console.log(__dirname)
   return path.join(__dirname, dir)
 }
+
 module.exports = {
   configureWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
       // 为生产环境修改配置...
+      // 注释并删除console
+      config.plugins.push(
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              warnings: false,
+              drop_debugger: true,
+              drop_console: true,
+              pure_funcs: ['console.log', 'console.info'] // 移除此类语句
+            }
+          },
+          sourceMap: true,
+          parallel: true
+        })
+      )
     } else {
       // 为开发环境修改配置...
     }
@@ -31,7 +48,7 @@ module.exports = {
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
   },
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',
   lintOnSave: process.env.NODE_ENV !== 'production',
   devServer: {
     // 开发环境下设置跨域解决方案

@@ -1,8 +1,32 @@
 <template>
-  <el-form :inline="true" :data="formData" class="box">
+  <el-form :inline="true" :data="formData" label-suffix=":" label-width="80px" label-position="right" class="box">
     <el-form-item v-for="(item, key) in formData" :key="key" :label="item.label">
-      <el-input v-model="item.value" />
+      <template v-if="key === 'status'">
+        <el-select v-model="item.value" placeholder="请选择">
+          <el-option
+            v-for="element in options"
+            :key="element.value"
+            :label="element.label"
+            :value="element.value">
+          </el-option>
+        </el-select>
+      </template>
+      <template v-else-if="key === 'date'">
+        <el-date-picker
+          v-model="item.value"
+          type="datetimerange"
+          :picker-options="pickerOptions"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          align="left">
+        </el-date-picker>
+      </template>
+      <template v-else>
+        <el-input v-model="item.value" />
+      </template>
     </el-form-item>
+    <slot></slot>
     <el-form-item>
       <el-button type="primary" size="medium" icon="el-icon-search" round @click="submit">
         搜索
@@ -20,6 +44,47 @@ export default {
     formData: {
       required: true,
       type: Object
+    }
+  },
+  data() {
+    return {
+      options: [{
+        value: null,
+        label: '所有'
+      }, {
+        value: 1,
+        label: '正常'
+      }, {
+        value: 0,
+        label: '停用'
+      }],
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
     }
   },
   methods: {
@@ -45,10 +110,14 @@ export default {
 .box {
   padding: 20px 0 0 20px;
   margin-bottom: 20px;
-  -webkit-box-shadow: 1px 1px 2px 2px #ddd;
-  box-shadow: 1px 1px 2px 2px #ddd;
-  @media screen and (max-width: 800px) {
+  box-shadow: 1px 1px 3px #ddd;
+  @media screen and (max-width: 990px) {
     display: none;
+  }
+  border-radius: 5px;
+  background-color: #fff;
+  .el-form-item {
+    margin-right: 20px;
   }
 }
 </style>

@@ -1,13 +1,15 @@
 import request from '@/utils/request'
 
-export function getRoleInfo(pageNum, pageSize, status = null) {
+export function getRoleInfo(pageNum, pageSize, data = {}) {
   return request({
     url: '/role/getAllRoles',
     method: 'get',
     params: {
       pageNum,
       pageSize,
-      status
+      status: data.status,
+      roleKey: data.roleKey,
+      roleName: data.roleName
     }
   })
 }

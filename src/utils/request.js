@@ -38,7 +38,7 @@ service.interceptors.response.use(
   response => {
     /** 处理返回值 **/
     const res = response.data
-    if (res.success !== true) {
+    if (!res.success) {
       /** 内置提醒框 **/
       Message({
         message: res.errmsg,

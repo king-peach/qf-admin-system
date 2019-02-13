@@ -1,12 +1,17 @@
 import request from '@/utils/request'
 
-export function getUserInfo(pageNum, pageSize) {
+export function getUserInfo(pageNum, pageSize, data = {}) {
   return request({
     url: '/user/getAllUsers',
     method: 'get',
     params: {
       pageNum,
-      pageSize
+      pageSize,
+      username: data.username,
+      realName: data.realName,
+      status: data.status,
+      phone: data.phone,
+      deptId: data.deptId
     }
   })
 }

@@ -16,10 +16,8 @@
       </div>
     </div>
     <div :class="['right', departSwitch === true ? 'move-right' : 'move-left']">
-      <el-row>
-        <el-input v-model="inputValue" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search" @keyup.enter.native="search" />
-        <el-button type="primary" @click="search">搜索</el-button>
-      </el-row>
+      <!-- 搜索组件 -->
+      <search-box :formData="searchForm" @search="search"></search-box>
 
       <div class="container">
         <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
@@ -33,7 +31,7 @@
           @select="selected"
           @select-all="selectAll"
           style="margin-top: 10px;">
-          <el-table-column type="index" label="ID" align="center" width="50" />
+          <el-table-column prop="id" label="ID" sortable align="center" width="60" />
           <el-table-column type="selection" align="center" />
           <el-table-column prop="username" label="用户名" align="center" />
           <el-table-column prop="realName" label="真实姓名" align="center" />
@@ -43,7 +41,8 @@
             </template>
           </el-table-column>
           <el-table-column prop="createBy" label="所属机构" align="center" />
-          <el-table-column prop="email" label="邮箱" align="center" width="180" />
+          <el-table-column prop="createTime" label="创建时间" sortable align="center" width="160" />
+          <el-table-column prop="email" label="邮箱" align="center" width="160" show-overflow-tooltip />
           <el-table-column label="操作" width="200" align="center">
             <template slot-scope="scope">
               <el-button size="medium" type="text" @click="editUser">编辑</el-button>
@@ -62,7 +61,7 @@
         <el-pagination
           :page-size="pageSize"
           :current-page="currentPage"
-          :total="userList.length"
+          :total="total"
           layout="total, prev, pager, next, jumper"
           class="pagination-style"
           @current-change="getCurrentPage"
@@ -76,27 +75,30 @@
 import DelUser from '@/components/ConfirmDel/index'
 import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
+import SearchBox from '@/components/SearchBox'
 import { getUserInfo, editUser, createUser, editPassword } from '@/api/userManage'
 import { Message } from 'element-ui'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     DelUser,
     EditPassword,
-    UserInfo
+    UserInfo,
+    SearchBox
   },
   data() {
     return {
       tableData: [],
       pageSize: 5, // 单页容纳元素量
       currentPage: 1, // 当前页码
-      inputValue: '', // 搜索框值
-      filterValue: '', // 模糊搜索值
+      total: 10, // 数据总数
       delUserVisible: false, // 确认删除组件开关
       editPasswordVisible: false, // 修改密码组件开关
-      userPsw: { name: '', userId: '', oldPassword: '', userPassword: '', newPassword: '' }, // 修改用户密码所需数据
+      userPsw: { name: '', userId: '', oldPassword: '', newPassword: '' }, // 修改用户密码所需数据
       isCreate: false, // 是否新增用户标识
       userinfoVisible: false, // 编辑、新增用户组件开关
       rowIndex: 0, // 存储点击当前行索引
+      searchData: {}, // 存储搜索值
       defaultForm: { // 新增用户数据
         username: '',
         realName: '',
@@ -148,51 +150,35 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
+      },
+      searchForm: { // 搜索组件数据
+        username: { label: '用户名', value: '' },
+        realName: { label: '真实姓名', value: '' },
+        status: { label: '状态', value: null },
+        date: { label: '创建时间', value: '' }
       }
-    }
-  },
-  computed: {
-    userList() {
-      const filterValue = this.filterValue
-      if (filterValue !== '') {
-        const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
-        if (!reg.test(filterValue)) {
-          Message({
-            type: 'error',
-            message: '请输入中、英文、数字类型的关键词!'
-          })
-        } else {
-          return this.tableData.filter(dataNews => {
-            return Object.keys(dataNews).some(key => {
-              return String(dataNews[key]).toLowerCase().indexOf(filterValue) > -1
-            })
-          })
-        }
-      }
-      return this.tableData
     }
   },
   created() {
     this.getData()
   },
   methods: {
-    getData() {
-      getUserInfo(this.currentPage, this.pageSize).then(response => {
+    getData(data) {
+      getUserInfo(this.currentPage, this.pageSize, data).then(response => {
         this.tableData = response.data.list
-        this.tableData.forEach(element => {
-          element.status = element.status === 1 ? true : false
+        this.total = response.data.total
+        this.tableData.forEach((element, index) => {
+          element.status === 1 ? element.status = true : element.status = false
+          element.createTime = parseTime(element.createTime)
+          element.id = index + 1
         })
       })
-    },
-    search() { // 搜索框的值赋给过滤器
-      this.filterValue = this.inputValue
     },
     handleClickRow(row) { // 点击当前行回调
       this.userinfoData = { ...row }
       const index = row.index
       this.userPsw.name = this.tableData[index].username
       this.userPsw.userId = this.tableData[index].userId
-      this.userPsw.userPassword = this.tableData[index].password
       // this.$refs.userChecked.toggleRowSelection(row)
     },
     getRowIndex({ row, rowIndex }) { // 获取当前行索引
@@ -206,6 +192,7 @@ export default {
     },
     getCurrentPage(val) { // 当前页码改变时触发，获取当前页码
       this.currentPage = val
+      this.getData(this.searchData)
     },
     del(index) { // 打开删除弹出框
       this.delUserVisible = true
@@ -223,40 +210,45 @@ export default {
       this.editPasswordVisible = true
     },
     editPass(newData) { // 修改密码成功
-      this.editPasswordVisible = false
       const data = { ...newData }
       editPassword(data).then(response => {
-        console.info(response)
-      })
+        if (response.success === true) {
+          this.editPasswordVisible = false
+          Message({
+            type: 'success',
+            message: '密码修改成功'
+          })
+        }
+      }).catch(error => { return error }) // axios全局错误状态已处理，此处不做处理
     },
     cancelEditPass() { // 取消修改密码
       this.editPasswordVisible = false
     },
     addUser(newFormData) { // 确认新建用户
-      this.userinfoVisible = false
       const data = { ...newFormData }
       data.status = data.status === true ? 1 : 0
       createUser(data).then(response => {
         if (response.success === true) {
+          this.userinfoVisible = false
           Message({
             type: 'success',
             message: '新建用户成功'
           })
         }
-      })
+      }).catch(error => { return error })
     },
     editSuccess(newFormData) { // 确认编辑用户
-      this.userinfoVisible = false
       const data = { ...newFormData }
       data.status = data.status === true ? 1 : 0
       editUser(data).then(response => {
         if (response.success === true) {
+          this.userinfoVisible = false
           Message({
             type: 'success',
             message: '用户信息提交成功'
           })
         }
-      })
+      }).catch(error => { return error })
     },
     createUser() { // 打开新增用户组件
       this.userinfoVisible = true
@@ -275,18 +267,22 @@ export default {
     },
     handleNodeClick(data) {
       return
+    },
+    search(searchForm) { // 点击搜索
+      const startDate = parseTime(searchForm.date[0])
+      const endDate = parseTime(searchForm.date[1])
+      searchForm.startDate = startDate
+      searchForm.endDate = endDate
+      this.getData(searchForm)
+      Object.getOwnPropertyNames(data).forEach((key) => {
+        this.searchData[key] = data[key]
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.el-row{
-  margin-bottom: 20px;
-  .search{
-    width: 30%;
-  }
-}
 .left {
   position: absolute;
   left: 0;
@@ -379,22 +375,8 @@ export default {
     border-radius: 5px;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, .2);
   }
-}
-.icon{
-  display: inline-block;
-  height: 30px;
-  width: 30px;
-}
-.iconTrue{
-  background: url('~@/assets/userManage_images/true.png') center center no-repeat;
-  background-size: cover;
-}
-.iconFalse{
-  background: url('~@/assets/userManage_images/false.png') center center no-repeat;
-  background-size: cover;
-}
-.pagination-style{
-  margin-top: 3%;
-  text-align: center;
+  .pagination-style{
+    margin-top: 20px;
+  }
 }
 </style>

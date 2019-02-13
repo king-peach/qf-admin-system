@@ -40,9 +40,6 @@ export default {
         if (this.user.newPassword !== '') {
           this.$refs.editPassForm.validateField('newPassword')
         }
-        // if (valid != this.user.userPassword) {
-        //   callback(new Error('原始密码错误！'))
-        // }
         regUsername.test(value) === true ? callback() : callback(new Error('请输入含有字母、数字或下划线的4-16位原始密码'))  
       }
     }
