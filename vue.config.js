@@ -48,15 +48,15 @@ module.exports = {
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
   },
-  baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',
-  lintOnSave: process.env.NODE_ENV !== 'production',
-  devServer: {
-    // 开发环境下设置跨域解决方案
-    proxy: {
-      '/': {
-        target: 'http://94.191.36.181/',
-        changeOrigin: true
-      }
-    }
-  }
+  baseUrl: './', // 配置打包基本路径
+  lintOnSave: process.env.NODE_ENV !== 'production'
+  // devServer: {
+  //   // 开发环境下设置跨域解决方案
+  //   proxy: {
+  //     '/': {
+  //       target: 'http://94.191.36.181/',
+  //       changeOrigin: true
+  //     }
+  //   }
+  // }
 }
