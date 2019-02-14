@@ -1,8 +1,8 @@
 <template>
-  <el-dialog :visible.sync="delUserVisible" :show="show" title="提示" center @close="$emit('update:show', false)">
+  <el-dialog :visible.sync="delVisible" :show="show" title="提示" center @close="$emit('update:show', false)">
     <div class="del-dialog-cnt">删除不可恢复，是否确定删除</div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="delUserVisible = false">取消</el-button>
+      <el-button @click="delVisible = false">取消</el-button>
       <el-button type="primary" @click="confirm">确定</el-button>
     </span>
   </el-dialog>
@@ -14,21 +14,29 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: 'delOne'
     }
   },
   data() {
     return {
-      delUserVisible: this.show
+      delVisible: this.show
     }
   },
   watch: {
     show() {
-      this.delUserVisible = this.show
+      this.delVisible = this.show
     }
   },
   methods: {
     confirm() {
-      this.$emit('confirmDel')
+      if (this.type !== 'delOne') {
+        this.$emit(this.type === 'clear' ? 'confirmClear' : 'confirmDelMore')
+        return false
+      }
+      this.$emit('confirmDelOne')
     }
   }
 }

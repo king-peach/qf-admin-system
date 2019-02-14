@@ -31,7 +31,7 @@
           @select="selected"
           @select-all="selectAll"
           style="margin-top: 10px;">
-          <el-table-column prop="id" label="ID" sortable align="center" width="60" />
+          <el-table-column prop="num" label="序号" sortable align="center" width="80" />
           <el-table-column type="selection" align="center" />
           <el-table-column prop="username" label="用户名" align="center" />
           <el-table-column prop="realName" label="真实姓名" align="center" />
@@ -52,7 +52,7 @@
           </el-table-column>
         </el-table>
         <!-- 确认删除组件 -->
-        <del-user :show.sync="delUserVisible" @confirmDel="delUser" />
+        <del-user :show.sync="delUserVisible" :type="delType" @confirmDelOne="delUser" />
         <!-- 修改密码组件 -->
         <edit-password :show.sync="editPasswordVisible" :user="userPsw" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
         <!-- 新建/编辑用户组件 -->
@@ -93,6 +93,7 @@ export default {
       currentPage: 1, // 当前页码
       total: 10, // 数据总数
       delUserVisible: false, // 确认删除组件开关
+      delType: 'delOne', // 存储确认删除框状态
       editPasswordVisible: false, // 修改密码组件开关
       userPsw: { name: '', userId: '', oldPassword: '', newPassword: '' }, // 修改用户密码所需数据
       isCreate: false, // 是否新增用户标识
@@ -170,7 +171,7 @@ export default {
         this.tableData.forEach((element, index) => {
           element.status === 1 ? element.status = true : element.status = false
           element.createTime = parseTime(element.createTime)
-          element.id = index + 1
+          element.num = (this.currentPage - 1) * this.pageSize + index + 1
         })
       })
     },
@@ -179,7 +180,6 @@ export default {
       const index = row.index
       this.userPsw.name = this.tableData[index].username
       this.userPsw.userId = this.tableData[index].userId
-      // this.$refs.userChecked.toggleRowSelection(row)
     },
     getRowIndex({ row, rowIndex }) { // 获取当前行索引
       row.index = rowIndex
@@ -204,7 +204,7 @@ export default {
         type: 'info',
         message: '删除成功'
       })
-      this.userList.splice(this.rowIndex, 1)
+      this.tableData.splice(this.rowIndex, 1)
     },
     edit() { // 打开修改密码弹出框
       this.editPasswordVisible = true
@@ -274,8 +274,8 @@ export default {
       searchForm.startDate = startDate
       searchForm.endDate = endDate
       this.getData(searchForm)
-      Object.getOwnPropertyNames(data).forEach((key) => {
-        this.searchData[key] = data[key]
+      Object.getOwnPropertyNames(searchForm).forEach((key) => {
+        this.searchData[key] = searchForm[key]
       })
     }
   }

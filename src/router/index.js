@@ -134,9 +134,9 @@ export const asyncRouterMap = [
         meta: { title: '登陆日志', icon: 'logItem', role: ['admin'] }
       },
       {
-        path: 'consoleLog',
-        component: () => import('@/views/systemLog/consoleLog/index'),
-        name: 'consoleLog',
+        path: 'operationLog',
+        component: () => import('@/views/systemLog/operationLog/index'),
+        name: 'operationLog',
         meta: { title: '操作日志', icon: 'logItem', role: ['admin'] }
       }
     ]

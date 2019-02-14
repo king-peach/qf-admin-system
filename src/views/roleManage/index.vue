@@ -14,7 +14,7 @@
         style="margin-top: 10px;"
         @row-click="currentSelected"
         :default-sort="{prop: 'roleId', order: 'ascending'}">
-        <el-table-column prop="id" sortable label="ID" align="center" width="100" />
+        <el-table-column prop="num" label="序号" align="center" width="80" sortable />
         <el-table-column label="角色名称" prop="roleName" align="center" />
         <el-table-column label="角色代码" prop="roleKey" sortable align="center" width="100" />
         <el-table-column label="上级主管" prop="createBy" align="center" />
@@ -33,7 +33,7 @@
         </el-table-column>
       </el-table>
       <!-- 确认删除角色组件 -->
-      <del-role :show.sync="delRoleVisible" @confirmDel="delRole" />
+      <del-role :show.sync="delRoleVisible" :type="delType" @confirmDelOne="delRole" />
       <!-- 新增/编辑角色组件 -->
       <add-role :show.sync="roleInfoVisible" :role="roles" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
       <!-- 分页器 -->
@@ -82,7 +82,8 @@ export default {
       roleInfoVisible: false, // 新增角色开关
       delIndex: 0, // 存储删除索引
       isCreate: true, // 是否新建角色
-      searchData: {} // 存储搜索条件
+      searchData: {}, // 存储搜索条件
+      delType: 'delOne' // 存储确认删除组件状态
     }
   },
   created() { // 获取所有角色
@@ -101,7 +102,7 @@ export default {
         this.tableData.forEach((element, index) => {
           element.status === 1 ? element.status = true : element.status = false
           element.createTime = parseTime(element.createTime)
-          element.id = index + 1
+          element.num = (this.currentPage - 1) * this.pageSize + index + 1
         })
         this.total = response.data.total
       })
