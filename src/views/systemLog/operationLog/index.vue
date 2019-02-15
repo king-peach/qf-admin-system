@@ -124,9 +124,6 @@ export default {
         })
       })
     },
-    search() { // 触发模糊搜索
-      this.logFilter = this.searchValue
-    },
     handleRowClick(row) { // 点击当前行
       this.currentId = row.operId
       this.rowInfo = { ...row }
