@@ -1,7 +1,7 @@
 <template>
   <div class="main clearfix">
     <div class="title">
-      <el-button type="warning">禁止登陆</el-button>
+      <el-button type="warning">禁止登录</el-button>
       <el-button type="danger">强制注销所有会话</el-button>
     </div>
     <el-card v-for="(value, key, index) in list" :key="key" :class="['info-box', index < 2 ? 'half' : 'all']">

@@ -8,7 +8,7 @@
     <el-table :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)" border>
       <el-table-column type="index"/>
       <el-table-column prop="username" label="用户名" align="center" />
-      <el-table-column prop="date" label="登陆时间" align="center" />
+      <el-table-column prop="date" label="登录时间" align="center" />
       <el-table-column prop="IP" label="IP地址" align="center" />
       <el-table-column prop="operateSystem" label="操作系统" align="center" />
       <el-table-column prop="browser" label="浏览器" align="center" />

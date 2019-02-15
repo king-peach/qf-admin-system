@@ -1,6 +1,19 @@
 <template>
   <div class="main">
-    <!-- 登陆日志表格 -->
+    <!-- 搜索组件 -->
+    <search-box :formData="searchForm" @search="search">
+      <el-form-item label="操作类型">
+        <el-select v-model="operType">
+          <el-option
+            v-for="item in operTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </search-box>
+    <!-- 操作日志表格 -->
     <div class="container">
       <el-button type="danger" icon="el-icon-delete" size="medium" @click="clear">清空</el-button>
       <el-button type="danger" icon="el-icon-arrow-down" size="medium" @click="delMultiple">批量删除</el-button>
@@ -31,7 +44,7 @@
         <el-table-column label="操作" align="center" width="180">
           <template slot-scope="scope" >
             <el-button type="danger" size="mini" @click="delCurrent(scope.row)">删除</el-button>
-            <el-button type="info" size="mini">详情</el-button>
+            <el-button type="info" size="mini" @click="openInfo">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,6 +59,8 @@
       />
       <!-- 确认删除组件 -->
       <confirm-del :show.sync="confirmDelVisible" :type="delType" @confirmDelOne="delOne" @confirmDelMore="delMore" @confirmClear="delAll"/>
+      <!-- 查看详情组件 -->
+      <log-info :show.sync="infoVisible" :info="rowInfo" @close="closeInfo"/>
     </div>
   </div>
 </template>
@@ -54,29 +69,52 @@
 import { getLogInfo, delLog, clearLog } from '@/api/systemLog/operationLog'
 import { parseTime } from '@/utils/index'
 import ConfirmDel from '@/components/ConfirmDel'
+import LogInfo from './components/Info'
+import SearchBox from '@/components/SearchBox'
 import { Message } from 'element-ui'
 export default {
   components: {
-    ConfirmDel
+    ConfirmDel,
+    LogInfo,
+    SearchBox
   },
   data() {
     return {
       tableData: [],
-      pageSize: 10, // 单页容量
+      pageSize: 8, // 单页容量
       currentPage: 1, // 当前页码
-      total: 5, // 总数据条数
+      total: 8, // 总数据条数
       multipleDelIds: [], // 存储批量删除操作id
       currentId: null, // 存储当前行id
       confirmDelVisible: false, // 删除组件开关
-      delType: 'delOne' // 删除组件状态
+      delType: 'delOne', // 删除组件状态
+      infoVisible: false, // 点击查看详情组件开关
+      rowInfo: {}, // 存储当前行日志信息
+      searchForm: { // 存储搜索条件
+        title: { label: '操作名称', value: null },
+        operBy: { label: '操作人员', value: null },
+        operLocation: { label: '操作地点', value: null }
+      },
+      searchData: {}, // 存储搜索请求参数
+      operType: null, // 搜索框操作类型值
+      operTypeOptions: [{ // 多选框数据
+        value: null,
+        label: '所有'
+      }, {
+        value: 1,
+        label: '代码生成'
+      }, {
+        value: 2,
+        label: '一般类型'
+      }]
     }
   },
   created() {
     this.getData()
   },
   methods: {
-    getData() { // 获取后台数据
-      getLogInfo(this.currentPage, this.pageSize).then(response => {
+    getData(data) { // 获取后台数据
+      getLogInfo(this.currentPage, this.pageSize, data).then(response => {
         this.tableData = response.data.list
         this.total = response.data.total
         this.tableData.forEach((element, index) => {
@@ -91,10 +129,11 @@ export default {
     },
     handleRowClick(row) { // 点击当前行
       this.currentId = row.operId
+      this.rowInfo = { ...row }
     },
     getCurrentPage(val) { // 改变页码回调
       this.currentPage = val
-      this.getData()
+      this.getData(this.searchData)
     },
     formatterOperType(index) { // 格式化操作类型
       const data = [
@@ -177,6 +216,19 @@ export default {
           })
         }
       }).catch(error => { return error })
+    },
+    openInfo() { // 打开详情组件
+      this.infoVisible = true
+    },
+    closeInfo() { // 关闭详情组件
+      this.infoVisible = false
+    },
+    search(searchForm) { // 搜索
+      Object.getOwnPropertyNames(searchForm).forEach((key) => {
+        this.searchData[key] = searchForm[key]
+      })
+      this.searchData.operType = this.operType
+      this.getData(this.searchData)
     }
   }
 }

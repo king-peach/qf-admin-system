@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="infoVisible" :show="show" :title="flag ? '新增部门' : '编辑部门'" center @close="cancel('departForm')">
+  <el-dialog :visible.sync="infoVisible" :title="flag ? '新增部门' : '编辑部门'" center @close="cancel('departForm')">
     <el-form :model="formData" :rules="rule" ref="departForm" label-width="100px">
       <el-form-item label="上级部门" prop="parent">
         <el-popover
@@ -107,14 +107,12 @@ export default {
     confirm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let newFormData = { ... this.formData }
+          const newFormData = { ... this.formData }
           this.$emit('confirmAdd', newFormData)
           this.$refs[formName].resetFields()
         } else {
           return false
         }
-
-        function deepClone() {}
       })
     },
     cancel(formName) {

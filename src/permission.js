@@ -32,7 +32,7 @@ router.beforeEach((to, from, next) => {
           })
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
-            Message.error(err || '验证失败, 请重新登陆！')
+            Message.error(err || '验证失败, 请重新登录！')
             next({ path: '/' })
           })
         })
@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) { // 在免费登陆白名单，直接进入
+    if (whiteList.indexOf(to.path) !== -1) { // 在免费登录白名单，直接进入
       next()
     } else {
       next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
