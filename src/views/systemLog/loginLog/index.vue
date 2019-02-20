@@ -82,7 +82,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 .el-row {
   margin-bottom: 20px;

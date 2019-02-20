@@ -20,6 +20,7 @@
       <el-table
         :data="tableData"
         stripe
+        v-loading="loading"
         @row-click="handleRowClick"
         @select="handleSelected"
         @select-all="handleSelectAll"
@@ -29,7 +30,9 @@
         <el-table-column prop="title" label="操作名称" align="center" width="180" />
         <el-table-column prop="operatorType" label="操作类型" :formatter="formatterOperType" align="center" width="100">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.operatorType.type" size="small">{{ scope.row.operatorType.txt }}</el-tag>
+            <el-tag :type="scope.row.operatorType.type" size="small">
+              {{ scope.row.operatorType.txt }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="operBy" label="操作人员" align="center" />
@@ -37,12 +40,14 @@
         <el-table-column prop="operIp" label="主机" align="center" width="180" sortable show-overflow-tooltip />
         <el-table-column prop="status" label="状态" align="center">
           <template slot-scope="scope">
-            <el-tag size="small" :type="tableData.status === 1 ? 'success' : 'danger'" round>{{ scope.row.status === 1 ? '成功' : '失败' }}</el-tag>
+            <el-tag size="small" :type="tableData.status === 1 ? 'success' : 'danger'" round>
+              {{ scope.row.status === 1 ? '成功' : '失败' }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="operTime" label="操作时间" align="center" width="160" sortable />
         <el-table-column label="操作" align="center" width="180">
-          <template slot-scope="scope" >
+          <template slot-scope="scope">
             <el-button type="danger" size="mini" @click="delCurrent(scope.row)">删除</el-button>
             <el-button type="info" size="mini" @click="openInfo">详情</el-button>
           </template>
@@ -54,13 +59,13 @@
         :page-size="pageSize"
         :current-page="currentPage"
         layout="total, prev, pager, next, jumper"
-        @current-change="getCurrentPage"
         class="pagination-style"
+        @current-change="getCurrentPage"
       />
       <!-- 确认删除组件 -->
-      <confirm-del :show.sync="confirmDelVisible" :type="delType" @confirmDelOne="delOne" @confirmDelMore="delMore" @confirmClear="delAll"/>
+      <ConfirmDel :show.sync="confirmDelVisible" :type="delType" @confirmDelOne="delOne" @confirmDelMore="delMore" @confirmClear="delAll" />
       <!-- 查看详情组件 -->
-      <log-info :show.sync="infoVisible" :info="rowInfo" @close="closeInfo"/>
+      <LogInfo :show.sync="infoVisible" :info="rowInfo" @close="closeInfo" />
     </div>
   </div>
 </template>
@@ -71,7 +76,7 @@ import { parseTime } from '@/utils/index'
 import ConfirmDel from '@/components/ConfirmDel'
 import LogInfo from './components/Info'
 import SearchBox from '@/components/SearchBox'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 export default {
   components: {
     ConfirmDel,
@@ -106,7 +111,8 @@ export default {
       }, {
         value: 2,
         label: '一般类型'
-      }]
+      }],
+      loading: true // 加载状态
     }
   },
   created() {
@@ -115,6 +121,9 @@ export default {
   methods: {
     getData(data) { // 获取后台数据
       getLogInfo(this.currentPage, this.pageSize, data).then(response => {
+        if (response.success === true) {
+          this.loading = false
+        }
         this.tableData = response.data.list
         this.total = response.data.total
         this.tableData.forEach((element, index) => {
@@ -147,7 +156,6 @@ export default {
       })
     },
     handleSelectAll(selection) { // 勾选全选时回调
-      this.multipleDelIds = []
       selection.forEach(element => {
         this.multipleDelIds.push(element.operId)
       })
@@ -163,9 +171,10 @@ export default {
         if (response.success === true) {
           this.confirmDelVisible = false
           this.getData()
-          Message({
-            type: 'success',
-            message: '删除成功'
+          Notification({
+            title: '删除成功',
+            message: '',
+            type: 'success'
           })
         }
       }).catch(error => { return error })
@@ -194,6 +203,7 @@ export default {
             type: 'success',
             message: '批量删除成功'
           })
+          this.multipleDelIds = []
         }
       }).catch(error => { return error })
     },

@@ -26,6 +26,7 @@
           ref="userChecked"
           :data="tableData"
           stripe
+          v-loading="loading"
           :row-style="getRowIndex"
           @row-click="handleClickRow"
           @select="selected"
@@ -89,6 +90,7 @@ export default {
   data() {
     return {
       tableData: [],
+      loading: true, // 加载状态
       pageSize: 5, // 单页容纳元素量
       currentPage: 1, // 当前页码
       total: 10, // 数据总数
@@ -166,6 +168,9 @@ export default {
   methods: {
     getData(data) {
       getUserInfo(this.currentPage, this.pageSize, data).then(response => {
+        if (response.success === true) {
+          this.loading = false
+        }
         this.tableData = response.data.list
         this.total = response.data.total
         this.tableData.forEach((element, index) => {

@@ -1,6 +1,7 @@
 /**
  * 对象深度克隆方法
  * @Author: W-peach
+ * @param {data} 原始数据
  */
 
 export function deepClone(data) {
@@ -27,6 +28,11 @@ export function deepClone(data) {
   }
   return obj
 }
+
+/**
+ * 检测数据类型
+ * @param {obj}  待检查数据
+ */
 
 function judgeType(obj) {
   // tostring会返回对应不同的标签的构造函数

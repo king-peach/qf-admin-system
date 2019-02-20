@@ -2,42 +2,54 @@
   <div class="main">
     <search-box :formData="searchForm" @search="search" />
     <!-- 部门treeTable -->
-    <tree-table :data="data" :eval-func="func" :eval-args="args" :expand-all="expandAll" border>
-      <el-table-column label="部门名称">
-        <template slot-scope="scope">
-          <span style="color:#ef0c4f">{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="部门主管">
-        <template slot-scope="scope">
-          <span>{{ scope.row.leader }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="传真">
-        <template slot-scope="scope">
-          <span>{{ scope.row.fax }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="电话">
-        <template slot-scope="scope">
-          <span>{{ scope.row.tel }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="240">
-        <template slot-scope="scope">
-          <div v-show="scope.row._level !== 1">
-            <el-button size="mini" @click="add(scope.row)">新增</el-button>
-            <el-button size="mini" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </tree-table>
+    <div class="container">
+      <tree-table
+        :data="treeData"
+        :eval-func="func"
+        :expand-all="expandAll"
+        stripe>
+        <el-table-column label="部门名称" align="center">
+          <template slot-scope="scope">
+            <span style="color:#ef0c4f">{{ scope.row.deptName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="部门主管" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.leader }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-color="#13ce66"
+              active-value=1
+              inactive-value=0
+              @change="statusChange(scope.row.status)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="电话" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.phone }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="240">
+          <template slot-scope="scope">
+            <div v-show="scope.row.parentId !== 0">
+              <el-button size="mini" @click="add(scope.row)">新增</el-button>
+              <el-button size="mini" @click="edit(scope.row)">编辑</el-button>
+              <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </tree-table>
 
-    <!-- 删除提示框 -->
-    <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
-    <!-- 新增机构组件 -->
-    <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
+      <!-- 删除提示框 -->
+      <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
+      <!-- 新增机构组件 -->
+      <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
+    </div>
   </div>
 </template>
 
@@ -51,7 +63,9 @@ import treeToArray from './customEval'
 import DelItem from '@/components/ConfirmDel/index'
 import InfoDialog from './components/Info'
 import SearchBox from '@/components/SearchBox'
-import { Message } from 'element-ui'
+import { getDeptData } from '@/api/department'
+import { filterNode } from '@/utils/getTree'
+// import { listToTree } from '@/utils/getTree'
 
 export default {
   name: 'Department',
@@ -65,68 +79,37 @@ export default {
     return {
       func: treeToArray,
       expandAll: true,
-      data: {
-        name: '总公司',
-        leader: '系统管理员',
-        fax: '0730-12344',
-        tel: '13517302233',
-        children: [
-          {
-            name: '七风网络',
-            leader: '管理员',
-            fax: '0731-22222',
-            tel: '18723124442',
-            children: [
-              {
-                name: '运营部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '技术部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '商务部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '编辑部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '财务部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }
-            ]
-          }
-        ]
-      },
+      treeData: [], // 原始数据
+      oldTree: [], // 存储原始数据
+      // listData: [],
       searchForm: { // 条件搜索数据
-        name: { label: '部门名称', value: '' },
-        leader: { label: '部门主管', value: '' },
-        tel: { label: '电话', value: '' },
-        fax: { label: '传真', value: '' }
+        deptName: { label: '部门名称', value: '' },
+        status: { label: '状态', value: null }
       },
       defaultForm: {
         parent: '',
         name: '',
         leader: '',
-        fax: '',
-        tel: ''
+        status: '',
+        phone: '',
+        remark: ''
       },
       parentTree: [],
       formData: {},
-      args: [null, null, 'timeLine'],
       delItemVisible: false,
       infoVisible: false,
       isCreate: true
     }
+  },
+  created() {
+    getDeptData().then(response => {
+      if (response.success === true) {
+        this.treeData = response.data
+        this.oldTree = response.data
+        // this.listData = response.data
+        // this.treeData = listToTree(response.data, { parentId: 'parentId', id: 'deptId' }, 0)
+      }
+    })
   },
   methods: {
     del(row) { // 删除操作打开提示框
@@ -137,19 +120,19 @@ export default {
       this.delItemVisible = false
     },
     add(row) { // 新增机构
-      console.info(row)
       this.infoVisible = true
       this.isCreate = true
       this.formData = { ...this.defaultForm }
-      this.formData.parent = row.name
-      this.parentTree = [this.data]
+      this.formData.parentName = row.parentName
+      this.parentTree = this.treeData
+      console.info(row)
     },
     edit(row) { // 编辑机构
       this.infoVisible = true
       this.isCreate = false
       this.formData = { ...row }
       this.formData.parent = row.parent.name
-      this.parentTree = [this.data]
+      this.parentTree = this.treeData
     },
     confirm(newFormData) { // 确定新增/编辑
       this.infoVisible = false
@@ -159,16 +142,53 @@ export default {
       this.infoVisible = false
     },
     search(searchForm) {
-      const regTel = /^$|^[\d]{0,11}$/
-      if (!regTel.test(searchForm.tel)) {
-        Message({
-          type: 'error',
-          message: '请填写不超过11位数字的电话'
-        })
-        return false
+      const deptName = searchForm.deptName
+      getDeptData().then(response => {
+        if (response.success === true) {
+          this.oldTree = response.data
+        }
+      })
+      if (searchForm.status !== null) {
+        this.treeData = filterNode(filterNode(this.oldTree, node => node.deptName.indexOf(deptName) > -1), node => node.status === String(searchForm.status))
+      } else {
+        this.treeData = filterNode(this.oldTree, node => node.deptName.indexOf(deptName) > -1)
       }
-      console.info(searchForm)
+      // const deptName = searchForm.deptName
+      // const status = searchForm.status
+      // let data = null
+      // if (status !== null && deptName !== '') {
+      //   data = this.listData.filter(element => {
+      //     return element.deptName.indexOf(deptName) > -1 && element.status.indexOf(status) > -1
+      //   })
+      // } else if (deptName !== '' && status === null) {
+      //   data = this.listData.filter(element => {
+      //     return element.deptName.indexOf(deptName) > -1
+      //   })
+      // } else {
+      //   console.info(this.listData)
+      //   data = this.listData.filter(element => {
+      //     return element.status.indexOf(status) > -1
+      //   })
+      // }
+      // if (status === null && deptName === '') {
+      //   data = listToTree(this.listData, { parentId: 'parentId', id: 'deptId' }, 0)
+      // }
+      // console.info(data)
+      // this.treeData = data
+    },
+    statusChange(value) {
+      console.info(value)
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.container {
+  padding: 20px;
+  min-height: 600px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px #ddd;
+}
+</style>

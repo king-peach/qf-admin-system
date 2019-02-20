@@ -9,6 +9,7 @@
       <el-table
         :data="tableData"
         stripe
+        v-loading="loading"
         :row-style="getRowIndex"
         highlight-current-row
         style="margin-top: 10px;"
@@ -65,7 +66,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      loading: true, // 加载状态
       searchForm: {
         roleName: { label: '角色名称', value: '' },
         roleKey: { label: '角色代码', value: '' },
@@ -98,6 +99,9 @@ export default {
     },
     getData(data) { // 获取表格数据
       getRoleInfo(this.currentPage, this.pageSize, data).then(response => {
+        if (response.success === true) {
+          this.loading = false
+        }
         this.tableData = response.data.list
         this.tableData.forEach((element, index) => {
           element.status === 1 ? element.status = true : element.status = false

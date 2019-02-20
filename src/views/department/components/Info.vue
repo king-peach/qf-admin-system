@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :visible.sync="infoVisible" :title="flag ? '新增部门' : '编辑部门'" center @close="cancel('departForm')">
-    <el-form :model="formData" :rules="rule" ref="departForm" label-width="100px">
+  <el-dialog :visible.sync="infoVisible" :title="flag ? '新增部门' : '编辑部门'"  center @close="cancel('departForm')">
+    <el-form :model="formData" label-suffix=":" :rules="rule" ref="departForm" label-width="100px">
       <el-form-item label="上级部门" prop="parent">
         <el-popover
           placement="bottom"
@@ -13,7 +13,7 @@
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>
           </div>
-          <el-input v-model="formData.parent" slot="reference" class="parent-department"/>
+          <el-input v-model="formData.parentName" slot="reference" class="parent-department"/>
         </el-popover>
       </el-form-item>
       <el-form-item label="部门名称" prop="name">
@@ -22,11 +22,22 @@
       <el-form-item label="部门主管" prop="leader">
         <el-input v-model="formData.leader" />
       </el-form-item>
-      <el-form-item label="传真" prop="fax">
-        <el-input v-model="formData.fax" />
+      <el-form-item label="状态" prop="status">
+        <template>
+          <el-switch
+            v-model="formData.status"
+            active-color="#13ce66"
+            active-value=1
+            inactive-value=0
+          >
+          </el-switch>
+        </template>
       </el-form-item>
-      <el-form-item label="电话" prop="tel">
-        <el-input v-model="formData.tel" />
+      <el-form-item label="电话" prop="phone">
+        <el-input v-model="formData.phone" />
+      </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input type="textarea" v-model="formData.remark" />
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -57,14 +68,7 @@ export default {
     }
   },
   data() {
-    const faxValid = (rule, value, callback) => {
-      if (value !== '') {
-        const faxReg = /^(\d{3,4}-)?\d{7,8}$/
-        faxReg.test(value) ? true : callback(new Error('请输入正确传真形如: xxx-1234567/xxx-12345678/xxxx-12345678'))
-      }
-      callback()
-    }
-    const telValid = (rule, value, callback) => {
+    const phoneValid = (rule, value, callback) => {
       if (value !== '') {
         const telReg = /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/
         telReg.test(value) ? true : callback(new Error('请输入正确的手机号或固定电话'))
@@ -76,7 +80,7 @@ export default {
       parentVisible: false, // 选择parent值弹出框开关
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'deptName'
       },
       parentDepart: '', // 存放选取上级部门值
       rule: {
@@ -89,11 +93,8 @@ export default {
         leader: [
           { required: true, message: '请输入部门主管', trigger: 'blur' }
         ],
-        fax: [
-          { validator: faxValid, trigger: 'blur' }
-        ],
-        tel: [
-          { validator: telValid, trigger: 'blur' }
+        phone: [
+          { validator: phoneValid, trigger: 'blur' }
         ]
       }
     }

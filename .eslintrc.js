@@ -21,7 +21,7 @@ module.exports = {
         "allowFirstLine": false
       }
     }],
-    "vue/name-property-casing": ["error", "PascalCase"],
+    "vue/name-property-casing": [0, "PascalCase" | "kebab-case"],
     'accessor-pairs': 2,
     'arrow-spacing': [2, {
       'before': true,
