@@ -1,7 +1,7 @@
 <template>
   <el-dialog :visible.sync="infoVisible" :title="flag ? '新增部门' : '编辑部门'"  center @close="cancel('departForm')">
     <el-form :model="formData" label-suffix=":" :rules="rule" ref="departForm" label-width="100px">
-      <el-form-item label="上级部门" prop="parent">
+      <el-form-item label="上级部门" prop="parentName">
         <el-popover
           placement="bottom"
           v-model="parentVisible"
@@ -16,8 +16,8 @@
           <el-input v-model="formData.parentName" slot="reference" class="parent-department"/>
         </el-popover>
       </el-form-item>
-      <el-form-item label="部门名称" prop="name">
-        <el-input v-model="formData.name" />
+      <el-form-item label="部门名称" prop="deptName">
+        <el-input v-model="formData.deptName" />
       </el-form-item>
       <el-form-item label="部门主管" prop="leader">
         <el-input v-model="formData.leader" />
@@ -82,7 +82,10 @@ export default {
         children: 'children',
         label: 'deptName'
       },
-      parentDepart: '', // 存放选取上级部门值
+      parentDepart: {
+        parentId: 0,
+        deptName: ''
+      }, // 存放选取上级部门值
       rule: {
         parent: [
           { required: true, message: '请选择上级部门', trigger: 'change' }
@@ -121,10 +124,12 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleNodeClick(data) { // parent树节点被选择时回调函数
-      this.parentDepart = data.name
+      this.parentDepart.deptName = data.deptName
+      this.parentDepart.parentId = data.parentId
     },
     selected() { // 确定选中上级部门
-      this.formData.parent = this.parentDepart
+      this.formData.parentName = this.parentDepart.deptName
+      this.formData.parentId = this.parentDepart.parentId
       this.parentVisible = false
     }
   }

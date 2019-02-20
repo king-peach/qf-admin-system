@@ -46,7 +46,7 @@
       </tree-table>
 
       <!-- 删除提示框 -->
-      <del-item :show.sync="delItemVisible" @confirmDel="delItem" />
+      <del-item :show.sync="delItemVisible" @confirmDelOne="delItem" :type="delType" />
       <!-- 新增机构组件 -->
       <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
     </div>
@@ -55,17 +55,17 @@
 
 <script>
 /**
-  Auth: W_peach
-  Created: 2019/1/16 14:54
-*/
+ * @Author : W_peach on 2019/1/16 14:54
+ */
 import treeTable from '@/components/TreeTable'
 import treeToArray from './customEval'
 import DelItem from '@/components/ConfirmDel/index'
 import InfoDialog from './components/Info'
 import SearchBox from '@/components/SearchBox'
-import { getDeptData } from '@/api/department'
+import { getDeptData, createDept } from '@/api/department'
 import { filterNode } from '@/utils/getTree'
 // import { listToTree } from '@/utils/getTree'
+import { Notification } from 'element-ui'
 
 export default {
   name: 'Department',
@@ -79,6 +79,7 @@ export default {
     return {
       func: treeToArray,
       expandAll: true,
+      delType: 'delOne',
       treeData: [], // 原始数据
       oldTree: [], // 存储原始数据
       // listData: [],
@@ -87,12 +88,13 @@ export default {
         status: { label: '状态', value: null }
       },
       defaultForm: {
-        parent: '',
-        name: '',
+        parentName: '',
+        deptName: '',
         leader: '',
         status: '',
         phone: '',
-        remark: ''
+        remark: '',
+        parentId: 0,
       },
       parentTree: [],
       formData: {},
@@ -125,7 +127,6 @@ export default {
       this.formData = { ...this.defaultForm }
       this.formData.parentName = row.parentName
       this.parentTree = this.treeData
-      console.info(row)
     },
     edit(row) { // 编辑机构
       this.infoVisible = true
@@ -135,8 +136,17 @@ export default {
       this.parentTree = this.treeData
     },
     confirm(newFormData) { // 确定新增/编辑
-      this.infoVisible = false
-      console.info(newFormData)
+      newFormData.orderNum = '1'
+        console.info(newFormData)
+      createDept(newFormData).then(response => {
+        if (response.success === true) {
+          this.infoVisible = false
+          Notification({
+            type: 'success',
+            message: '新增机构成功'
+          })
+        }
+      }).catch(error => { return error })
     },
     cancel() { // 取消新增/编辑
       this.infoVisible = false

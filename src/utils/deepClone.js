@@ -1,6 +1,6 @@
 /**
  * 对象深度克隆方法
- * @Author: W-peach
+ * @author: W-peach
  * @param {data} 原始数据
  */
 

@@ -1,5 +1,6 @@
 /**
  * corn校验方法
+ * @param {*} cronExpression 待校验参数
  * create by W_peach on 2019-01-09
  */
 

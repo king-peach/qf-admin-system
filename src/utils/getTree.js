@@ -1,8 +1,9 @@
-/*
+/**
  * 将扁平的数组生成树形结构
- * @param {data} 原始数据
- * @param {param} 父子关系对象: parentId(parentId属性名)、id(id属性名)
- * @parentId 根元素parentId
+ * @param {*} data 原始数据
+ * @param {*} param 父子关系对象: parentId(parentId属性名)、id(id属性名)
+ * @param {*} parentId 根元素parentId
+ * @author W_peach on 2019-02-20
  */
 export function listToTree(data, param, parentId) {
   const tree = []
@@ -26,6 +27,7 @@ export function listToTree(data, param, parentId) {
  * 根据搜索条件查找树节点
  * @param {*} nodes 原始数据
  * @param {*} predicate 搜索条件
+ * @author W_peach on 2019-02-19
  */
 
 export function filterNode(nodes, predicate) {
