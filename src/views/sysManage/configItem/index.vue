@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { getConfigMsg } from '@/api/configItem'
+import { getConfigMsg } from '@/api/sysManage/configItem'
 export default {
   data() {
     return {

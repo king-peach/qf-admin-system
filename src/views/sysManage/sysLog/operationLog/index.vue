@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getLogInfo, delLog, clearLog } from '@/api/systemLog/operationLog'
+import { getLogInfo, delLog, clearLog } from '@/api/sysManage/sysLog/operationLog'
 import { parseTime } from '@/utils/index'
 import ConfirmDel from '@/components/ConfirmDel'
 import LogInfo from './components/Info'

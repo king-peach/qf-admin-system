@@ -77,7 +77,7 @@ import DelUser from '@/components/ConfirmDel/index'
 import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import SearchBox from '@/components/SearchBox'
-import { getUserInfo, editUser, createUser, editPassword } from '@/api/userManage'
+import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage/userManage'
 import { Message } from 'element-ui'
 import { parseTime } from '@/utils/index'
 export default {

@@ -55,7 +55,7 @@
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import SearchBox from '@/components/SearchBox'
-import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/roleManage'
+import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/sysManage/roleManage'
 import { parseTime } from '@/utils/index'
 import { Message } from 'element-ui'
 export default {

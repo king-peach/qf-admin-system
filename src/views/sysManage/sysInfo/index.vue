@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getInfo } from '@/api/sysInfo'
+import { getInfo } from '@/api/sysManage/sysInfo'
 export default {
   data() {
     return {

@@ -55,7 +55,7 @@
 import { Message } from 'element-ui'
 import DelTask from '@/components/ConfirmDel/index'
 import TaskInfo from './components/TaskInfo'
-// import { getSetTimeData } from '@/api/setTime'
+// import { getSetTimeData } from '@/api/sysManage/setTime'
 export default {
   components: {
     DelTask,
