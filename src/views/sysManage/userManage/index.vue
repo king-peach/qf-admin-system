@@ -11,7 +11,14 @@
           <h4>组织机构</h4>
         </header>
         <div class="box-container">
-          <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          <el-tree
+            :data="deptTree"
+            :expand-on-click-node="false"
+            highlight-current
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+            default-expand-all>
+          </el-tree>
         </div>
       </div>
     </div>
@@ -57,7 +64,7 @@
         <!-- 修改密码组件 -->
         <edit-password :show.sync="editPasswordVisible" :user="userPsw" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
         <!-- 新建/编辑用户组件 -->
-        <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
+        <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" :treeData="deptTree" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
         <!-- 分页器 -->
         <el-pagination
           :page-size="pageSize"
@@ -78,6 +85,7 @@ import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import SearchBox from '@/components/SearchBox'
 import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage/userManage'
+import { getDeptData } from '@/api/sysManage/department'
 import { Message } from 'element-ui'
 import { parseTime } from '@/utils/index'
 export default {
@@ -115,44 +123,10 @@ export default {
       },
       userinfoData: {}, // 存放userinfo组件数据
       departSwitch: true, // 组织机构树盒子开关
-      data: [{ // tree data
-        label: '一级 1',
-        children: [{
-          label: '二级 1-1',
-          children: [{
-            label: '三级 1-1-1'
-          }]
-        }]
-      }, {
-        label: '一级 2',
-        children: [{
-          label: '二级 2-1',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '二级 2-2',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }, {
-        label: '一级 3',
-        children: [{
-          label: '二级 3-1',
-          children: [{
-            label: '三级 3-1-1'
-          }]
-        }, {
-          label: '二级 3-2',
-          children: [{
-            label: '三级 3-2-1'
-          }]
-        }]
-      }],
+      deptTree: [], // 存放组织机构树数据
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'deptName'
       },
       searchForm: { // 搜索组件数据
         username: { label: '用户名', value: '' },
@@ -163,7 +137,10 @@ export default {
     }
   },
   created() {
-    this.getData()
+    this.getData({ deptId: 1 })
+    getDeptData().then(response => {
+      this.deptTree = response.data
+    }).catch(error => { return error })
   },
   methods: {
     getData(data) {
@@ -271,7 +248,8 @@ export default {
 
     },
     handleNodeClick(data) {
-      return
+      this.searchData.deptId = data.deptId
+      this.getData(data)
     },
     search(searchForm) { // 点击搜索
       const startDate = parseTime(searchForm.date[0])

@@ -40,7 +40,7 @@
         <el-table-column prop="operIp" label="主机" align="center" width="180" sortable show-overflow-tooltip />
         <el-table-column prop="status" label="状态" align="center">
           <template slot-scope="scope">
-            <el-tag size="small" :type="tableData.status === 1 ? 'success' : 'danger'" round>
+            <el-tag size="small" :type="scope.row.status === 1 ? 'success' : 'danger'" round>
               {{ scope.row.status === 1 ? '成功' : '失败' }}
             </el-tag>
           </template>

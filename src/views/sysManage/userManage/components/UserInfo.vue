@@ -61,6 +61,10 @@ export default {
     formData: {
       type: Object,
       required: true
+    },
+    treeData: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -94,7 +98,10 @@ export default {
     return {
       userinfoVisible: this.show,
       parentVisible: false,
-      parentDepart: '',
+      parentDepart: {
+        deptName: '',
+        deptId: 1
+      },
       title: '用户信息',
       rule: {
         username: [
@@ -120,58 +127,9 @@ export default {
           { validator: validPhone, trigger: 'blur' }
         ]
       },
-      treeData: [{
-        name: '总公司',
-        leader: '系统管理员',
-        id: 0,
-        fax: '0730-12344',
-        tel: '13517302233',
-        children: [
-          {
-            name: '七风网络',
-            leader: '管理员',
-            id: 1,
-            fax: '0731-22222',
-            tel: '18723124442',
-            children: [
-              {
-                name: '运营部',
-                leader: '',
-                id: 2,
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '技术部',
-                leader: '',
-                id: 2,
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '商务部',
-                leader: '',
-                id: 2,
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '编辑部',
-                leader: '',
-                id: 2,
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '财务部',
-                leader: '',
-                id: 2,
-                fax: '0730-231231',
-                tel: ''
-              }
-            ]
-          }
-        ]
-      }],
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'deptName'
       }
     }
   },
@@ -198,11 +156,13 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleNodeClick(data) { // 树节点被选择时回调
-      this.parentDepart = data.id
+      this.parentDepart.deptName = data.deptName
+      this.parentDepart.deptId = data.deptId
     },
     selected() {
       this.parentVisible = false
-      this.formData.deptId = this.parentDepart
+      this.formData.deptId = this.parentDepart.deptId
+      this.formData.deptName = this.parentDepart.deptName
     }
   }
 }

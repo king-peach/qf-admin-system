@@ -10,7 +10,9 @@ export function getLogInfo(pageNum, pageSize, data = {}) {
       title: data.title,
       operBy: data.operBy,
       operLocation: data.operLocation,
-      operType: data.operType
+      operType: data.operType,
+      isAsc: false,
+      orderByColumn: 'operTime'
     }
   })
 }

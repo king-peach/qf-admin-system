@@ -22,20 +22,21 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // 如果当前页面是Dashboard则不触发beforeEach hook,所以立即执行它
     } else {
-      // if (store.getters.roles.length === 0) {
-      store.dispatch('GetInfo').then(res => { // 拉取用户信息
+      if (store.getters.roles.length === 0) {
+        store.dispatch('GetInfo').then(res => { // 拉取用户信息
         // next()
-        // const roles = res.data.roles // roles必须是一个数组，类似['test','admin']
-        store.dispatch('GenerateRoutes').then(() => { // 根据roles权限生成可访问的路由表
-          router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-          next({ ...to, replace: true }) // hack方法，确保addRoutes已经完成，replace设置未true，导航不会留下历史记录
+        // const roles = res.data.roles // roles必须是一个数      组，类似['test','admin']
+          store.dispatch('GenerateRoutes').then(() => { // 根据roles权限生成可访问的路由表
+            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+            next({ ...to, replace: true }) // hack方法，确保addRoutes已经完成，replace设置未true，导航不会留下历史记录
+          })
+        }).catch((err) => {
+          store.dispatch('FedLogOut').then(() => {
+            Message.error(err || '验证失败, 请重新登录！')
+            next({ path: '/' })
+          })
         })
-      }).catch((err) => {
-        store.dispatch('FedLogOut').then(() => {
-          Message.error(err || '验证失败, 请重新登录！')
-          next({ path: '/' })
-        })
-      })
+      }
       next()
       // } else {
       //   // next()

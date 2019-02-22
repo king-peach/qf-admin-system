@@ -18,7 +18,7 @@
         <el-table-column prop="num" label="序号" align="center" width="80" sortable />
         <el-table-column label="角色名称" prop="roleName" align="center" />
         <el-table-column label="角色代码" prop="roleKey" sortable align="center" width="100" />
-        <el-table-column label="上级主管" prop="createBy" align="center" />
+        <el-table-column label="上级主管" prop="leader" align="center" />
         <el-table-column label="用户状态" align="center" width="100">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
@@ -36,7 +36,7 @@
       <!-- 确认删除角色组件 -->
       <del-role :show.sync="delRoleVisible" :type="delType" @confirmDelOne="delRole" />
       <!-- 新增/编辑角色组件 -->
-      <add-role :show.sync="roleInfoVisible" :role="roles" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
+      <add-role :show.sync="roleInfoVisible" :role="roles" :treeData="deptTree" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
       <!-- 分页器 -->
       <el-pagination
         :page-size="pageSize"
@@ -56,6 +56,7 @@ import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import SearchBox from '@/components/SearchBox'
 import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/sysManage/roleManage'
+import { getDeptData } from '@/api/sysManage/department'
 import { parseTime } from '@/utils/index'
 import { Message } from 'element-ui'
 export default {
@@ -74,6 +75,7 @@ export default {
       },
       tableData: [], // 存储所有角色数据
       roles: {}, // 新增/编辑角色表单数据
+      deptTree: [], // 组织机构树数据
       createRoles: { roleKey: '', roleName: '', status: true, createBy: '', roleSort: null, menuIds: [], ramark: '' }, // 新增角色信息
       roleList: [],
       pageSize: 8, // 页面包含选项个数
@@ -89,6 +91,9 @@ export default {
   },
   created() { // 获取所有角色
     this.getData()
+    getDeptData().then(response => {
+      this.deptTree = response.data
+    }).catch(error => { return error })
   },
   methods: {
     search(data) { // 点击搜索

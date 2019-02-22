@@ -10,7 +10,7 @@
       <el-form-item label="状态" prop="status">
         <el-switch v-model="role.status" />
       </el-form-item>
-      <el-form-item label="上级主管" prop="updateBy">
+      <el-form-item label="上级主管" prop="leader">
         <el-popover
           placement="bottom"
           v-model="parentVisible"
@@ -22,7 +22,7 @@
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>
           </div>
-          <el-input v-model="role.createBy" slot="reference"/>
+          <el-input v-model="role.leader" slot="reference"/>
         </el-popover>
       </el-form-item>
       <el-form-item label="角色排序" prop="roleSort">
@@ -53,6 +53,10 @@ export default {
     isCreate: {
       type: Boolean,
       default: true
+    },
+    treeData: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -63,7 +67,7 @@ export default {
       parentDepart: '', // 存放选取上级部门值
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'deptName'
       },
       rules: {
         roleKey: [
@@ -79,49 +83,7 @@ export default {
           { required: true, message: '请输入角色排序', trigger: ['blur'] },
           { type: 'number', message: '请输入数字类型的角色排序', trigger: 'blur' }
         ]
-      },
-      treeData: [{
-        name: '总公司',
-        leader: '系统管理员',
-        fax: '0730-12344',
-        tel: '13517302233',
-        children: [
-          {
-            name: '七风网络',
-            leader: '管理员',
-            fax: '0731-22222',
-            tel: '18723124442',
-            children: [
-              {
-                name: '运营部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '技术部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '商务部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '编辑部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }, {
-                name: '财务部',
-                leader: '',
-                fax: '0730-231231',
-                tel: ''
-              }
-            ]
-          }
-        ]
-      }]
+      }
     }
   },
   watch: {
@@ -146,10 +108,10 @@ export default {
       this.$emit('cancel')
     },
     handleNodeClick(data) { // 树节点被选择时回调
-      this.parentDepart = data.name
+      this.parentDepart = data.deptName
     },
     selected() { // 确定选择上级机构函数
-      this.role.createBy = this.parentDepart
+      this.role.leader = this.parentDepart
       this.parentVisible = false
     }
   }
