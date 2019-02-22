@@ -69,6 +69,11 @@ export const asyncRouterMap = [
       component: () => import('@/views/sysManage/configItem/index'),
       name: 'configItem',
       meta: { title: '配置项管理', icon: 'configItem' }
+    }, { // 菜单管理
+      path: 'menuManage',
+      component: () => import('@/views/sysManage/menuManage/index'),
+      name: 'menuManage',
+      meta: { title: '菜单管理', icon: 'menuManage' }
     }, { // 角色管理
       path: 'roleManage',
       name: 'roleManage',

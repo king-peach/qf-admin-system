@@ -201,16 +201,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.container {
-  min-height: 600px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 1px 1px 3px #ddd;
-  .pagination-style{
-    margin-top: 20px;
-  }
-}
-</style>

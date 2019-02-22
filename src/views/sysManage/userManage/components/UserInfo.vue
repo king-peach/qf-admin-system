@@ -36,6 +36,16 @@
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="formData.phone" />
       </el-form-item>
+      <el-form-item label="所属角色" prop="roleIds">
+        <el-select v-model="formData.roleIds" multiple placeholder="请选择" style="width: 100%">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.roleName"
+            :value="item.roleId">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="formData.remark" />
       </el-form-item>
@@ -64,6 +74,10 @@ export default {
     },
     treeData: {
       type: Array,
+      required: true
+    },
+    options: {
+      tyep: Array,
       required: true
     }
   },
@@ -143,7 +157,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let newFormData = { ...this.formData }
-          // this.$emit('update:formData', newFormData)
           this.flag === true ? this.$emit('confirmAdd', newFormData) : this.$emit('confirmEdit', newFormData)
           this.$refs[formName].resetFields()
         } else {

@@ -6,7 +6,7 @@
       <tree-table
         :data="treeData"
         :eval-func="func"
-        :expand-all="expandAll"
+        :expand-all="true"
         stripe>
         <el-table-column label="部门名称" align="center">
           <template slot-scope="scope">
@@ -57,8 +57,8 @@
 /**
  * @Author : W_peach on 2019/1/16 14:54
  */
-import treeTable from '@/components/TreeTable'
-import treeToArray from './customEval'
+import TreeTable from '@/components/TreeTable'
+import treeToArray from '@/utils/customEval'
 import DelItem from '@/components/ConfirmDel/index'
 import InfoDialog from './components/Info'
 import SearchBox from '@/components/SearchBox'
@@ -70,15 +70,14 @@ import { Notification } from 'element-ui'
 export default {
   name: 'Department',
   components: {
-    treeTable,
+    TreeTable,
     DelItem,
     InfoDialog,
     SearchBox
   },
   data() {
     return {
-      func: treeToArray,
-      expandAll: true,
+      func: treeToArray, // 数据格式化
       delType: 'delOne',
       treeData: [], // 原始数据
       oldTree: [], // 存储原始数据
@@ -94,7 +93,7 @@ export default {
         status: '',
         phone: '',
         remark: '',
-        parentId: 0,
+        parentId: 0
       },
       parentTree: [],
       formData: {},
@@ -137,7 +136,6 @@ export default {
     },
     confirm(newFormData) { // 确定新增/编辑
       newFormData.orderNum = '1'
-        console.info(newFormData)
       createDept(newFormData).then(response => {
         if (response.success === true) {
           this.infoVisible = false
@@ -192,13 +190,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.container {
-  padding: 20px;
-  min-height: 600px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 1px 1px 3px #ddd;
-}
-</style>

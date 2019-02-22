@@ -27,8 +27,8 @@ export function editUser(data) {
       email: data.email,
       phone: data.phone,
       userId: data.userId,
-      roleIds: [],
-      status: data.status
+      status: data.status,
+      roleIds: data.roleIds
     }
   })
 }

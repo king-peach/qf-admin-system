@@ -64,7 +64,7 @@
         <!-- 修改密码组件 -->
         <edit-password :show.sync="editPasswordVisible" :user="userPsw" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
         <!-- 新建/编辑用户组件 -->
-        <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" :treeData="deptTree" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
+        <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" :treeData="deptTree" :options="roleList" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
         <!-- 分页器 -->
         <el-pagination
           :page-size="pageSize"
@@ -85,6 +85,7 @@ import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import SearchBox from '@/components/SearchBox'
 import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage/userManage'
+import { getRoleInfo } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
 import { Message } from 'element-ui'
 import { parseTime } from '@/utils/index'
@@ -133,13 +134,19 @@ export default {
         realName: { label: '真实姓名', value: '' },
         status: { label: '状态', value: null },
         date: { label: '创建时间', value: '' }
-      }
+      },
+      roleList: [] // 存放角色列表
     }
   },
   created() {
     this.getData({ deptId: 1 })
     getDeptData().then(response => {
       this.deptTree = response.data
+    }).catch(error => { return error })
+    // 获取所有角色，调用角色管理页接口最多获取1000个数据，待优化
+    getRoleInfo(1, 1000).then(response => {
+      this.roleList = response.data.list
+      console.info(this.roleList)
     }).catch(error => { return error })
   },
   methods: {
@@ -153,7 +160,8 @@ export default {
         this.tableData.forEach((element, index) => {
           element.status === 1 ? element.status = true : element.status = false
           element.createTime = parseTime(element.createTime)
-          element.num = (this.currentPage - 1) * this.pageSize + index + 1
+          element.num = (this.currentPage - 1) * this.pageSize + index + 1,
+          element.roleIds = [1, 2]
         })
       })
     },
@@ -350,13 +358,6 @@ export default {
   &.move-right {
     padding-left: 190px;
     transition: .5s padding-left;
-  }
-  .container {
-    min-height: 600px;
-    background-color: #FFF;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, .2);
   }
   .pagination-style{
     margin-top: 20px;

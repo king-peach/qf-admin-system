@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="infoVisible" title="日志详情" @close="close">
-    <ul class="container">
+    <ul class="list">
       <li>
         <span class="title">操作名称:</span>
         <span class="detail">{{ info.title }}</span>
@@ -59,10 +59,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.list {
   list-style: none;
-  margin-top: -20px;
-  min-height: 300px;
   li {
     margin: 30px 0;
     white-space: nowrap;
