@@ -58,6 +58,7 @@ import SearchBox from '@/components/SearchBox'
 import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
 import { parseTime } from '@/utils/index'
+import { listToTree } from '@/utils/getTree'
 import { Message } from 'element-ui'
 export default {
   components: {
@@ -92,7 +93,7 @@ export default {
   created() { // 获取所有角色
     this.getData()
     getDeptData().then(response => {
-      this.deptTree = response.data
+      this.deptTree = listToTree(response.data, { id: 'deptId', parentId: 'parentId' }, 0)
     }).catch(error => { return error })
   },
   methods: {

@@ -12,12 +12,12 @@
       </el-form-item>
       <el-form-item label="上级主管" prop="leader">
         <el-popover
-          placement="bottom"
+          placement="bottom-end"
           v-model="parentVisible"
           title="部门列表"
           visible-arrow
           width="400">
-          <el-tree :data="treeData" :props="defaultProps" accordion @node-click="handleNodeClick"/>
+          <el-tree :data="treeData" :props="defaultProps" :expand-on-click-node="false" :default-expand-all="true" accordion @node-click="handleNodeClick"/>
           <div align="right" style="margin-top: 1em">
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>

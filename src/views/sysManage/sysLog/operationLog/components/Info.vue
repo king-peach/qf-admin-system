@@ -21,6 +21,10 @@
         <span class="title">请求参数:</span>
         <el-input type="textarea" class="detail" :value="info.operParam" disabled />
       </li>
+      <li v-if="info.status === 0">
+        <span class="title">错误信息:</span>
+        <span class="detail" style="color: red">{{ info.errorMsg }}</span>
+      </li>
     </ul>
     <div align="right" slot="footer" class="dialog-footer">
       <el-button @click="close" type="primary">关闭</el-button>
@@ -75,6 +79,8 @@ export default {
       display: inline-block;
       vertical-align: top;
       max-width: 80%;
+      overflow: hidden;
+      white-space: normal;
     }
   }
 }

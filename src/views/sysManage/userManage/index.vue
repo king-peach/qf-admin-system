@@ -87,6 +87,7 @@ import SearchBox from '@/components/SearchBox'
 import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage/userManage'
 import { getRoleInfo } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
+import { listToTree } from '@/utils/getTree'
 import { Message } from 'element-ui'
 import { parseTime } from '@/utils/index'
 export default {
@@ -141,7 +142,7 @@ export default {
   created() {
     this.getData({ deptId: 1 })
     getDeptData().then(response => {
-      this.deptTree = response.data
+      this.deptTree = listToTree(response.data, { id: 'deptId', parentId: 'parentId' }, 0)
     }).catch(error => { return error })
     // 获取所有角色，调用角色管理页接口最多获取1000个数据，待优化
     getRoleInfo(1, 1000).then(response => {

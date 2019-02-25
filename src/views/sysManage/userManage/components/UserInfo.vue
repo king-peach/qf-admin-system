@@ -15,11 +15,12 @@
       </el-form-item>
       <el-form-item label="所属部门ID" prop="deptId">
         <el-popover
+          placement="bottom-end"
           width="400"
           v-model="parentVisible"
           title="部门列表"
           visible-arrow>
-          <el-tree :data="treeData" :props="defaultProps" accordion @node-click="handleNodeClick" />
+          <el-tree :data="treeData" :props="defaultProps" default-expand-all :expand-on-click-node="false" accordion @node-click="handleNodeClick" />
           <div align="right" style="margin-top: 1em">
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>

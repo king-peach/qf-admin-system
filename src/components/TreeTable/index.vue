@@ -1,6 +1,6 @@
 <template>
   <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
-    <el-table-column v-if="columns.length===0" width="150">
+    <el-table-column v-if="columns.length===0" width="100">
       <template slot-scope="scope">
         <span v-for="space in scope.row._level" :key="space" class="ms-tree-space"/>
         <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">

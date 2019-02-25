@@ -1,14 +1,14 @@
 <template>
-  <el-dialog :visible.sync="infoVisible" :title="flag ? '新增部门' : '编辑部门'"  center @close="cancel('departForm')">
+  <el-dialog :visible.sync="infoVisible" :title="flag ? '编辑部门' : '新增部门'"  center @close="cancel('departForm')">
     <el-form :model="formData" label-suffix=":" :rules="rule" ref="departForm" label-width="100px">
       <el-form-item label="上级部门" prop="parentName">
         <el-popover
-          placement="bottom"
+          placement="bottom-end"
           v-model="parentVisible"
           title="部门列表"
           visible-arrow
           width="400">
-          <el-tree :data="treeData" :props="defaultProps" accordion @node-click="handleNodeClick"/>
+          <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" :default-expand-all="true" :expand-on-click-node="false" />
           <div align="right" style="margin-top: 1em">
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>
@@ -24,13 +24,7 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <template>
-          <el-switch
-            v-model="formData.status"
-            active-color="#13ce66"
-            active-value=1
-            inactive-value=0
-          >
-          </el-switch>
+          <el-switch v-model="formData.status"></el-switch>
         </template>
       </el-form-item>
       <el-form-item label="电话" prop="phone">
@@ -125,7 +119,7 @@ export default {
     },
     handleNodeClick(data) { // parent树节点被选择时回调函数
       this.parentDepart.deptName = data.deptName
-      this.parentDepart.parentId = data.parentId
+      this.parentDepart.parentId = data.deptId
     },
     selected() { // 确定选中上级部门
       this.formData.parentName = this.parentDepart.deptName
