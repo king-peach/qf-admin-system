@@ -88,7 +88,7 @@ import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage
 import { getRoleInfo } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
 import { listToTree } from '@/utils/getTree'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 import { parseTime } from '@/utils/index'
 export default {
   components: {
@@ -147,7 +147,6 @@ export default {
     // 获取所有角色，调用角色管理页接口最多获取1000个数据，待优化
     getRoleInfo(1, 1000).then(response => {
       this.roleList = response.data.list
-      console.info(this.roleList)
     }).catch(error => { return error })
   },
   methods: {
@@ -161,7 +160,7 @@ export default {
         this.tableData.forEach((element, index) => {
           element.status === 1 ? element.status = true : element.status = false
           element.createTime = parseTime(element.createTime)
-          element.num = (this.currentPage - 1) * this.pageSize + index + 1,
+          element.num = (this.currentPage - 1) * this.pageSize + index + 1
           element.roleIds = [1, 2]
         })
       })
@@ -191,9 +190,9 @@ export default {
     },
     delUser() { // 确定删除
       this.delUserVisible = false
-      Message({
-        type: 'info',
-        message: '删除成功'
+      Notification({
+        type: 'success',
+        message: '当前用户删除成功'
       })
       this.tableData.splice(this.rowIndex, 1)
     },

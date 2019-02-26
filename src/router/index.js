@@ -118,7 +118,7 @@ export const asyncRouterMap = [
       path: 'setTime',
       name: 'setTime',
       component: () => import('@/views/sysWatch/setTime/index'),
-      meta: { title: '定时任务', icon: 'setTime' }
+      meta: { title: '定时任务', icon: 'setTime', btnPermission: ['search', 'remove'] }
     }]
   },
 

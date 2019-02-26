@@ -26,6 +26,17 @@ const errorHandler = (error, vm) => {
 Vue.config.errorHandler = errorHandler
 Vue.prototype.$throw = (error) => errorHandler(error, this)
 
+// 全局权限指令
+Vue.directive('has', {
+  inserted: function(el, binding, vnode) {
+    // 获取当前页的按钮权限列表
+    const btnPermissionArr = vnode.context.$route.meta.btnPermission
+    if (btnPermissionArr.indexOf(binding.value) < 0) {
+      el.parentNode.removeChild(el)
+    }
+  }
+})
+
 new Vue({
   router,
   store,

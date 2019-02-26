@@ -60,6 +60,13 @@ export default {
     }
   },
   data() {
+    const roleKeyValid = (rule, value, callback) => {
+      const roleKeyReg = /^[a-zA-Z\d]+$/
+      if (!roleKeyReg.test(value)) {
+        callback(new Error('请输入包含字母或数字的角色代码'))
+      }
+      callback()
+    }
     return {
       labelPosition: 'right', // 新增表单的位置
       addRoleVisible: this.show,
@@ -71,6 +78,7 @@ export default {
       },
       rules: {
         roleKey: [
+          { validator: roleKeyValid , trigger: 'blur' },
           { required: true, message: '请输入角色代码', trigger: 'blur' }
         ],
         roleName: [

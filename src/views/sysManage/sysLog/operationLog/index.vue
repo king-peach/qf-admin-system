@@ -172,9 +172,8 @@ export default {
           this.confirmDelVisible = false
           this.getData()
           Notification({
-            title: '删除成功',
-            message: '',
-            type: 'success'
+            type: 'success',
+            message: '当前日志删除成功'
           })
         }
       }).catch(error => { return error })
@@ -201,7 +200,7 @@ export default {
           this.getData()
           Message({
             type: 'success',
-            message: '批量删除成功'
+            message: '日志批量删除成功'
           })
           this.multipleDelIds = []
         }

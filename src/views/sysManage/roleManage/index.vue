@@ -59,7 +59,7 @@ import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/sysMa
 import { getDeptData } from '@/api/sysManage/department'
 import { parseTime } from '@/utils/index'
 import { listToTree } from '@/utils/getTree'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 export default {
   components: {
     DelRole,
@@ -127,7 +127,7 @@ export default {
       status === true ? status = 1 : status = 0
       editStatus(roleId, status).then(response => {
         if (response.success === true) {
-          Message({
+          Notification({
             type: 'success',
             message: '状态修改成功'
           })
@@ -143,9 +143,9 @@ export default {
         if (response.success === true) {
           this.tableData.splice(this.delIndex, 1)
           this.delRoleVisible = false
-          Message({
+          Notification({
             type: 'success',
-            message: '删除成功'
+            message: '当前角色删除删除成功'
           })
         }
       }).catch(error => { return error }) // axios全局错误已处理，此处只捕获不处理

@@ -1,11 +1,14 @@
 <template>
-  <el-dialog :visible.sync="infoVisible" :title="flag === 0 ? '编辑菜单' : flag === 1 ? '新增菜单' : '编辑按钮'" center @close="cancel">
+  <el-dialog :visible.sync="infoVisible" :title="flag === 0 ? '编辑目录' : flag === 1 ? '编辑菜单' : '编辑按钮'" center @close="cancel">
     <el-form :data="formData" label-width="100px" label-suffix=":">
-      <el-form-item label="上级菜单">
-        <el-input v-model="formData.parentId" />
+      <el-form-item label="上级菜单" disabled>
+        <el-input v-model="formData.parentId" disabled/>
       </el-form-item>
-      <el-form-item label="菜单名称">
+      <el-form-item :label="flag === 0 ? '目录名称' : flag === 1 ? '菜单名称' : '按钮名称'">
         <el-input v-model="formData.menuName" />
+      </el-form-item>
+      <el-form-item label="排序">
+        <el-input v-model="formData.orderNum" disabled/>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="formData.status" placeholder="请选择">
@@ -20,7 +23,7 @@
       <el-form-item style="text-align: right">
         <template slot-scope="">
           <el-button @click="cancel">取消</el-button>
-          <el-button type="primary">确定</el-button>
+          <el-button type="primary" @click="confirm">确定</el-button>
         </template>
       </el-form-item>
     </el-form>
@@ -63,6 +66,9 @@ export default {
   methods: {
     cancel() { // 取消新增/编辑
       this.$emit('cancel')
+    },
+    confirm() {
+      this.$emit('confirm')
     }
   }
 }
