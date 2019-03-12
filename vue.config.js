@@ -47,16 +47,11 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
+    // 配置打包hash文件名
+    config.output.filename('[name].[hash].js').end()
+    // 修复热更新失效
+    config.resolve.symlinks(true)
   },
   baseUrl: './', // 配置打包基本路径
   lintOnSave: process.env.NODE_ENV !== 'production'
-  // devServer: {
-  //   // 开发环境下设置跨域解决方案
-  //   proxy: {
-  //     '/': {
-  //       target: 'http://94.191.36.181/',
-  //       changeOrigin: true
-  //     }
-  //   }
-  // }
 }

@@ -188,10 +188,9 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
-  height: 44px;
+  height: 52px;
   width: 100%;
-  background: #ddd;
-  border-bottom: 1px solid #d8dce5;
+  // border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
   .tags-view-wrapper {
     .tags-view-item {
@@ -201,13 +200,13 @@ export default {
       height: 36px;
       line-height: 36px;
       border: 1px solid #d8dce5;
-      border-radius: 5px 5px 0 0;
+      border-radius: 5px;
       color: #495060;
       background: #fff;
       padding: 0 8px;
       font-size: 12px;
-      margin-left: 5px;
-      margin-top: 8px;
+      // margin-left: 5px;
+      margin: 8px 0 8px 5px;
       &:first-of-type {
         margin-left: 25px;
       }
