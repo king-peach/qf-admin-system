@@ -48,7 +48,11 @@ module.exports = {
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
     // 配置打包hash文件名
-    config.output.filename('[name].[hash].js').end()
+    config
+      .output
+      .filename('js/[name].[hash:3].js')
+      .chunkFilename('js/[name].[chunkhash:3].js')
+      .end()
     // 修复热更新失效
     config.resolve.symlinks(true)
   },
