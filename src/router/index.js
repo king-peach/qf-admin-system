@@ -19,6 +19,7 @@ import Layout from '../views/layout/Layout'
 * meta : {
     title: 'title'               在子菜单（submenu）和面包屑(breadcrumb)中显示的名称 (推荐设置)
     icon: 'svg-name'             sidebar中显示icon,
+    affix: true                  在标签导航栏中显示
   }
 **/
 export const constantRouterMap = [
@@ -29,11 +30,11 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: 'Dashboard',
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '主页', icon: 'dashboard' }
+      name: 'dashboard',
+      meta: { title: '主页', icon: 'dashboard', noCache: true, affix: true }
     }]
   },
 
