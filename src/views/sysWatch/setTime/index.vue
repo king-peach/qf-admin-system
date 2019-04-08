@@ -48,6 +48,21 @@
       @current-change="getCurrentPage"
       style="margin-top: 20px;"
     />
+    <el-form :inline="true">
+      <el-form-item label="文件上传:" style="position: relative;">
+        <input type="file" style="height: 50px; position: absolute; top: 0; z-index: 999; opacity: 0;" @change="uploadFile" ref="createFile" />
+        <!-- <el-input v-model="file.fileData" style="display: none;"></el-input> -->
+        <el-button type="primary">选择文件</el-button>
+        <div ref="showFile" class="showFile">
+          <img :src="item.src" alt="" v-for="item of imgList" :key="item.src">
+        </div>
+      </el-form-item>
+    </el-form>
+    <div>
+      {{ set_timeout }}
+      <el-button @click="increment" size="mini" type="primary">自增一</el-button>
+      <el-button @click="decrement" size="mini" type="danger">自减一</el-button>
+    </div>
   </div>
 </template>
 
@@ -55,6 +70,7 @@
 import { Message } from 'element-ui'
 import DelTask from '@/components/ConfirmDel/index'
 import TaskInfo from './components/TaskInfo'
+import { mapGetters } from 'vuex'
 // import { getSetTimeData } from '@/api/sysManage/setTime'
 export default {
   components: {
@@ -129,7 +145,8 @@ export default {
       isCreate: true,
       pageSize: 2,
       currentPage: 1,
-      btnVisible: true
+      btnVisible: true,
+      imgList: [],
     }
   },
   computed: {
@@ -150,11 +167,20 @@ export default {
           })
         }
       }
-
       return this.tableData
-    }
+    },
+    ...mapGetters(['set_timeout']) // 使用对象拓展运算符将getter混入computed对象中
+    // set_timeout() {
+    //   return this.$store.getters.set_timeout
+    // }
   },
   methods: {
+    increment() {
+      this.$store.dispatch('IncrementCount', 1)
+    },
+    decrement() {
+      this.$store.dispatch('DecrementCount', 1)
+    },
     searchTask() { // enter触发模糊搜索
       this.taskFilter = this.searchValue
     },
@@ -190,6 +216,15 @@ export default {
     },
     getCurrentPage(val) { // 当前页码改变时触发，获取当前页码
       this.currentPage = val
+    },
+    uploadFile() {
+      const src = window.URL.createObjectURL(this.$refs.createFile.files[0])
+      // this.node.push(`<img src="${src}" alt="" class="img"/>`)
+      // const nodeHTML = this.node.join(' ')
+      // this.$refs.showFile.innerHTML = nodeHTML
+      var imgObj = {}
+      imgObj.src = src
+      this.imgList.push(imgObj)
     }
   }
 }
@@ -204,5 +239,10 @@ export default {
   }
   .search-input {
     width: 30%;
+  }
+  .showFile img {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
   }
 </style>
