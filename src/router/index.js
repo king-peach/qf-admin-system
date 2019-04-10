@@ -54,74 +54,170 @@ export default new Router({
   routes: constantRouterMap
 })
 
+// export const asyncRouterMap = [
+//   { // 系统管理
+//     path: '/sysManage',
+//     component: Layout,
+//     name: 'sysManage',
+//     meta: { title: '系统管理', icon: 'sysManage' },
+//     children: [{
+//       path: 'sysInfo',
+//       component: () => import('@/views/sysManage/sysInfo/index'),
+//       name: 'sysInfo',
+//       meta: { title: '系统信息', icon: 'sysInfo' }
+//     }, { // 配置项管理
+//       path: 'configItem',
+//       component: () => import('@/views/sysManage/configItem/index'),
+//       name: 'configItem',
+//       meta: { title: '配置项管理', icon: 'configItem' }
+//     }, { // 菜单管理
+//       path: 'menuManage',
+//       component: () => import('@/views/sysManage/menuManage/index'),
+//       name: 'menuManage',
+//       meta: { title: '菜单管理', icon: 'menuManage' }
+//     }, { // 角色管理
+//       path: 'roleManage',
+//       name: 'roleManage',
+//       component: () => import('@/views/sysManage/roleManage/index'),
+//       meta: { title: '角色管理', icon: 'roleManage' }
+//     }, { // 用户管理
+//       path: 'userManage',
+//       name: 'userManage',
+//       component: () => import('@/views/sysManage/userManage/index'),
+//       meta: { title: '用户管理', icon: 'user' }
+//     }, { // 组织机构
+//       path: 'department',
+//       name: 'department',
+//       component: () => import('@/views/sysManage/department/index'),
+//       meta: { title: '组织机构', icon: 'tree' }
+//     }, { // 系统日志
+//       path: '/sysLog',
+//       name: 'sysLog',
+//       component: () => import('@/views/sysManage/sysLog/index'),
+//       meta: { title: '系统日志', icon: 'sysLog' },
+//       children: [{
+//         path: 'loginLog',
+//         name: 'loginLog',
+//         component: () => import('@/views/sysManage/sysLog/loginLog/index'),
+//         meta: { title: '登录日志', icon: 'logLog' }
+//       }, {
+//         path: 'operationLog',
+//         name: 'operationLog',
+//         component: () => import('@/views/sysManage/sysLog/operationLog/index'),
+//         meta: { title: '操作日志', icon: 'operLog' }
+//       }]
+//     }]
+//   },
+
+//   { // 系统监控
+//     path: '/sysWatch',
+//     component: Layout,
+//     name: 'sysWatch',
+//     meta: { title: '系统监控', icon: 'sysWatch' },
+//     alwaysShow: true,
+//     children: [{ // 定时任务
+//       path: 'setTime',
+//       name: 'setTime',
+//       component: () => import('@/views/sysWatch/setTime/index'),
+//       meta: { title: '定时任务', icon: 'setTime', btnPermission: ['search', 'remove'] }
+//     }]
+//   },
+
+//   { path: '*', redirect: '/404', hidden: true }
+// ]
+// export const asyncRouterMap = [
+//   { // 系统管理
+//     name: 'sysManage',
+//     children: [{
+//       name: 'sysInfo'
+//     }, { // 配置项管理
+//       name: 'configItem'
+//     }, { // 菜单管理
+//       name: 'menuManage'
+//     }, { // 角色管理
+//       name: 'roleManage'
+//     }, { // 用户管理
+//       name: 'userManage'
+//     }, { // 组织机构
+//       name: 'department'
+//     }, { // 系统日志
+//       name: 'sysLog',
+//       children: [{
+//         name: 'loginLog'
+//       }, {
+//         name: 'operationLog'
+//       }]
+//     }]
+//   },
+
+//   { // 系统监控
+//     name: 'sysWatch',
+//     alwaysShow: true,
+//     children: [{ // 定时任务
+//       name: 'setTime'
+//     }]
+//   }
+// ]
 export const asyncRouterMap = [
   { // 系统管理
-    path: '/sysManage',
-    component: Layout,
     name: 'sysManage',
-    meta: { title: '系统管理', icon: 'sysManage' },
-    children: [{
-      path: 'sysInfo',
-      component: () => import('@/views/sysManage/sysInfo/index'),
-      name: 'sysInfo',
-      meta: { title: '系统信息', icon: 'sysInfo' }
-    }, { // 配置项管理
-      path: 'configItem',
-      component: () => import('@/views/sysManage/configItem/index'),
-      name: 'configItem',
-      meta: { title: '配置项管理', icon: 'configItem' }
-    }, { // 菜单管理
-      path: 'menuManage',
-      component: () => import('@/views/sysManage/menuManage/index'),
-      name: 'menuManage',
-      meta: { title: '菜单管理', icon: 'menuManage' }
-    }, { // 角色管理
-      path: 'roleManage',
-      name: 'roleManage',
-      component: () => import('@/views/sysManage/roleManage/index'),
-      meta: { title: '角色管理', icon: 'roleManage' }
-    }, { // 用户管理
-      path: 'userManage',
-      name: 'userManage',
-      component: () => import('@/views/sysManage/userManage/index'),
-      meta: { title: '用户管理', icon: 'user' }
-    }, { // 组织机构
-      path: 'department',
-      name: 'department',
-      component: () => import('@/views/sysManage/department/index'),
-      meta: { title: '组织机构', icon: 'tree' }
-    }, { // 系统日志
-      path: '/sysLog',
-      name: 'sysLog',
-      component: () => import('@/views/sysManage/sysLog/index'),
-      meta: { title: '系统日志', icon: 'sysLog' },
-      children: [{
-        path: 'loginLog',
-        name: 'loginLog',
-        component: () => import('@/views/sysManage/sysLog/loginLog/index'),
-        meta: { title: '登录日志', icon: 'logLog' }
-      }, {
-        path: 'operationLog',
-        name: 'operationLog',
-        component: () => import('@/views/sysManage/sysLog/operationLog/index'),
-        meta: { title: '操作日志', icon: 'operLog' }
-      }]
-    }]
+    parentId: 0,
+    routeId: 1
   },
-
+  { // 系统信息
+    name: 'sysInfo',
+    parentId: 1,
+    routeId: 2
+  },
+  { // 配置项管理
+    name: 'configItem',
+    parentId: 1,
+    routeId: 3
+  },
+  { // 菜单管理
+    name: 'menuManage',
+    parentId: 1,
+    routeId: 4
+  },
+  { // 角色管理
+    name: 'roleManage',
+    parentId: 1,
+    routeId: 5
+  },
+  { // 用户管理
+    name: 'userManage',
+    parentId: 1,
+    routeId: 6
+  },
+  { // 组织机构
+    name: 'department',
+    parentId: 1,
+    routeId: 7
+  },
+  { // 系统日志
+    name: 'sysLog',
+    parentId: 1,
+    routeId: 8
+  },
+  { // 登陆日志
+    name: 'loginLog',
+    parentId: 8,
+    routeId: 9
+  },
+  { // 操作日志
+    name: 'operationLog',
+    parentId: 8,
+    routeId: 10
+  },
   { // 系统监控
-    path: '/sysWatch',
-    component: Layout,
     name: 'sysWatch',
-    meta: { title: '系统监控', icon: 'sysWatch' },
     alwaysShow: true,
-    children: [{ // 定时任务
-      path: 'setTime',
-      name: 'setTime',
-      component: () => import('@/views/sysWatch/setTime/index'),
-      meta: { title: '定时任务', icon: 'setTime', btnPermission: ['search', 'remove'] }
-    }]
+    parentId: 0,
+    routeId: 11
   },
-
-  { path: '*', redirect: '/404', hidden: true }
+  { // 定时任务
+    name: 'setTime',
+    parentId: 11,
+    routeId: 12
+  }
 ]
