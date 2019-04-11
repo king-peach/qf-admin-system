@@ -62,3 +62,14 @@ export function editPassword(data) {
     }
   })
 }
+
+export function changeStatus(userId, status) {
+  return request({
+    url: '/user/changeStatus',
+    method: 'post',
+    data: {
+      userId: userId,
+      status: status
+    }
+  })
+}

@@ -16,15 +16,15 @@
             :expand-on-click-node="false"
             highlight-current
             :props="defaultProps"
-            @node-click="handleNodeClick"
-            default-expand-all>
+            default-expand-all
+            @node-click="handleNodeClick">
           </el-tree>
         </div>
       </div>
     </div>
     <div :class="['right', departSwitch === true ? 'move-right' : 'move-left']">
       <!-- 搜索组件 -->
-      <search-box :formData="searchForm" @search="search"></search-box>
+      <SearchBox :formData="searchForm" @search="search"></SearchBox>
 
       <div class="container">
         <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
@@ -60,11 +60,11 @@
           </el-table-column>
         </el-table>
         <!-- 确认删除组件 -->
-        <del-user :show.sync="delUserVisible" :type="delType" @confirmDelOne="delUser" />
+        <DelUser :show.sync="delUserVisible" :type="delType" @confirmDelOne="delUser" />
         <!-- 修改密码组件 -->
-        <edit-password :show.sync="editPasswordVisible" :user="userPsw" @confirmEdit="editPass" @cancelEdit="cancelEditPass"/>
+        <EditPassword :show.sync="editPasswordVisible" :user="userPsw" @confirmEdit="editPass" @cancelEdit="cancelEditPass" />
         <!-- 新建/编辑用户组件 -->
-        <user-info :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" :treeData="deptTree" :options="roleList" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
+        <UserInfo :show.sync="userinfoVisible" :flag="isCreate" :formData="userinfoData" :treeData="deptTree" :options="roleList" @confirmAdd="addUser" @confirmEdit="editSuccess" @closeDialog="cancel" />
         <!-- 分页器 -->
         <el-pagination
           :page-size="pageSize"
@@ -84,7 +84,7 @@ import DelUser from '@/components/ConfirmDel/index'
 import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import SearchBox from '@/components/SearchBox'
-import { getUserInfo, editUser, createUser, editPassword } from '@/api/sysManage/userManage'
+import { getUserInfo, editUser, createUser, editPassword, changeStatus } from '@/api/sysManage/userManage'
 import { getRoleInfo } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
 import { listToTree } from '@/utils/getTree'
@@ -252,8 +252,16 @@ export default {
     cancel() { // 取消新增/编辑用户
       this.userinfoVisible = false
     },
-    handleStatus() { // 改变状态时回调
-
+    handleStatus(index) { // 改变状态时回调
+      const status = this.tableData[index] ? 1 : 0
+      changeStatus(this.tableData[index].userId, status).then(response => {
+        if (response.success) {
+          Notification({
+            message: '用户状态修改成功',
+            type: 'success'
+          })
+        }
+      }).catch(error => error)
     },
     handleNodeClick(data) {
       this.searchData.deptId = data.deptId

@@ -55,8 +55,8 @@ function formattingRouter(routes) {
 /**
  * 根据name新增meta、components、path等信息
  * @param {*} item 待转化对象
- * @param {*} isRoot 是否为根元素
- * @param {*} isParent 是否为父元素
+ * @param {*} isRoot 是否为根路由
+ * @param {*} isParent 是否为父路由
  */
 function generateRouter(item, isRoot, isParent) {
   var router = {
@@ -64,13 +64,16 @@ function generateRouter(item, isRoot, isParent) {
     routeId: item.routeId,
     path: isParent ? '/' + item.name : item.name,
     name: item.name,
-    alwaysShow: item.name === 'sysWatch',
+    alwaysShow: isRoot,
     meta: metaMap[item.name],
     component: isRoot ? Layout : componentsMap[item.name]
   }
   return router
 }
-// components映射表
+/**
+ * conponents映射表
+ * 需对接后端、如新增菜单需添加路由信息（结构参照以下）
+ */
 export const componentsMap = {
   sysInfo: () => import('@/views/sysManage/sysInfo/index'),
   configItem: () => import('@/views/sysManage/configItem/index'),
@@ -83,7 +86,10 @@ export const componentsMap = {
   operationLog: () => import('@/views/sysManage/sysLog/operationLog/index'),
   setTime: () => import('@/views/sysWatch/setTime/index')
 }
-// meta 映射表
+/**
+ * meta 字段映射表
+ * 需对接后端、如新增菜单需添加映射信息（结构参照以下）
+ */
 export const metaMap = {
   sysInfo: { title: '系统信息', icon: 'sysInfo' },
   sysManage: { title: '系统管理', icon: 'sysManage' },
@@ -119,11 +125,6 @@ const permission = {
         const routesList = formattingRouter(asyncRouterMap)
         const accessedRouters = listToTree(routesList, { parentId: 'parentId', id: 'routeId' }, 0)
         accessedRouters.push({ path: '*', redirect: '/404', hidden: true })
-        // console.info(accessedRouters)
-        // if (roles.includes('admin')) {
-        //   accessedRouters = asyncRouterMap
-        // } else {
-        // }
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
