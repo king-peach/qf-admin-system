@@ -1,14 +1,10 @@
 <template>
   <div class="main">
     <el-row>
-      <!-- <el-col :span="4"> -->
         <el-button icon="el-icon-arrow-right" style="margin-right: 10px;">手动执行</el-button>
-      <!-- </el-col>
-      <el-col :span="18" class="col-right"> -->
         <el-input v-model="searchValue" placeholder="请输入搜索关键字" @keyup.enter.native="searchTask" suffix-icon="el-icon-search" class="search-input" />
         <el-button type="primary" @click="searchTask" v-has="'search'">搜索</el-button>
         <el-button type="primary" @click="createTask" v-has="'add'">+ 添加</el-button>
-      <!-- </el-col> -->
     </el-row>
     <!-- 定时任务表单 -->
     <el-table
