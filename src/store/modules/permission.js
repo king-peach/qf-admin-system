@@ -1,35 +1,6 @@
-import { asyncRouterMap, constantRouterMap } from '@/router'
+import { constantRouterMap } from '@/router'
 import { listToTree } from '@/utils/getTree'
 import Layout from '@/views/layout/Layout'
-
-/**
- *将后台的路由表进行格式化
- * @param {*} asyncRouterMap
- */
-// function convertRouter(routes) {
-//   const accessedRouters = []
-//   if (routes) {
-//     routes.forEach(item => {
-//       var parent = generateRouter(item, true, true)
-//       var children = []
-//       if (item.children) {
-//         item.children.forEach(child => {
-//           if (child.children) {
-//             const thirdRoute = []
-//             thirdRoute.push(child)
-//             const formattingThirdRoute = convertRouter(thirdRoute)[0]
-//             children.push(formattingThirdRoute)
-//           }
-//           children.push(generateRouter(child, false))
-//         })
-//       }
-//       parent.children = children
-//       accessedRouters.push(parent)
-//     })
-//   }
-//   accessedRouters.push({ path: '*', redirect: '/404', hidden: true })
-//   return accessedRouters
-// }
 
 /**
  * 动态路由列表信息完善
@@ -39,13 +10,13 @@ function formattingRouter(routes) {
   const accessedRouters = []
   if (routes) {
     let isRoot, isParent
-    const routeIds = []
+    const parentIds = []
     routes.forEach(item => {
-      routeIds.push(item.routeId)
+      parentIds.push(item.parentId)
     })
     routes.forEach(item => {
       isRoot = item.parentId === 0
-      isParent = routeIds.includes(item.parentId)
+      isParent = parentIds.includes(item.routeId)
       accessedRouters.push(generateRouter(item, isRoot, isParent))
     })
   }
@@ -62,11 +33,21 @@ function generateRouter(item, isRoot, isParent) {
   var router = {
     parentId: item.parentId,
     routeId: item.routeId,
-    path: isParent ? '/' + item.name : item.name,
+    path: isRoot ? '/' + item.name : item.name,
     name: item.name,
     alwaysShow: isRoot,
     meta: metaMap[item.name],
     component: isRoot ? Layout : componentsMap[item.name]
+  }
+  if (isRoot || isParent) {
+    router = {
+      parentId: item.parentId,
+      routeId: item.routeId,
+      path: isRoot ? '/' + item.name : item.name,
+      alwaysShow: isRoot,
+      meta: metaMap[item.name],
+      component: isRoot ? Layout : componentsMap[item.name]
+    }
   }
   return router
 }
@@ -119,13 +100,10 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
-        // const { roles } = data
-        // const accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-        // const routes = listToTree(asyncRouterMap, { parentId: 'parentId', id: 'routeId' }, 0)
-        const routesList = formattingRouter(asyncRouterMap)
-        const accessedRouters = listToTree(routesList, { parentId: 'parentId', id: 'routeId' }, 0)
-        accessedRouters.push({ path: '*', redirect: '/404', hidden: true })
-        commit('SET_ROUTERS', accessedRouters)
+        const routesList = formattingRouter(data)
+        const asyncRouterMap = listToTree(routesList, { parentId: 'parentId', id: 'routeId' }, 0)
+        asyncRouterMap.push({ path: '*', redirect: '/404', hidden: true })
+        commit('SET_ROUTERS', asyncRouterMap)
         resolve()
       })
     }

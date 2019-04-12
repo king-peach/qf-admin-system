@@ -6,7 +6,7 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    asyncRouter: []
   },
 
   mutations: {
@@ -19,8 +19,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_ASYNCROUTER: (state, asyncRouter) => {
+      state.asyncRouter = asyncRouter
     }
   },
 
@@ -45,10 +45,10 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (data.asyncRouter) {
+            commit('SET_ASYNCROUTER', data.asyncRouter)
           } else {
-            reject('getInfo: roles must be a non-null array !（roles必须是一个非空数组）')
+            reject('获取动态路由表失败！')
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
@@ -64,7 +64,6 @@ const user = {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
           removeToken()
           resolve()
         }).catch(error => {

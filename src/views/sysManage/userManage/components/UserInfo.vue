@@ -60,6 +60,7 @@
 
 <script>
 export default {
+  name: 'UserInfo',
   props: {
     flag: { // 编辑/新增功能标识
       type: Boolean,
@@ -127,7 +128,7 @@ export default {
         ],
         password: [
           { validator: validPassword, trigger: 'blur' },
-          { min: 6, message:'密码至少六位', trriger: 'blur' }
+          { min: 6, message: '密码至少六位', trriger: 'blur' }
         ],
         repeatPass: [
           { validator: validRepeatPass, trigger: 'blur' }
@@ -157,7 +158,7 @@ export default {
     confirm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let newFormData = { ...this.formData }
+          const newFormData = { ...this.formData }
           this.flag === true ? this.$emit('confirmAdd', newFormData) : this.$emit('confirmEdit', newFormData)
           this.$refs[formName].resetFields()
         } else {

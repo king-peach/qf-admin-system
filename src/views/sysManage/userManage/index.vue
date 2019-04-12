@@ -91,6 +91,7 @@ import { listToTree } from '@/utils/getTree'
 import { Message, Notification } from 'element-ui'
 import { parseTime } from '@/utils/index'
 export default {
+  name: 'userManage',
   components: {
     DelUser,
     EditPassword,

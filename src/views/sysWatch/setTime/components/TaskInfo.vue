@@ -43,6 +43,7 @@
 <script>
 import { cronValidate } from '@/utils/cronValid'
 export default {
+  name: 'TaskInfo',
   props: {
     show: {
       type: Boolean,
@@ -154,7 +155,7 @@ export default {
           { type: 'date', required: true, meessage: '请选择起始时间', trigger: 'blur' }
         ],
         setTime: [
-          { validator: cronValidate , trigger: 'blur' }
+          { validator: cronValidate, trigger: 'blur' }
         ]
       }
     }

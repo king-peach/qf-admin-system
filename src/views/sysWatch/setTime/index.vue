@@ -69,6 +69,7 @@ import TaskInfo from './components/TaskInfo'
 import { mapGetters } from 'vuex'
 // import { getSetTimeData } from '@/api/sysManage/setTime'
 export default {
+  name: 'setTime',
   components: {
     DelTask,
     TaskInfo
@@ -142,7 +143,7 @@ export default {
       pageSize: 2,
       currentPage: 1,
       btnVisible: true,
-      imgList: [],
+      imgList: []
     }
   },
   computed: {

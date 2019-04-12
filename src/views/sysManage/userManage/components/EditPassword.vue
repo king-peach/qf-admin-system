@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  name: 'EditPassword',
   props: {  
     show: {
       type: Boolean,
