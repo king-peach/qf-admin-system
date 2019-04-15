@@ -34,9 +34,10 @@ function generateRouter(item, isRoot, isParent) {
     parentId: item.parentId,
     routeId: item.routeId,
     path: isRoot ? '/' + item.name : item.name,
-    name: item.name,
+    name: item.name + '_',
     alwaysShow: isRoot,
     meta: metaMap[item.name],
+    btnPermission: item.buttonPriv,
     component: isRoot ? Layout : componentsMap[item.name]
   }
   if (isRoot || isParent) {

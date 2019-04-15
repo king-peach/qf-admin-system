@@ -56,6 +56,9 @@ module.exports = {
     // 修复热更新失效
     config.resolve.symlinks(true)
   },
+  devServer: {
+    disableHostCheck: true // 禁用webpack热重载检查
+  },
   baseUrl: './', // 配置打包基本路径
   lintOnSave: process.env.NODE_ENV !== 'production'
 }

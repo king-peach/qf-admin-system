@@ -1,39 +1,36 @@
 <template>
-  <div class="main clearfix">
-    <div class="title">
-      <el-button type="warning">禁止登录</el-button>
-      <el-button type="danger">强制注销所有会话</el-button>
-    </div>
-    <!-- <el-card v-for="(value, key, index) in list" :key="key" :class="['info-box', index < 2 ? 'half' : 'all']">
-      <div slot="header">
-        <span>{{ key }}</span>
+  <!-- 两栏布局 -->
+  <two-column-layout :leftColumnTitle="leftColumnTitle">
+    <template v-slot:left-content>
+      菜单树adadadadsda
+      <p>惨淡菜单菜单菜</p>
+    </template>
+    <template v-slot:right-content>
+      <div class="title">
+        <el-button type="warning">禁止登录</el-button>
+        <el-button type="danger">强制注销所有会话</el-button>
       </div>
-      <el-table :data="value">
-        <el-table-column prop="name" label="数据项" />
-        <el-table-column prop="value" label="属性值" />
-      </el-table>
-    </el-card> -->
-  </div>
+    </template>
+  </two-column-layout>
 </template>
 
 <script>
 // import { getInfo } from '@/api/sysManage/sysInfo'
+import TwoColumnLayout from '@/components/TwoColumnLayout/index'
 export default {
+  name: 'sysInfo',
+  components: {
+    TwoColumnLayout
+  },
   data() {
     return {
-      // activeName: '',
-      // list: {}
+      leftColumnTitle: '菜单栏标题'
     }
   },
   created() {
-    // this.getData()
+    // this.router = this.$store.getters.addRouters
   },
   methods: {
-    // getData() {
-    //   getInfo().then(response => {
-    //     this.list = response.data
-    //   })
-    // }
   }
 }
 </script>
@@ -41,30 +38,5 @@ export default {
 <style lang="scss" scoped>
   .title{
     padding-bottom:20px;
-  }
-  .info-box {
-    display: inline-block;
-    min-height: 385px;
-    margin-bottom: 20px;
-  }
-  .clearfix {
-    clear: both;
-  }
-  .clearfix::before,
-  .clearfix::after {
-    display: table;
-    content: '';
-  }
-  .half {
-    width: 48%;
-    @media screen and (max-width: 980px) {
-      width: 100%;
-    }
-    &:nth-of-type(2) {
-      float: right;
-    }
-  }
-  .all {
-    width: 100%;
   }
 </style>

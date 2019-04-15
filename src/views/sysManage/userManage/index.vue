@@ -1,30 +1,18 @@
 <template>
-  <div class="main">
-    <div class="left">
-      <div class="switch">
-        <div @click="departSwitch = !departSwitch">
-          <span :class="departSwitch === true ? 'to-right' : 'to-left'" />
-        </div>
-      </div>
-      <div :class="['box', departSwitch === true ? 'show' : 'hide']">
-        <header>
-          <h4>组织机构</h4>
-        </header>
-        <div class="box-container">
-          <el-tree
-            :data="deptTree"
-            :expand-on-click-node="false"
-            highlight-current
-            :props="defaultProps"
-            default-expand-all
-            @node-click="handleNodeClick">
-          </el-tree>
-        </div>
-      </div>
-    </div>
-    <div :class="['right', departSwitch === true ? 'move-right' : 'move-left']">
-      <!-- 搜索组件 -->
-      <SearchBox :formData="searchForm" @search="search"></SearchBox>
+<!-- 两列自适应布局 -->
+<two-column-layout :leftColumnTitle="leftColumnTitle">
+  <template v-slot:left-content>
+    <el-tree
+      :data="deptTree"
+      :expand-on-click-node="false"
+      highlight-current
+      :props="defaultProps"
+      default-expand-all
+      @node-click="handleNodeClick">
+    </el-tree>
+  </template>
+  <template v-slot:right-content>
+    <SearchBox :formData="searchForm" @search="search"></SearchBox>
 
       <div class="container">
         <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
@@ -75,8 +63,8 @@
           @current-change="getCurrentPage"
         />
       </div>
-    </div>
-  </div>
+  </template>
+</two-column-layout>
 </template>
 
 <script>
@@ -84,6 +72,7 @@ import DelUser from '@/components/ConfirmDel/index'
 import EditPassword from './components/EditPassword'
 import UserInfo from './components/UserInfo'
 import SearchBox from '@/components/SearchBox'
+import TwoColumnLayout from '@/components/TwoColumnLayout'
 import { getUserInfo, editUser, createUser, editPassword, changeStatus } from '@/api/sysManage/userManage'
 import { getRoleInfo } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
@@ -96,10 +85,12 @@ export default {
     DelUser,
     EditPassword,
     UserInfo,
-    SearchBox
+    SearchBox,
+    TwoColumnLayout
   },
   data() {
     return {
+      leftColumnTitle: '组织机构',
       tableData: [],
       loading: true, // 加载状态
       pageSize: 5, // 单页容纳元素量
@@ -281,95 +272,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.left {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #fff;
-  height: 100%;
-  .box {
-    width: 190px;
-    &.show {
-      width: 190px;
-      font-size: 16px;
-      transition: .5s width, .5s font-size;
-      .box-container {
-        visibility: visible;
-        transition: 1s visibility;
-      }
-    }
-    &.hide {
-      width: 0;
-      font-size: 0;
-      transition: .5s width;
-      .box-container {
-        visibility: hidden;
-      }
-    }
-    header {
-      border-bottom: 1px solid #ebeef5;
-      h4 {
-        text-align: center;
-        color: #909399;
-        font-weight: 500;
-      }
-    }
-    .box-container {
-      padding: 20px;
-    }
-  }
-  .switch {
-    float: right;
-    width: 10px;
-    height: 100%;
-    background: #ebeef5;
-    position: relative;
-    div {
-      position: absolute;
-      top: 50%;
-      display: inline-block;
-      width: 100%;
-      height: 50px;
-      transform: translateY(-50%);
-      background-color: #dcdfe6;
-      &:hover {
-        background-color: #ffbb3df5;
-      }
-      span {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border: 5px solid transparent;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      .to-left {
-        left: 2px;
-        border-left-color: #666;
-      }
-      .to-right {
-        left: -2px;
-        border-right-color: #666;
-      }
-    }
-  }
-}
-.right {
-  width: 100%;
-  padding-left: 190px;
-  &.move-left {
-    padding-left: 0;
-    transition: .5s padding-left;
-  }
-  &.move-right {
-    padding-left: 190px;
-    transition: .5s padding-left;
-  }
-  .pagination-style{
-    margin-top: 20px;
-  }
-}
-</style>
