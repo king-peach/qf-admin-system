@@ -31,11 +31,11 @@
       <el-form-item label="备注" prop="remark">
         <el-input type="textarea" v-model="role.remark"/>
       </el-form-item>
-      <div align="center">
-        <el-button @click="cancelAdd('ruleForm')">取 消</el-button>
-        <el-button type="primary" @click="onSubmit('ruleForm')">立即创建</el-button>
-      </div>
     </el-form>
+    <div align="center" slot="footer" class="dialog-footer">
+      <el-button @click="cancelAdd('ruleForm')">取 消</el-button>
+      <el-button type="primary" @click="onSubmit('ruleForm')">立即创建</el-button>
+    </div>
   </el-dialog>
 </template>
 

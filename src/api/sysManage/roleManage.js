@@ -51,6 +51,7 @@ export function editRole(data) {
     url: '/role/updateRole',
     method: 'post',
     data: {
+      menuIds: data.menuIds,
       roleName: data.roleName,
       roleKey: data.roleKey,
       roleId: data.roleId,

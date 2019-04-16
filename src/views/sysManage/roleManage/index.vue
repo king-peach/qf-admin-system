@@ -24,11 +24,11 @@
             <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="createTime" sortable align="center" />
-        <el-table-column label="操作" align="center">
+        <el-table-column label="创建时间" prop="createTime" sortable align="center" show-overflow-tooltip/>
+        <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope" >
             <el-button size="mini" @click="editRole">编辑</el-button>
-            <!-- <el-button size="mini" small>权限设置</el-button> -->
+            <el-button size="mini" type="primary" @click="handlePermission(scope.$index)">权限设置</el-button>
             <el-button type="danger" size="mini" @click.native.prevent="openDel(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -37,6 +37,8 @@
       <del-role :show.sync="delRoleVisible" :type="delType" @confirmDelOne="delRole" />
       <!-- 新增/编辑角色组件 -->
       <add-role :show.sync="roleInfoVisible" :role="roles" :treeData="deptTree" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
+      <!-- 权限设置组件 -->
+      <permission-manage :show.sync="permissionManageVisible" :roleInfo="roles" :menuIds="currentRoleMenuIds" @cancel="cancelEditPermission" @confirm="confirmEditPermission"/>
       <!-- 分页器 -->
       <el-pagination
         :page-size="pageSize"
@@ -55,6 +57,7 @@
 import DelRole from '@/components/ConfirmDel/index'
 import AddRole from './components/AddRole'
 import SearchBox from '@/components/SearchBox'
+import PermissionManage from './components/PermissionManage'
 import { getRoleInfo, addRole, editStatus, delRole, editRole } from '@/api/sysManage/roleManage'
 import { getDeptData } from '@/api/sysManage/department'
 import { parseTime } from '@/utils/index'
@@ -64,7 +67,8 @@ export default {
   components: {
     DelRole,
     AddRole,
-    SearchBox
+    SearchBox,
+    PermissionManage
   },
   data() {
     return {
@@ -75,7 +79,7 @@ export default {
         status: { label: '状态', value: null }
       },
       tableData: [], // 存储所有角色数据
-      roles: {}, // 新增/编辑角色表单数据
+      roles: {}, // 存储当前行角色信息
       deptTree: [], // 组织机构树数据
       createRoles: { roleKey: '', roleName: '', status: true, createBy: '', roleSort: null, menuIds: [], ramark: '' }, // 新增角色信息
       roleList: [],
@@ -84,17 +88,19 @@ export default {
       total: 10, // 数据总数
       delRoleVisible: false, // 删除角色开关
       roleInfoVisible: false, // 新增角色开关
+      permissionManageVisible: false, // 权限设置开关
       delIndex: 0, // 存储删除索引
       isCreate: true, // 是否新建角色
       searchData: {}, // 存储搜索条件
-      delType: 'delOne' // 存储确认删除组件状态
+      delType: 'delOne', // 存储确认删除组件状态
+      currentRoleMenuIds: null // 当前角色的菜单权限
     }
   },
   created() { // 获取所有角色
     this.getData()
     getDeptData().then(response => {
       this.deptTree = listToTree(response.data, { id: 'deptId', parentId: 'parentId' }, 0)
-    }).catch(error => { return error })
+    }).catch(error => error)
   },
   methods: {
     search(data) { // 点击搜索
@@ -145,7 +151,7 @@ export default {
           this.delRoleVisible = false
           Notification({
             type: 'success',
-            message: '当前角色删除删除成功'
+            message: '当前角色删除成功'
           })
         }
       }).catch(error => { return error }) // axios全局错误已处理，此处只捕获不处理
@@ -198,6 +204,18 @@ export default {
           this.getData()
         }
       }).catch(error => { return error })
+    },
+    handlePermission(index) { // 权限设置
+      this.permissionManageVisible = true
+      this.roles = { ...this.tableData[index] }
+      this.currentRoleMenuIds = this.roles.menuIds === null ? [] : this.menuIds
+    },
+    cancelEditPermission() {
+      this.permissionManageVisible = false
+    },
+    confirmEditPermission() {
+      this.permissionManageVisible = false
+      this.getData()
     }
   }
 }
