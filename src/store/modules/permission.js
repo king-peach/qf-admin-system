@@ -33,8 +33,8 @@ function generateRouter(item, isRoot, isParent) {
   var router = {
     parentId: item.parentId,
     routeId: item.routeId,
-    path: isRoot ? '/' + item.name : item.name,
-    name: item.name + '_',
+    path: item.name,
+    name: item.name,
     alwaysShow: isRoot,
     meta: metaMap[item.name],
     btnPermission: item.buttonPriv,

@@ -49,11 +49,18 @@ export const constantRouterMap = [
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  // mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
+  base: process.env.BASE_URL,
   routes: constantRouterMap
 })
 
+// 解决开发环境下路由重复警告的问题
+
+export const createRouter = () => new Router({
+  base: process.env.BASE_URL,
+  routes: constantRouterMap
+})
 // export const asyncRouterMap = [
 //   { // 系统管理
 //     path: '/sysManage',
