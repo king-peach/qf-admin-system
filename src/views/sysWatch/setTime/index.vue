@@ -44,20 +44,18 @@
       @current-change="getCurrentPage"
       style="margin-top: 20px;"
     />
-    <el-form :inline="true">
-      <el-form-item label="文件上传:" style="position: relative;">
-        <input type="file" style="height: 50px; position: absolute; top: 0; z-index: 999; opacity: 0;" @change="uploadFile" ref="createFile" />
-        <!-- <el-input v-model="file.fileData" style="display: none;"></el-input> -->
-        <el-button type="primary">选择文件</el-button>
-        <div ref="showFile" class="showFile">
-          <img :src="item.src" alt="" v-for="item of imgList" :key="item.src">
-        </div>
-      </el-form-item>
-    </el-form>
     <div>
       {{ set_timeout }}
       <el-button @click="increment" size="mini" type="primary">自增一</el-button>
       <el-button @click="decrement" size="mini" type="danger">自减一</el-button>
+    </div>
+
+    <div class="img-upload-box">
+      <img-upload uploadUrl="http://192.168.1.164:8088/group1/upload">
+        <template v-slot:tips>
+          <div class="tips">图片上传组件</div>
+        </template>
+      </img-upload>
     </div>
   </div>
 </template>
@@ -67,15 +65,19 @@ import { Message } from 'element-ui'
 import DelTask from '@/components/ConfirmDel/index'
 import TaskInfo from './components/TaskInfo'
 import { mapGetters } from 'vuex'
+import axios from 'axios'
+import ImgUpload from '@/components/Upload/ImgUpload'
 // import { getSetTimeData } from '@/api/sysManage/setTime'
 export default {
   name: 'setTime',
   components: {
     DelTask,
-    TaskInfo
+    TaskInfo,
+    ImgUpload
   },
   data() {
     return {
+      fileList: [],
       tableData: [{
         type: '系统任务1',
         name: 'Framework Cron Task',
@@ -213,15 +215,6 @@ export default {
     },
     getCurrentPage(val) { // 当前页码改变时触发，获取当前页码
       this.currentPage = val
-    },
-    uploadFile() {
-      const src = window.URL.createObjectURL(this.$refs.createFile.files[0])
-      // this.node.push(`<img src="${src}" alt="" class="img"/>`)
-      // const nodeHTML = this.node.join(' ')
-      // this.$refs.showFile.innerHTML = nodeHTML
-      var imgObj = {}
-      imgObj.src = src
-      this.imgList.push(imgObj)
     }
   }
 }
@@ -241,5 +234,13 @@ export default {
     width: 100px;
     height: 100px;
     display: inline-block;
+  }
+  .img-upload-box {
+    width: 400px;
+    .tips {
+      font-size: .5em;
+      color: #999;
+      margin-top: 10px;
+    }
   }
 </style>

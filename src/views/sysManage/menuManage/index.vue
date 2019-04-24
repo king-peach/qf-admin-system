@@ -7,8 +7,7 @@
       <TreeTable
       :data="treeData"
       :eval-func="func"
-      :expand-all="true"
-      stripe>
+      :expand-all="true">
         <el-table-column label="菜单名称" align="center" width="120">
           <template slot-scope="scope">
             <span style="color: #ef3434">{{ scope.row.menuName }}</span>
@@ -55,7 +54,7 @@ import { listToTree, filterNode } from '@/utils/getTree'
 import { parseTime } from '@/utils/index'
 import MenuInfo from './components/info'
 export default {
-  components: { 
+  components: {
     SearchBox,
     TreeTable,
     MenuInfo
@@ -76,7 +75,6 @@ export default {
   },
   created() {
     this.getData()
-    console.info(this.$route)
   },
   methods: {
     getData() {
@@ -85,7 +83,7 @@ export default {
           response.data.forEach(element => {
             element.createTime = parseTime(element.createTime)
           })
-          this.treeData = listToTree(response.data, { id: 'menuId', parentId: 'parentId'}, 0)
+          this.treeData = listToTree(response.data, { id: 'menuId', parentId: 'parentId' }, 0)
         }
       }).catch(error => { return error })
     },

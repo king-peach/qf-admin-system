@@ -99,7 +99,6 @@ export default {
   },
   created() { // 获取所有角色
     this.getData()
-    console.log(this.$route)
     getDeptData().then(response => {
       this.deptTree = listToTree(response.data, { id: 'deptId', parentId: 'parentId' }, 0)
     }).catch(error => error)
