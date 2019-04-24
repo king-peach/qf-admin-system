@@ -1,61 +1,61 @@
 <template>
   <div class="main">
-    <el-row>
-        <el-button icon="el-icon-arrow-right" style="margin-right: 10px;">手动执行</el-button>
-        <el-input v-model="searchValue" placeholder="请输入搜索关键字" @keyup.enter.native="searchTask" suffix-icon="el-icon-search" class="search-input" />
-        <el-button type="primary" @click="searchTask" v-has="'search'">搜索</el-button>
-        <el-button type="primary" @click="createTask" v-has="'add'">+ 添加</el-button>
-    </el-row>
-    <!-- 定时任务表单 -->
-    <el-table
-      ref="setTimeForm"
-      border
-      :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
-      tooltip-effect="dark"
-      style="width: 100%">
-      <el-table-column type="index" width="30" align="center" />
-      <el-table-column type="selection" width="40" align="center"/>
-      <el-table-column prop="type" label="类别" align="center" />
-      <el-table-column prop="name" label="任务名称" show-overflow-tooltip width="120" align="center"/>
-      <el-table-column prop="status" label="任务状态" align="center" />
-      <el-table-column prop="nextDate" label="下次执行时间" show-overflow-tooltip align="center" />
-      <el-table-column prop="timeout" label="当前任务耗时" align="center" />
-      <el-table-column prop="startDate" label="上次任务开始时间" show-overflow-tooltip align="center" />
-      <el-table-column prop="endDate" label="上次任务结束时间" show-overflow-tooltip align="center" />
-      <el-table-column prop="descript" label="任务描述" show-overflow-tooltip align="center"/>
-      <el-table-column label="操作" width="150" align="center">
-        <template slot-scope="scope">
-          <el-button size="medium" type="text" @click="editTask">编辑</el-button>
-          <el-button size="medium" type="text" style="color:#F56C6C;" @click="handlerDel(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 确认删除任务组件 -->
-    <del-task :show.sync="delTaskVisible" @confirmDel="delTask"/>
-    <!-- 新增/编辑任务组件 -->
-    <task-info :show.sync="taskinfoVisible" :flag="isCreate" :formData="formData" @confirmAdd="addTask" @closeDialog="cancel"/>
-    <!-- 分页器 -->
-    <el-pagination
-      :page-size="pageSize"
-      :current-page="currentPage"
-      :total="tables.length"
-      layout="total, prev, pager, next, jumper"
-      @size-page="getPageSize"
-      @current-change="getCurrentPage"
-      style="margin-top: 20px;"
-    />
-    <div>
-      {{ set_timeout }}
-      <el-button @click="increment" size="mini" type="primary">自增一</el-button>
-      <el-button @click="decrement" size="mini" type="danger">自减一</el-button>
-    </div>
+    <!-- 搜索组件 -->
+    <search-box :formData="searchForm" />
 
-    <div class="img-upload-box">
-      <img-upload uploadUrl="http://192.168.1.164:8088/group1/upload">
-        <template v-slot:tips>
-          <div class="tips">图片上传组件</div>
-        </template>
-      </img-upload>
+    <div class="container">
+      <!-- 定时任务表单 -->
+      <el-table
+        ref="setTimeForm"
+        border
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        >
+        <el-table-column type="index" width="30" align="center" />
+        <el-table-column type="selection" width="40" align="center" />
+        <el-table-column prop="type" label="类别" align="center" />
+        <el-table-column prop="name" label="任务名称" show-overflow-tooltip width="120" align="center" />
+        <el-table-column prop="status" label="任务状态" align="center" />
+        <el-table-column prop="nextDate" label="下次执行时间" show-overflow-tooltip align="center" />
+        <el-table-column prop="timeout" label="当前任务耗时" align="center" />
+        <el-table-column prop="startDate" label="上次任务开始时间" show-overflow-tooltip align="center" />
+        <el-table-column prop="endDate" label="上次任务结束时间" show-overflow-tooltip align="center" />
+        <el-table-column prop="descript" label="任务描述" show-overflow-tooltip align="center" />
+        <el-table-column label="操作" width="150" align="center">
+          <template slot-scope="scope">
+            <el-button size="medium" type="text" @click="editTask">编辑</el-button>
+            <el-button size="medium" type="text" style="color:#F56C6C;" @click="handlerDel(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 确认删除任务组件 -->
+      <del-task :show.sync="delTaskVisible" @confirmDel="delTask" />
+      <!-- 新增/编辑任务组件 -->
+      <task-info :show.sync="taskinfoVisible" :flag="isCreate" :formData="formData" @confirmAdd="addTask" @closeDialog="cancel" />
+      <!-- 分页器 -->
+      <el-pagination
+        :page-size="pageSize"
+        :current-page="currentPage"
+        :total="tableData.length"
+        layout="total, prev, pager, next, jumper"
+        style="margin-top: 20px;"
+        @size-page="getPageSize"
+        @current-change="getCurrentPage"
+      />
+      <div>
+        {{ set_timeout }}
+        <el-button type="primary" size="mini" @click="increment">自增一</el-button>
+        <el-button type="danger" size="mini" @click="decrement">自减一</el-button>
+      </div>
+
+      <div class="img-upload-box">
+        <img-upload uploadUrl="http://192.168.1.164:8088/group1/upload">
+          <template v-slot:tips>
+            <div class="tips">图片上传组件</div>
+          </template>
+        </img-upload>
+      </div>
     </div>
   </div>
 </template>
@@ -64,20 +64,23 @@
 import { Message } from 'element-ui'
 import DelTask from '@/components/ConfirmDel/index'
 import TaskInfo from './components/TaskInfo'
+import SearchBox from '@/components/SearchBox'
 import { mapGetters } from 'vuex'
-import axios from 'axios'
 import ImgUpload from '@/components/Upload/ImgUpload'
-// import { getSetTimeData } from '@/api/sysManage/setTime'
 export default {
   name: 'setTime',
   components: {
     DelTask,
     TaskInfo,
-    ImgUpload
+    ImgUpload,
+    SearchBox
   },
   data() {
     return {
       fileList: [],
+      searchForm: {
+        status: { label: '状态', value: null }
+      },
       tableData: [{
         type: '系统任务1',
         name: 'Framework Cron Task',
@@ -137,8 +140,6 @@ export default {
       },
       formData: {}, // 存储新增/编辑表单数据
       delRow: {},
-      searchValue: '', // 搜索框值
-      taskFilter: '', // 存储模糊搜索值
       delTaskVisible: false,
       taskinfoVisible: false,
       isCreate: true,
@@ -149,25 +150,6 @@ export default {
     }
   },
   computed: {
-    tables() { // 模糊搜索功能
-      const taskFilter = this.taskFilter
-      if (taskFilter !== '') {
-        const reg = /^[\u4e00-\u9fa5\da-z-]+$/
-        if (!reg.test(taskFilter)) {
-          Message({
-            type: 'error',
-            message: '请输入中文、小写字母、数字、"-"类型的关键词'
-          })
-        } else {
-          return this.tableData.filter(dataNews => {
-            return Object.keys(dataNews).some(key => {
-              return String(dataNews[key]).toLowerCase().indexOf(taskFilter) > -1
-            })
-          })
-        }
-      }
-      return this.tableData
-    },
     ...mapGetters(['set_timeout']) // 使用对象拓展运算符将getter混入computed对象中
     // set_timeout() {
     //   return this.$store.getters.set_timeout

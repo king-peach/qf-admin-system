@@ -7,8 +7,7 @@
         :data="treeData"
         :eval-func="func"
         :expand-all="true"
-        v-loading="loading"
-        stripe>
+        v-loading="loading">
         <el-table-column label="部门名称" align="center">
           <template slot-scope="scope">
             <span style="color:#ef3434">{{ scope.row.deptName }}</span>

@@ -1,12 +1,16 @@
 <template>
   <div class="container">
     <div class="upload-img-box">
-      <input type="file" class="hide-file-input" @change="uploadFile" ref="createFile">
+      <input ref="createFile" type="file" class="hide-file-input" @change="uploadFile">
       <el-button type="primary">上传文件</el-button>
     </div>
+
+    <!-- 提示文案 -->
     <slot name="tips"></slot>
+
+    <!-- 上传图片展示区 -->
     <div ref="showImg" class="showImg">
-      <div class="img-box" v-for="item of imgList" :key="item.src" v-loading="item.loading">
+      <div v-for="item of imgList" :key="item.src" class="img-box">
         <img :src="item.src" alt="">
         <span class="img-name">{{ item.imgName }}</span>
         <label v-if="item.status === 'success'" class="upload-status upload-success">
@@ -105,7 +109,7 @@ export default {
       background: #13ce66;
     }
     .upload-fail {
-      background: #ff5e5e;  
+      background: #ff5e5e;
     }
     .icon-delete {
       display: none;

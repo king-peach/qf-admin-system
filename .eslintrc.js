@@ -14,6 +14,17 @@ module.exports = {
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
+    // HTML结尾标签之前不必要新起一行
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
+    // 忽略第三方库组件注册
+    'vue/component-name-in-template-casing': [
+      'PascalCase',
+      {
+        ignores: ['el-*'],
+      },
+    ],
+    "vue/html-self-closing": "never",
     "vue/max-attributes-per-line": [2, {
       "singleline": 10,
       "multiline": {
