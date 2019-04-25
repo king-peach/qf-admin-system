@@ -1,37 +1,38 @@
 <template>
-<!-- 两列自适应布局 -->
-<two-column-layout :leftColumnTitle="leftColumnTitle">
-  <template v-slot:left-content>
-    <el-tree
-      :data="deptTree"
-      :expand-on-click-node="false"
-      highlight-current
-      :props="defaultProps"
-      default-expand-all
-      @node-click="handleNodeClick">
-    </el-tree>
-  </template>
-  <template v-slot:right-content>
-    <SearchBox :formData="searchForm" @search="search"></SearchBox>
+  <!-- 两列自适应布局 -->
+  <two-column-layout :leftColumnTitle="leftColumnTitle">
+    <template v-slot:left-content>
+      <el-tree
+        :data="deptTree"
+        :expand-on-click-node="false"
+        highlight-current
+        :props="defaultProps"
+        default-expand-all
+        @node-click="handleNodeClick"
+      />
+    </template>
+    <template v-slot:right-content>
+      <SearchBox :formData="searchForm" @search="search" />
 
       <div class="container">
         <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
-        <el-button type="primary" size="medium" @click="createUser" icon="el-icon-plus">添加</el-button>
+        <el-button type="primary" size="medium" icon="el-icon-plus" @click="createUser">添加</el-button>
         <el-table
           ref="userChecked"
+          v-loading="loading"
           :data="tableData"
           stripe
-          v-loading="loading"
           :row-style="getRowIndex"
+          style="margin-top: 10px;"
           @row-click="handleClickRow"
           @select="selected"
           @select-all="selectAll"
-          style="margin-top: 10px;">
+        >
           <el-table-column prop="num" label="序号" sortable align="center" width="80" />
           <el-table-column type="selection" align="center" />
           <el-table-column prop="username" label="用户名" align="center" />
           <el-table-column prop="realName" label="真实姓名" align="center" />
-          <el-table-column prop="status" label="用户状态" align="center" >
+          <el-table-column prop="status" label="用户状态" align="center">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
             </template>
@@ -63,8 +64,8 @@
           @current-change="getCurrentPage"
         />
       </div>
-  </template>
-</two-column-layout>
+    </template>
+  </two-column-layout>
 </template>
 
 <script>

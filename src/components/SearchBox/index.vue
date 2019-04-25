@@ -7,8 +7,7 @@
             v-for="element in options"
             :key="element.value"
             :label="element.label"
-            :value="element.value">
-          </el-option>
+            :value="element.value" />
         </el-select>
       </template>
       <template v-else-if="key === 'date'">
@@ -19,14 +18,16 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          align="left">
-        </el-date-picker>
+          align="left" />
       </template>
       <template v-else>
         <el-input v-model="item.value" />
       </template>
     </el-form-item>
-    <slot></slot>
+
+    <!-- 自定义内容插槽 -->
+    <slot />
+
     <el-form-item>
       <el-button type="primary" size="medium" icon="el-icon-search" round @click="submit">
         搜索
@@ -62,29 +63,29 @@ export default {
         shortcuts: [{
           text: '最近一周',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
           }
         }, {
           text: '最近一个月',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
           }
         }, {
           text: '最近三个月',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
           }
         }]
-      },
+      }
     }
   },
   methods: {

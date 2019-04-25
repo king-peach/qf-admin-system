@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="taskinfoVisible" :show="show" center @close="cancel('ruleForm')" :title="flag ? '新建任务' : '编辑任务'">
+  <el-dialog :visible.sync="taskinfoVisible" :show="show" center :title="flag ? '新建任务' : '编辑任务'" @close="cancel('ruleForm')">
     <el-form ref="ruleForm" :rules="rule" :model="formData" label-width="150px">
       <el-form-item label="任务名称" prop="taskName">
         <el-input v-model="formData.taskName" />
@@ -8,7 +8,7 @@
         <el-input v-model="formData.taskType" />
       </el-form-item>
       <el-form-item label="起始时间" prop="startDate">
-        <el-date-picker v-model="formData.startDate" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="formData.startDate" type="date" placeholder="选择日期" />
       </el-form-item>
       <el-form-item label="执行表达式(cron)" prop="setTime">
         <!-- <el-radio-group v-model="formData.radio">
@@ -19,9 +19,9 @@
           <div style="height: 20px;" />
           <el-radio :label="2" prop="setTime2" style="display: block;">
             使用Cron表达式 <br /> -->
-            <el-input v-model="formData.setTime" @change="handlerChange" style="margin-top: 10px;"/>
-          <!-- </el-radio> -->
-        <!-- </el-radio-group> -->
+        <el-input v-model="formData.setTime" style="margin-top: 10px;" @change="handlerChange" />
+        <!-- </el-radio> -->
+      <!-- </el-radio-group> -->
       </el-form-item>
       <el-form-item label="状态">
         <el-radio-group v-model="formData.status">
@@ -30,7 +30,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input type="textarea" v-model="formData.remark" />
+        <el-input v-model="formData.remark" type="textarea" />
       </el-form-item>
       <el-form-item align="right">
         <el-button @click="cancel('ruleForm')">取消</el-button>
@@ -160,13 +160,13 @@ export default {
       }
     }
   },
-  updated() { // 虚拟DOM渲染更新以后进行corn校验并赋值给cronValid
-    this.cronValid = cronValidate(this.formData.setTime)
-  },
   watch: {
     show() {
       this.taskinfoVisible = this.show
     }
+  },
+  updated() { // 虚拟DOM渲染更新以后进行corn校验并赋值给cronValid
+    this.cronValid = cronValidate(this.formData.setTime)
   },
   methods: {
     confirm(formName) {
@@ -179,7 +179,6 @@ export default {
           return false
         }
       })
-      
     },
     cancel(formName) {
       this.$emit('closeDialog')

@@ -4,10 +4,10 @@
     <!-- 部门treeTable -->
     <div class="container">
       <tree-table
+        v-loading="loading"
         :data="treeData"
         :eval-func="func"
-        :expand-all="true"
-        v-loading="loading">
+        :expand-all="true">
         <el-table-column label="部门名称" align="center">
           <template slot-scope="scope">
             <span style="color:#ef3434">{{ scope.row.deptName }}</span>
@@ -22,8 +22,7 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              @change="statusChange(scope.row.status, scope.row.deptId)">
-            </el-switch>
+              @change="statusChange(scope.row.status, scope.row.deptId)" />
           </template>
         </el-table-column>
         <el-table-column label="电话" align="center">
@@ -36,14 +35,14 @@
             <div v-show="scope.row.parentId !== 0">
               <el-button type="text" size="medium" @click="add(scope.row)">新增</el-button>
               <el-button type="text" size="medium" @click="edit(scope.row)">编辑</el-button>
-              <el-button type="text" size="medium" @click="del(scope.row.deptId)" style="color: #ef3434">删除</el-button>
+              <el-button type="text" size="medium" style="color: #ef3434" @click="del(scope.row.deptId)">删除</el-button>
             </div>
           </template>
         </el-table-column>
       </tree-table>
 
       <!-- 删除提示框 -->
-      <del-item :show.sync="delItemVisible" @confirmDelOne="delItem" :type="delType" />
+      <del-item :show.sync="delItemVisible" :type="delType" @confirmDelOne="delItem" />
       <!-- 新增机构组件 -->
       <info-dialog :show.sync="infoVisible" :treeData="parentTree" :formData="formData" :flag="isCreate" @confirmAdd="confirm" @cancelAdd="cancel" />
     </div>

@@ -2,16 +2,16 @@
   <div class="container">
     <div :class="['left-column-box', leftColumnShow ? 'show': 'hide']" :style="leftColumnShow ? 'width: ' + leftColumnWidth + ';' : 'width: 0;'">
       <header :style="leftColumnShow ? 'display: block;' : 'display: none;'">
-        <h4>{{ leftColumnTitle}}</h4>
+        <h4>{{ leftColumnTitle }}</h4>
       </header>
       <section :style="leftColumnShow ? 'display: block;' : 'display: none;'">
         <slot name="left-content" />
       </section>
       <div :class="['aside-wrapper', 'to-hide', leftColumnShow ? '' : 'hide']" @click="handleColumnHide">
-        <div></div>
+        <div />
       </div>
       <div :class="['aside-wrapper', 'to-show', leftColumnShow ? 'hide' : '']" @click="handleColumnShow">
-        <div></div>
+        <div />
       </div>
     </div>
     <div class="right-column-box">

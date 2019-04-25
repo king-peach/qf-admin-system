@@ -4,9 +4,9 @@
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
+        :key="tag.path"
         :class="isActive(tag)?'active':''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        :key="tag.path"
         tag="span"
         class="tags-view-item"
         @click.middle.native="closeSelectedTag(tag)"
@@ -17,8 +17,7 @@
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">{{ 'tagsView.refresh' }}</li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">{{
-      'tagsView.close' }}</li>
+      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">{{ 'tagsView.close' }}</li>
       <li @click="closeOthersTags">{{ 'tagsView.closeOthers' }}</li>
       <li @click="closeAllTags(selectedTag)">{{ 'tagsView.closeAll' }}</li>
     </ul>

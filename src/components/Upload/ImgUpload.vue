@@ -6,7 +6,7 @@
     </div>
 
     <!-- 提示文案 -->
-    <slot name="tips"></slot>
+    <slot name="tips" />
 
     <!-- 上传图片展示区 -->
     <div ref="showImg" class="showImg">
@@ -14,12 +14,12 @@
         <img :src="item.src" alt="">
         <span class="img-name">{{ item.imgName }}</span>
         <label v-if="item.status === 'success'" class="upload-status upload-success">
-          <i class="el-icon-check"></i>
+          <i class="el-icon-check" />
         </label>
         <label v-if="item.status === 'fail'" class="upload-status upload-fail">
-          <i class="el-icon-close"></i>
+          <i class="el-icon-close" />
         </label>
-        <i class="icon-delete el-icon-close"></i>
+        <i class="icon-delete el-icon-close" />
       </div>
     </div>
   </div>

@@ -1,14 +1,14 @@
 <template>
   <el-dialog :visible.sync="editPasswordVisible" :show="show" title="修改密码" center @close="cancel('editPassForm')">
-    <el-form :model="user" status-icon :rules="rule" ref="editPassForm" label-width="100px">
+    <el-form ref="editPassForm" :model="user" status-icon :rules="rule" label-width="100px">
       <el-form-item label="用户名" prop="name">
-        <el-input v-model="user.name" disabled></el-input>
+        <el-input v-model="user.name" disabled />
       </el-form-item>
       <el-form-item label="原始密码" prop="oldPassword" autocomplete="off">
-        <el-input v-model.trim="user.oldPassword"></el-input>
+        <el-input v-model.trim="user.oldPassword" />
       </el-form-item>
       <el-form-item label="新密码" prop="newPassword" autocomplete="off">
-        <el-input v-model.trim="user.newPassword"></el-input>
+        <el-input v-model.trim="user.newPassword" />
       </el-form-item>
       <el-form-item align="right">
         <el-button @click="cancel('editPassForm')">取消</el-button>
@@ -21,7 +21,7 @@
 <script>
 export default {
   name: 'EditPassword',
-  props: {  
+  props: {
     show: {
       type: Boolean,
       default: false
@@ -34,18 +34,18 @@ export default {
   data() {
     // 表单校验规则
     const validateOldPassword = (rule, value, callback) => {
-      let regUsername = /^\w{4,15}$/
+      const regUsername = /^\w{4,15}$/
       if (value === '') {
         callback(new Error('请输入原始密码'))
       } else {
         if (this.user.newPassword !== '') {
           this.$refs.editPassForm.validateField('newPassword')
         }
-        regUsername.test(value) === true ? callback() : callback(new Error('请输入含有字母、数字或下划线的4-16位原始密码'))  
+        regUsername.test(value) === true ? callback() : callback(new Error('请输入含有字母、数字或下划线的4-16位原始密码'))
       }
     }
     const validateNewPassword = (rule, value, callback) => {
-      let regValidate = /^\w{4,15}$/
+      const regValidate = /^\w{4,15}$/
       if (value === '') {
         callback(new Error('请输入新密码'))
       } else if (value === this.user.oldPassword) {
@@ -72,7 +72,7 @@ export default {
     }
   },
   methods: {
-     onSubmit(formName) {
+    onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const newData = { ...this.user }

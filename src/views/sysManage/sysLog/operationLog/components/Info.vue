@@ -26,8 +26,8 @@
         <span class="detail" style="color: red">{{ info.errorMsg }}</span>
       </li>
     </ul>
-    <div align="right" slot="footer" class="dialog-footer">
-      <el-button @click="close" type="primary">关闭</el-button>
+    <div slot="footer" align="right" class="dialog-footer">
+      <el-button type="primary" @click="close">关闭</el-button>
     </div>
   </el-dialog>
 </template>

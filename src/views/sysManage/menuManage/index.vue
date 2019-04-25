@@ -1,13 +1,13 @@
 <template>
   <div class="main">
     <!-- 搜索组件 -->
-    <SearchBox :formData="searchForm" @search="search"/>
+    <SearchBox :formData="searchForm" @search="search" />
     <!-- 菜单树形表单 -->
     <div class="container">
       <TreeTable
-      :data="treeData"
-      :eval-func="func"
-      :expand-all="true">
+        :data="treeData"
+        :eval-func="func"
+        :expand-all="true">
         <el-table-column label="菜单名称" align="center" width="120">
           <template slot-scope="scope">
             <span style="color: #ef3434">{{ scope.row.menuName }}</span>
@@ -15,7 +15,7 @@
         </el-table-column>
         <el-table-column label="类型" align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.menuType === 2 ? 'warning' : ''" size="small">{{ scope.row.menuType === 2 ? '按钮' : '菜单'}}</el-tag>
+            <el-tag :type="scope.row.menuType === 2 ? 'warning' : ''" size="small">{{ scope.row.menuType === 2 ? '按钮' : '菜单' }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="请求地址" align="center">
@@ -25,7 +25,7 @@
         </el-table-column>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">
-            <el-button :type="scope.row.visible === 1 ? 'success' : 'danger'" size="mini" circle>{{ scope.row.visible === 1 ? '启用' : '禁用'}}</el-button>
+            <el-button :type="scope.row.visible === 1 ? 'success' : 'danger'" size="mini" circle>{{ scope.row.visible === 1 ? '启用' : '禁用' }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" align="center" width="160">
@@ -41,7 +41,7 @@
       </TreeTable>
     </div>
     <!-- 新增/编辑组件 -->
-    <menu-info :show.sync="infoVisible" :flag="infoType" :formData="formData" @cancel="handleCancel" @confirm="confirmEdit"/>
+    <menu-info :show.sync="infoVisible" :flag="infoType" :formData="formData" @cancel="handleCancel" @confirm="confirmEdit" />
   </div>
 </template>
 

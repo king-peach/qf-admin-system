@@ -11,7 +11,7 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
-        >
+      >
         <el-table-column type="index" width="30" align="center" />
         <el-table-column type="selection" width="40" align="center" />
         <el-table-column prop="type" label="类别" align="center" />

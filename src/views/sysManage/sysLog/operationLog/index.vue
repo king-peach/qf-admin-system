@@ -8,8 +8,7 @@
             v-for="item in operTypeOptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value" />
         </el-select>
       </el-form-item>
     </search-box>
@@ -18,13 +17,13 @@
       <el-button type="danger" icon="el-icon-delete" size="medium" @click="clear">清空</el-button>
       <el-button type="danger" icon="el-icon-arrow-down" size="medium" @click="delMultiple">批量删除</el-button>
       <el-table
+        v-loading="loading"
         :data="tableData"
         stripe
-        v-loading="loading"
+        style="margin-top: 10px;"
         @row-click="handleRowClick"
         @select="handleSelected"
-        @select-all="handleSelectAll"
-        style="margin-top: 10px;">
+        @select-all="handleSelectAll">
         <el-table-column prop="num" label="序号" width="80px" align="center" sortable />
         <el-table-column type="selection" />
         <el-table-column prop="title" label="操作名称" align="center" width="180" />
@@ -60,8 +59,7 @@
         :current-page="currentPage"
         layout="total, prev, pager, next, jumper"
         class="pagination-style"
-        @current-change="getCurrentPage"
-      />
+        @current-change="getCurrentPage" />
       <!-- 确认删除组件 -->
       <ConfirmDel :show.sync="confirmDelVisible" :type="delType" @confirmDelOne="delOne" @confirmDelMore="delMore" @confirmClear="delAll" />
       <!-- 查看详情组件 -->

@@ -1,12 +1,12 @@
 <template>
   <div class="main">
-    <el-card class="box-card" v-for="(item, key) in data" :key="key">
+    <el-card v-for="(item, key) in data" :key="key" class="box-card">
       <div slot="header" class="clearfix">
-        <span>{{key}}</span>
+        <span>{{ key }}</span>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">保存</el-button> -->
       </div>
       <el-form :label-position="labelPosition">
-        <el-form-item v-for="(value, key) of item" :key="key" :label= "key" :label-width="formLabelWidth" class="text item">
+        <el-form-item v-for="(value, key) of item" :key="key" :label="key" :label-width="formLabelWidth" class="text item">
           <el-input v-model="item[key]" autocomplete="off" />
         </el-form-item>
         <el-form-item align="right">
@@ -20,7 +20,7 @@
         <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
       </div>
       <div v-for="o in 4" :key="o" class="text item">
-        {{'列表内容 ' + o }}
+        {{ '列表内容 ' + o }}
       </div>
     </el-card>
   </div>
@@ -60,10 +60,10 @@ export default {
   },
   methods: {
     submitForm(value, key) {
-        console.info(value, key)
-        const updateBy = value['更新用户']
-        console.info(updateBy)
-      }
+      console.info(value, key)
+      const updateBy = value['更新用户']
+      console.info(updateBy)
+    }
   }
 }
 </script>

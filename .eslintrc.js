@@ -24,7 +24,11 @@ module.exports = {
         ignores: ['el-*'],
       },
     ],
-    "vue/html-self-closing": "never",
+    // 最后一个元素属性与左括号同行
+    // "vue/html-closing-bracket-newline": ["error", {
+    //   "singleline": "never",
+    //   "multiline": "never"
+    // }],
     "vue/max-attributes-per-line": [2, {
       "singleline": 10,
       "multiline": {

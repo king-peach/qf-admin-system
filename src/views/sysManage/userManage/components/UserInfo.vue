@@ -1,31 +1,32 @@
 <template>
   <el-dialog :visible.sync="userinfoVisible" :show="show" :title="flag ? '新建用户' : '编辑用户'" center @close="cancel('ruleForm')">
-    <el-form :model="formData" :rules="rule" ref="ruleForm" label-width="100px">
+    <el-form ref="ruleForm" :model="formData" :rules="rule" label-width="100px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="formData.username" :disabled="!flag" />
       </el-form-item>
       <el-form-item label="真实姓名" prop="realName">
         <el-input v-model="formData.realName" />
       </el-form-item>
-      <el-form-item label="密码" :prop="flag ? 'password' : ''" v-show="flag">
+      <el-form-item v-show="flag" label="密码" :prop="flag ? 'password' : ''">
         <el-input v-model="formData.password" />
       </el-form-item>
-      <el-form-item label="重复密码" :prop="flag ? 'repeatPass' : ''" v-show="flag">
+      <el-form-item v-show="flag" label="重复密码" :prop="flag ? 'repeatPass' : ''">
         <el-input v-model="formData.repeatPass" />
       </el-form-item>
       <el-form-item label="所属部门ID" prop="deptId">
         <el-popover
+          v-model="parentVisible"
           placement="bottom-end"
           width="400"
-          v-model="parentVisible"
           title="部门列表"
-          visible-arrow>
+          visible-arrow
+        >
           <el-tree :data="treeData" :props="defaultProps" default-expand-all :expand-on-click-node="false" accordion @node-click="handleNodeClick" />
           <div align="right" style="margin-top: 1em">
             <el-button size="mini" @click="parentVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="selected">确定</el-button>
           </div>
-          <el-input v-model="formData.deptId" slot="reference"  />
+          <el-input slot="reference" v-model="formData.deptId" />
         </el-popover>
       </el-form-item>
       <el-form-item label="用户状态" prop="status">
@@ -43,8 +44,8 @@
             v-for="item in options"
             :key="item.value"
             :label="item.roleName"
-            :value="item.roleId">
-          </el-option>
+            :value="item.roleId"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="备注">
@@ -79,7 +80,7 @@ export default {
       required: true
     },
     options: {
-      tyep: Array,
+      type: Array,
       required: true
     }
   },

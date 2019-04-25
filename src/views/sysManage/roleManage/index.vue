@@ -1,20 +1,21 @@
 <template>
   <div class="main">
     <!-- 搜索组件 -->
-    <search-box :formData="searchForm" @search="search"></search-box>
+    <search-box :formData="searchForm" @search="search" />
 
     <div class="container">
       <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
       <el-button type="primary" size="medium" icon="el-icon-plus" @click="openAdd">新增</el-button>
       <el-table
+        v-loading="loading"
         :data="tableData"
         stripe
-        v-loading="loading"
         :row-style="getRowIndex"
         highlight-current-row
         style="margin-top: 10px;"
+        :default-sort="{prop: 'roleId', order: 'ascending'}"
         @row-click="currentSelected"
-        :default-sort="{prop: 'roleId', order: 'ascending'}">
+      >
         <el-table-column prop="num" label="序号" align="center" width="80" sortable />
         <el-table-column label="角色名称" prop="roleName" align="center" />
         <el-table-column label="角色代码" prop="roleKey" sortable align="center" width="100" />
@@ -24,9 +25,9 @@
             <el-switch v-model="scope.row.status" @change="handleStatus(scope.$index)" />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="createTime" sortable align="center" show-overflow-tooltip/>
+        <el-table-column label="创建时间" prop="createTime" sortable align="center" show-overflow-tooltip />
         <el-table-column label="操作" align="center" width="240">
-          <template slot-scope="scope" >
+          <template slot-scope="scope">
             <el-button size="mini" @click="editRole">编辑</el-button>
             <el-button size="mini" type="primary" @click="handlePermission(scope.$index)">权限设置</el-button>
             <el-button type="danger" size="mini" @click.native.prevent="openDel(scope.$index)">删除</el-button>
@@ -38,7 +39,7 @@
       <!-- 新增/编辑角色组件 -->
       <add-role :show.sync="roleInfoVisible" :role="roles" :treeData="deptTree" :isCreate="isCreate" @confirmAdd="addRole" @confirmEdit="editSuccess" @cancel="cancelAdd" />
       <!-- 权限设置组件 -->
-      <permission-manage :show.sync="permissionManageVisible" :roleInfo="roles" :menuIds="currentRoleMenuIds" @cancel="cancelEditPermission" @confirm="confirmEditPermission"/>
+      <permission-manage :show.sync="permissionManageVisible" :roleInfo="roles" :menuIds="currentRoleMenuIds" @cancel="cancelEditPermission" @confirm="confirmEditPermission" />
       <!-- 分页器 -->
       <el-pagination
         :page-size="pageSize"

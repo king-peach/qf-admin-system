@@ -1,12 +1,12 @@
 <template>
   <div class="main">
     <el-row>
-      <el-input v-model="searchValue" @keyup.enter.native="search" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search-input" />
+      <el-input v-model="searchValue" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search-input" @keyup.enter.native="search" />
       <el-button type="primary" @click="search">搜索</el-button>
     </el-row>
     <!-- 操作日志表格 -->
     <el-table :data="tables.slice((currentPage - 1) * pageSize,currentPage * pageSize)" border>
-      <el-table-column type="index"/>
+      <el-table-column type="index" />
       <el-table-column prop="username" label="用户名" align="center" />
       <el-table-column prop="date" label="登录时间" align="center" />
       <el-table-column prop="IP" label="IP地址" align="center" />
@@ -19,10 +19,10 @@
       :page-size="pageSize"
       :current-page="currentPage"
       layout="total, prev, pager, next, jumper"
+      class="pagination-style"
       @size-change="getPageSize"
       @current-change="getCurrentPage"
-      class="pagination-style"
-      />
+    />
   </div>
 </template>
 
