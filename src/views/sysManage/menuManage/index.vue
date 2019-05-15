@@ -1,9 +1,9 @@
 <template>
-  <div class="main">
+  <div id="main">
     <!-- 搜索组件 -->
     <SearchBox :formData="searchForm" @search="search" />
     <!-- 菜单树形表单 -->
-    <div class="container">
+    <div id="container">
       <TreeTable
         :data="treeData"
         :eval-func="func"

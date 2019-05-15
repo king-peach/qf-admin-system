@@ -1,8 +1,8 @@
 <template>
-  <div class="main">
+  <div id="main">
     <search-box :formData="searchForm" @search="search" />
     <!-- 部门treeTable -->
-    <div class="container">
+    <div id="container">
       <tree-table
         v-loading="loading"
         :data="treeData"

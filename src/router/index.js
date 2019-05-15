@@ -45,6 +45,20 @@ export const constantRouterMap = [
       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
       meta: { title: 'External Link', icon: 'link' }
     }]
+  },
+
+  {
+    path: '/mobileGame',
+    name: 'mobileGame',
+    component: Layout,
+    alwaysShow: true,
+    meta: { title: '手游业务', icon: 'mobile' },
+    children: [{
+      path: 'manage',
+      name: 'mbGameManage',
+      component: () => import('@/views/mobileGame/gameManage/index'),
+      meta: { title: '游戏管理', icon: 'manage' }
+    }]
   }
 ]
 

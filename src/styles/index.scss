@@ -78,16 +78,17 @@ a:hover {
 }
 
 // 页面主题布局
-.main {
+#main {
   height: 100%;
   overflow: hidden;
   padding: 20px 30px;
 
-  .container {
-    padding: 20px;
-    min-height: 600px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 1px 1px 3px #ddd;
-  }
+}
+
+#container {
+  padding: 20px;
+  min-height: 600px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px #ddd;
 }

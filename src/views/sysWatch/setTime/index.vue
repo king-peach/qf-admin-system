@@ -1,9 +1,9 @@
 <template>
-  <div class="main">
+  <div id="main">
     <!-- 搜索组件 -->
     <search-box :formData="searchForm" />
 
-    <div class="container">
+    <div id="container">
       <!-- 定时任务表单 -->
       <el-table
         ref="setTimeForm"

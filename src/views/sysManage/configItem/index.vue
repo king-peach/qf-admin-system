@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div id="main">
     <el-card v-for="(item, key) in data" :key="key" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{ key }}</span>

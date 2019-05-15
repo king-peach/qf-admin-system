@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div id="main">
     <el-row>
       <el-input v-model="searchValue" placeholder="请输入搜索关键词" suffix-icon="el-icon-search" class="search-input" @keyup.enter.native="search" />
       <el-button type="primary" @click="search">搜索</el-button>

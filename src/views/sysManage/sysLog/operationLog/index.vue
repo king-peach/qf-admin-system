@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div id="main">
     <!-- 搜索组件 -->
     <search-box :formData="searchForm" @search="search">
       <el-form-item label="操作类型">
@@ -13,7 +13,7 @@
       </el-form-item>
     </search-box>
     <!-- 操作日志表格 -->
-    <div class="container">
+    <div id="container">
       <el-button type="danger" icon="el-icon-delete" size="medium" @click="clear">清空</el-button>
       <el-button type="danger" icon="el-icon-arrow-down" size="medium" @click="delMultiple">批量删除</el-button>
       <el-table

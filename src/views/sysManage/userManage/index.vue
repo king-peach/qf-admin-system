@@ -11,10 +11,10 @@
         @node-click="handleNodeClick"
       />
     </template>
-    <template v-slot:right-content>
+    <template v-slot:right-content id="main">
       <SearchBox :formData="searchForm" @search="search" />
 
-      <div class="container">
+      <div id="container">
         <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
         <el-button type="primary" size="medium" icon="el-icon-plus" @click="createUser">添加</el-button>
         <el-table

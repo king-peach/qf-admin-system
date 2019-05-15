@@ -1,9 +1,9 @@
 <template>
-  <div class="main">
+  <div id="main">
     <!-- 搜索组件 -->
     <search-box :formData="searchForm" @search="search" />
 
-    <div class="container">
+    <div id="container">
       <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
       <el-button type="primary" size="medium" icon="el-icon-plus" @click="openAdd">新增</el-button>
       <el-table
