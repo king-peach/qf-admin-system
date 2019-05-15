@@ -3,7 +3,7 @@
 七风网络后台管理项目
 本项目基于vue + element + vuex + router开发的后台管理项目, 其中项目架构借鉴自PanJiaChen大神的vue-element-admin
 ```
->Pan大神的github: [传送门](https://github.com/PanJiaChen/vue-element-admin) /n
+>Pan大神的github: [传送门](https://github.com/PanJiaChen/vue-element-admin) <br/>
 项目中引用了他的登录、权限管理、项目侧边栏、面包屑导航。此项目vue脚手架升级至vue-cli3.0+ 相关配置也进行了优化
 
 ## 项目构建、安装依赖
