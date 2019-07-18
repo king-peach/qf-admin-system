@@ -7,7 +7,8 @@
       <TreeTable
         :data="treeData"
         :eval-func="func"
-        :expand-all="true">
+        :expand-all="true"
+      >
         <el-table-column label="菜单名称" align="center" width="120">
           <template slot-scope="scope">
             <span style="color: #ef3434">{{ scope.row.menuName }}</span>

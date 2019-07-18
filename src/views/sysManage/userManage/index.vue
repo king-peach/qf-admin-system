@@ -11,7 +11,7 @@
         @node-click="handleNodeClick"
       />
     </template>
-    <template v-slot:right-content id="main">
+    <template id="main" v-slot:right-content>
       <SearchBox :formData="searchForm" @search="search" />
 
       <div id="container">

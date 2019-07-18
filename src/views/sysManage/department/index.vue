@@ -7,7 +7,8 @@
         v-loading="loading"
         :data="treeData"
         :eval-func="func"
-        :expand-all="true">
+        :expand-all="true"
+      >
         <el-table-column label="部门名称" align="center">
           <template slot-scope="scope">
             <span style="color:#ef3434">{{ scope.row.deptName }}</span>
@@ -22,7 +23,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              @change="statusChange(scope.row.status, scope.row.deptId)" />
+              @change="statusChange(scope.row.status, scope.row.deptId)"
+            />
           </template>
         </el-table-column>
         <el-table-column label="电话" align="center">
