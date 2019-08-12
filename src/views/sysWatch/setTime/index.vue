@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <!-- 搜索组件 -->
-    <search-box :formData="searchForm" />1
+    <search-box :formData="searchForm" />
 
     <div id="container">
       <!-- 定时任务表单 -->
