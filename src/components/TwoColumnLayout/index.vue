@@ -54,7 +54,7 @@ export default {
     float: left;
     width: 18%;
     color: #909399;
-    min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 105px);
     background-color: #FFF;
     border-right: 10px solid #eee;
     position: relative;
@@ -110,7 +110,7 @@ export default {
   }
   .right-column-box {
     overflow: hidden;
-    min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 105px);
     padding: 20px 30px;
   }
 }

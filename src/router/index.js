@@ -59,6 +59,26 @@ export const constantRouterMap = [
       component: () => import('@/views/mobileGame/gameManage/index'),
       meta: { title: '游戏管理', icon: 'manage' }
     }]
+  },
+
+  {
+    path: '/questionnaire',
+    name: 'questionnaire',
+    component: Layout,
+    alwaysShow: true,
+    meta: { title: '问卷调查', icon: 'questionnaire' },
+    children: [{
+      path: 'list',
+      name: 'questionnaireList',
+      component: () => import('@/views/questionnaire/list/index'),
+      meta: { title: '问卷列表', icon: 'list' }
+    }, {
+      path: 'design',
+      name: 'designQuestionnaire',
+      component: () => import('@/views/questionnaire/designQuestionnaire/index'),
+      hidden: true,
+      meta: { title: '设计问卷' }
+    }]
   }
 ]
 
