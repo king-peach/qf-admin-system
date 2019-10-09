@@ -29,7 +29,10 @@
         </div>
 
         <div class="question-box">
-          <question-selector />
+          <question-selector>
+            <template v-slot:sortWrapper>排序功能选项框</template>
+          </question-selector>
+          <question-input />
         </div>
 
         <!-- 标题弹出框 -->
@@ -69,12 +72,14 @@
 import TwoColumnLayout from '@/components/TwoColumnLayout'
 import VueQuillEditor from '@/components/VueQuillEditor'
 import QuestionSelector from '@/components/Questionaire/Selector'
+import QuestionInput from '@/components/Questionaire/Input'
 export default {
   name: 'editQuestionaire',
   components: {
     TwoColumnLayout,
     VueQuillEditor,
-    QuestionSelector
+    QuestionSelector,
+    QuestionInput
   },
   data() {
     return {

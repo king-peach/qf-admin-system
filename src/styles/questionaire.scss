@@ -1,0 +1,122 @@
+.hover-bg {
+  position: relative;
+  .sort-wrapper {
+    display: none;
+    position: absolute;
+    right: 10%;
+    bottom: 0;
+    padding: 10px;
+  }
+  &:hover {
+    background-color: #FAFAFA;
+    .sort-wrapper {
+      display: block !important;
+    }
+  }
+}
+#questionaire-options-wrapper {
+  border-bottom: 1px solid #E0E0E0;
+  padding-top: 30px;
+  .sort-wrapper {
+    display: none;
+  }
+  .div_preview {
+    padding: 0 60px 40px 60px;
+    font-weight: 500;
+    .question_title {
+      vertical-align: middle;
+      .required {
+        color: red;
+        display: inline-block;
+        width: 10px;
+        vertical-align: top;
+      }
+      .m-title {
+        display: inline-block;
+      }
+      .title_tip {
+        margin-left: 5px;
+        color: #999;
+        vertical-align: top;
+      }
+    }
+    .title-tip {
+      padding-top: 8px;
+      color: #666666;
+      padding-left: 13px;
+      line-height: 18px;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .question-container {
+      padding: 10px 0 0 10px;
+      .option-item {
+        display: inline-block;
+        vertical-align: top;
+        div {
+          margin: 15px 0 0 28px;
+          font-size: 14px;
+          font-weight: normal;
+          color: #999999;
+        }
+      }
+      .checkBox-item {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .questionaire-editor-wrapper {
+    position: relative;
+    background: #FAFAFA;
+    padding: 20px 30px;
+    font-size: 14px;
+    border-top: 1px solid #dfe4e6;
+    .options {
+      margin-top: 10px;
+      .required-wrapper {
+        margin-left: 100px;
+        vertical-align: middle;
+      }
+      .title-tip-button {
+        margin-left: 40px;
+        line-height: 19px;
+        font-size: 14px;
+        font-weight: 600;
+        vertical-align: middle;
+        cursor: pointer;
+        &:hover {
+          color: #409EFF;
+        }
+      }
+      .row-num-select {
+        float: right;
+        width: 120px;
+      }
+    }
+    .m-trangle {
+      width: 22px;
+      height: 22px;
+      background: #FAFAFA;
+      border-left: 1px solid #dfe4e6;
+      border-top: 1px solid #dfe4e6;
+      position: absolute;
+      left: 86px;
+      top: -12px;
+      transform: rotate(46deg);
+    }
+    .complete-button {
+      height: 40px;
+      line-height: 40px;
+      border: 0;
+      cursor: pointer;
+      background-color: #FFAB1A;
+      font-size: 16px;
+      font-weight: 500;
+      color: white;
+      border-radius: 4px;
+      padding: 0 15px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  }
+}

@@ -1,13 +1,39 @@
 <template>
-  <quill-editor
-    :id="editorId"
-    ref="myQuillEditor"
-    v-model="content"
-    :options="editorOptions"
-    @focus="onEditorFocus($event)"
-    @blur="onEditorBlur($event)"
-    @change="onEditorChange($event)"
-  />
+  <div>
+    <quill-editor
+      :id="editorId"
+      ref="myQuillEditor"
+      v-model="content"
+      :options="editorOptions"
+      @focus="onEditorFocus($event)"
+      @blur="onEditorBlur($event)"
+      @change="onEditorChange($event)"
+    />
+
+    <!-- 图片上传弹出框 -->
+    <el-dialog
+      title="上传图片"
+      :visible.sync="imgUploadVisible"
+      >
+      <div>
+        <el-input placeholder="可直接粘贴图片地址" style="width: 60%;margin-right: 20px;" />
+        <el-button type="primary" size="mini">确定</el-button>
+      </div>
+      <div class="upload-container">
+        <div class="upload-wrapper">
+          <i class="upload-img-icon el-icon-plus" />
+          <p>点击上传图片</p>
+          <div class="upload-img-tip">不超过4M</div>
+        </div>
+        <input type="file" class="input-file" :style="`width:${uploadImgWidth};height:${uploadImgHeight};`" name="avator" ref="avatorInput" accept="image/gif, image/jpg, image/jpeg, image/png" @change="uploadImgChange($event)">
+      </div>
+      <div class="upload-status-tip"></div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="imgUploadVisible = false">取消</el-button>
+        <el-button type="primary" @click="imgUploadVisible = false">确定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -22,8 +48,12 @@ Font.whitelist = fonts
 Quill.register(Font, true)
 
 // 图片可拖拽上传
-import { ImageDrop } from 'quill-image-drop-module'
-Quill.register('modules/imageDrop', ImageDrop)
+// import { ImageDrop } from 'quill-image-drop-module'
+// Quill.register('modules/imageDrop', ImageDrop)
+
+// 图片上传模块
+// import { container, ImageExtend, QuillWatch } from 'quill-image-extend-module'
+// Quill.register('modules/ImageExtend', ImageExtend)
 
 // 图片可改变大小
 // import ImageResize from 'quill-image-resize-module'
@@ -52,28 +82,36 @@ export default {
   },
   data() {
     return {
+      imgUploadVisible: false,
       editor: null,
       content: this.defaultContent,
+      uploadImgWidth: '70px',
+      uploadImgHeight: '70px',
       editorOptions: {
         modules: {
-          imageDrop: true,
+          // imageDrop: true,
           // imageResize: {},
-          toolbar: [
-            ['bold', 'italic', 'underline', 'strike'], // 加粗、斜体、下划线、删除线
-            ['blockquote'], // 引用、代码块
-            [{ 'header': 1 }, { 'header': 2 }], // 标题，键值对的形式；1、2表示字体大小
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }], // 列表
-            [{ 'script': 'sub' }, { 'script': 'super' }], // 上下标
-            [{ 'indent': '-1' }, { 'indent': '+1' }], // 缩进
-            [{ 'direction': 'rtl' }], // 文本方向
-            [{ 'size': sizes }], // 字体大小
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // 几级标题
-            [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
-            [{ 'font': fonts }], // 字体
-            [{ 'align': [] }], // 对齐方式
-            ['clean'], // 清除字体样式
-            ['link', 'image', 'formula'] // 上传图片、上传视频
-          ]
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline', 'strike'], // 加粗、斜体、下划线、删除线
+              ['blockquote'], // 引用、代码块
+              [{ 'header': 1 }, { 'header': 2 }], // 标题，键值对的形式；1、2表示字体大小
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }], // 列表
+              [{ 'script': 'sub' }, { 'script': 'super' }], // 上下标
+              [{ 'indent': '-1' }, { 'indent': '+1' }], // 缩进
+              [{ 'direction': 'rtl' }], // 文本方向
+              [{ 'size': sizes }], // 字体大小
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // 几级标题
+              [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
+              [{ 'font': fonts }], // 字体
+              [{ 'align': [] }], // 对齐方式
+              ['clean'], // 清除字体样式
+              ['link', 'image', 'formula'] // 上传图片、上传视频
+            ],
+            handlers: {
+              'image': this.openImgUpload
+            }
+          }
         },
         theme: 'snow',
         placeholder: '请输入文本'
@@ -81,7 +119,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.defaultContent)
     this.editor = this.$refs.myQuillEditor.quill
   },
   beforeDestroy() {
@@ -89,28 +126,93 @@ export default {
     delete this.editor
   },
   methods: {
+    /**
+     * @method 点击打开富文本上传图片弹出框
+     */
+    openImgUpload() {
+      this.imgUploadVisible = true
+    },
+    /**
+     * @method 富文本初始化事件
+     * @param {String} editor 当前富文本内容
+     */
     onEditorReady(editor) {
       this.$emit('handleEditorReady', editor)
     },
+    /**
+     * @method 富文本聚焦事件
+     * @param {String} editor 当前富文本内容
+     */
     onEditorFocus(editor) {
       this.$emit('handleEditorFocus', editor)
     },
+    /**
+     * @method 富文本失去焦点事件
+     * @param {String} editor 当前富文本内容
+     */
     onEditorBlur(editor) {
       this.$emit('handleEditorBlur', editor)
     },
+    /**
+     * @method 富文本内容改变事件
+     * @param {String} editor 当前富文本内容
+     */
     onEditorChange(editor) {
       this.$emit('handleEditorChange', editor)
+    },
+    /**
+     * @method 上传图片更改事件
+     */
+    uploadImgChange(e) {
+      const file = e.target.files[0]
+      console.log(file)
     }
   }
 }
 </script>
 
 <style lang="scss">
-  #selectorEditor {
+  #twoRowEditor {
     .ql-container {
       .ql-editor {
         min-height: 50px;
       }
     }
+  }
+  .el-dialog__footer {
+    text-align: center;
+  }
+  .upload-container {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 15px;
+    text-align: center;
+    height: 284px;
+    border-radius: 4px;
+    border: solid 1px #d7d8d9;
+    background-color: #f7f8f9;
+    position: relative;
+    .upload-wrapper {
+      margin-top: 85px;
+      .upload-img-icon {
+        font-size: 70px;
+      }
+      p {
+        font-size: 16px;
+      }
+      .upload-img-tip {
+        font-size: 12px;
+      }
+    }
+    .input-file {
+      position: absolute;
+      top: 85px;
+      transform: translateX(-50%);
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+  .upload-status-tip {
+    color: red;
   }
 </style>

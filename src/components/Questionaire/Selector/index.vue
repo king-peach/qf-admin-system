@@ -1,6 +1,6 @@
 <template>
-  <div id="selector-questionaire">
-    <div class="div_preview">
+  <div id="questionaire-options-wrapper" :class="editOptionsVisible ? '' : 'hover-bg'">
+    <div class="div_preview" @click="handleSwitchEditOptions">
       <div class="question_title">
         <span v-show="required" class="required">*</span>
         <span class="m-title" v-html="titleEditorValue" />
@@ -34,15 +34,18 @@
         </template>
       </div>
     </div>
-    <div class="questionaire-editor-wrapper">
+    <div class="sort-wrapper">
+      <slot name="sortWrapper" />
+    </div>
+    <div v-show="editOptionsVisible" class="questionaire-editor-wrapper">
       <span class="m-trangle" />
       <vue-quill-editor
-        :editorId="'selectorEditor'"
+        :editorId="'twoRowEditor'"
         @handleEditorChange="titleEditorChange"
       />
       <div class="options">
         <template>
-          <el-select v-model="currentType" placeholder="请选择" class="type-select">
+          <el-select v-model="currentType" placeholder="请选择" class="type-select" @change="handleTypeChange($event)">
             <el-option
               v-for="item in typeOptions"
               :key="item.value"
@@ -51,7 +54,7 @@
             />
           </el-select>
         </template>
-        <el-checkbox v-model="required" class="required-wrapper">必选</el-checkbox>
+        <el-checkbox v-model="required" class="required-wrapper">必答</el-checkbox>
         <span class="title-tip-button" @click="handleTitleTip">标题提示</span>
         <el-select v-show="currentType === 'radio' || currentType === 'checkBox'" v-model="currentRows" placeholder="请选择" class="row-num-select">
           <el-option
@@ -121,7 +124,7 @@
         </span>
       </el-dialog>
 
-      <div class="complete-button">完成编辑</div>
+      <div class="complete-button" @click="handleSwitchEditOptions">完成编辑</div>
     </div>
   </div>
 </template>
@@ -142,6 +145,7 @@ export default {
   },
   data() {
     return {
+      editOptionsVisible: false,
       defaultSelected: null,
       titleEditorValue: '标题',
       tableOptions: [
@@ -210,6 +214,21 @@ export default {
     }
   },
   methods: {
+    /**
+     * @method 点击区块展示编辑选项盒子
+     */
+    handleSwitchEditOptions() {
+      this.editOptionsVisible = !this.editOptionsVisible
+    },
+    /**
+     * @method 类型下拉框选项值改变时修改对应数据
+     * @param {String} type 当前选中的类型
+     */
+    handleTypeChange(type) {
+      this.tableOptions.forEach(item => {
+        item.questionChecked = false
+      })
+    },
     /**
      * @method 编辑选项默认值
      * @param {Number} selectedIndex 点击项索引
@@ -303,13 +322,13 @@ export default {
       }
     },
     /**
-     * @method 标题富文本内容变化时处理
+     * @method 编辑标题
      * @param {String} e 改变以后的内容
      */
     titleEditorChange(e) {
       if (e.html !== '') {
         let text = e.html.replace(/<\/p>/g, '<br>')
-        text = text.replace(/\s/g, '&nbsp;')
+        text = text.replace(/\s{2}/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
         this.titleEditorValue = text.replace(/<p\>/g, '')
       } else {
         this.titleEditorValue = `标题`
@@ -328,7 +347,7 @@ export default {
      */
     tipEditorChange(e) {
       let text = e.html.replace(/<\/p>/g, '<br>')
-      text = text.replace(/\s/g, '&nbsp;')
+      text = text.replace(/\s{2}/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
       this.currentEditorValue.html = text.replace(/<p>/g, '')
       this.currentEditorValue.text = e.text
     },
@@ -358,158 +377,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  #selector-questionaire {
-    border-bottom: 1px solid #E0E0E0;
-    padding-top: 30px;
-    .div_preview {
-      padding: 0 60px 40px 60px;
-      font-weight: 500;
-      .question_title {
-        vertical-align: middle;
-        .required {
-          color: red;
-          display: inline-block;
-          width: 10px;
-          vertical-align: top;
+.table-option {
+    position: relative;
+    margin-top: 10px;
+    width: 100%;
+    padding: 0;
+    border-collapse:collapse;
+    border:none;
+    tr:first-child {
+      background-color: #E8E8E8;
+      th {
+        color: #333;
+        height: 26px;
+        text-align: left;
+        &:first-child {
+          text-indent: 10px;
+          width: 42%;
         }
-        .m-title {
-          display: inline-block;
+        &:nth-child(2) {
+          width: 5%;
         }
-        .title_tip {
+        &:nth-child(3) {
+          width: 5%;
+        }
+        &:nth-child(4) {
+          width: 5%;
+        }
+      }
+    }
+    td {
+      padding: 7px 0 0;
+      white-space: nowrap;
+      &:first-child {
+        .svg-icon {
           margin-left: 5px;
-          color: #999;
-          vertical-align: top;
         }
-      }
-      .title-tip {
-        padding-top: 8px;
-        color: #666666;
-        padding-left: 33px;
-        line-height: 18px;
-        font-size: 14px;
-        word-break: break-all;
-      }
-      .question-container {
-        padding: 20px 0 0 35px;
-        .option-item {
-          display: inline-block;
-          vertical-align: top;
-          div {
-            margin: 15px 0 0 28px;
-            font-size: 14px;
-            font-weight: normal;
-            color: #999999;
-          }
-        }
-        .checkBox-item {
-          margin-bottom: 10px;
-        }
-      }
-    }
-    .questionaire-editor-wrapper {
-      position: relative;
-      background: #FAFAFA;
-      padding: 20px 30px;
-      font-size: 14px;
-      border-top: 1px solid #dfe4e6;
-      .options {
-        margin-top: 10px;
-        .required-wrapper {
-          margin-left: 100px;
-          vertical-align: middle;
-        }
-        .title-tip-button {
-          margin-left: 40px;
-          line-height: 19px;
-          font-size: 14px;
-          font-weight: 600;
-          vertical-align: middle;
-          cursor: pointer;
-          &:hover {
-            color: #409EFF;
-          }
-        }
-        .row-num-select {
-          float: right;
-          width: 120px;
-        }
-      }
-      .m-trangle {
-        width: 22px;
-        height: 22px;
-        background: #FAFAFA;
-        border-left: 1px solid #dfe4e6;
-        border-top: 1px solid #dfe4e6;
-        position: absolute;
-        left: 86px;
-        top: -12px;
-        transform: rotate(46deg);
-      }
-      .table-option {
-        position: relative;
-        margin-top: 10px;
-        width: 100%;
-        padding: 0;
-        border-collapse:collapse;
-        border:none;
-        tr:first-child {
-          background-color: #E8E8E8;
-          th {
-            color: #333;
-            height: 26px;
-            text-align: left;
-            &:first-child {
-              text-indent: 10px;
-              width: 42%;
-            }
-            &:nth-child(2) {
-              width: 5%;
-            }
-            &:nth-child(3) {
-              width: 5%;
-            }
-            &:nth-child(4) {
-              width: 5%;
-            }
-          }
-        }
-        td {
-          padding: 7px 0 0;
-          white-space: nowrap;
-          &:first-child {
-            .svg-icon {
-              margin-left: 5px;
-            }
-          }
-        }
-      }
-      .complete-button {
-        height: 40px;
-        line-height: 40px;
-        border: 0;
-        cursor: pointer;
-        background-color: #FFAB1A;
-        font-size: 16px;
-        font-weight: 500;
-        color: white;
-        border-radius: 4px;
-        padding: 0 15px;
-        text-align: center;
-        margin-top: 20px;
       }
     }
   }
-  .svg-icon {
-    display: inline-block;
-    vertical-align: middle;
-    width: 25px;
-    height: 25px;
-    fill: #999999;
-    &:hover {
-      fill: #409EFF;
-    }
-    &.isChecked {
-      fill: #409eFF;
-    }
+.svg-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  fill: #999999;
+  &:hover {
+    fill: #409EFF;
   }
+  &.isChecked {
+    fill: #409eFF;
+  }
+}
 </style>
