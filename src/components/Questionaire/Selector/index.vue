@@ -1,6 +1,6 @@
 <template>
   <div id="questionaire-options-wrapper" :class="editOptionsVisible ? '' : 'hover-bg'">
-    <div class="div_preview" @click="handleSwitchEditOptions">
+    <div class="div_preview" @click="editOptionsVisible = true">
       <div class="question_title">
         <span v-show="required" class="required">*</span>
         <span class="m-title" v-html="titleEditorValue" />
@@ -109,6 +109,7 @@
 
       <!-- 提示弹出框 -->
       <el-dialog
+        v-if="refresh"
         :title="tipTitle"
         :visible.sync="tipEditorVisible"
         width="50%"
@@ -149,10 +150,10 @@ export default {
       defaultSelected: null,
       titleEditorValue: '标题',
       tableOptions: [
-        { questionTxt: '选项1', placeholder: '选项1', questionImage: null, questionTip: { html: null, textL: null }, questionChecked: false },
-        { questionTxt: '选项2', placeholder: '选项2', questionImage: null, questionTip: { html: null, textL: null }, questionChecked: false },
-        { questionTxt: '选项3', placeholder: '选项3', questionImage: null, questionTip: { html: null, textL: null }, questionChecked: false },
-        { questionTxt: '选项4', placeholder: '选项4', questionImage: null, questionTip: { html: null, textL: null }, questionChecked: false }
+        { questionTxt: '选项1', placeholder: '选项1', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项2', placeholder: '选项2', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项3', placeholder: '选项3', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项4', placeholder: '选项4', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false }
       ],
       selectVal: '',
       typeOptions: [{
@@ -169,6 +170,7 @@ export default {
       currentType: this.type,
       tipTitle: null,
       tipEditorVisible: false,
+      refresh: true,
       titleTipContent: {
         html: null,
         text: null
@@ -211,6 +213,14 @@ export default {
         value: 10,
         label: '每行10列'
       }]
+    }
+  },
+  watch: {
+    tipEditorVisible() {
+      this.refresh = false
+      this.$nextTick(() => {
+        this.refresh = true
+      })
     }
   },
   methods: {

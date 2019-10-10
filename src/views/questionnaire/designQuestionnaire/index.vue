@@ -17,7 +17,6 @@
       </h4>
       <div class="fillShowBox showBox" :style="fillShowBox ? 'display: block;' : 'display: none;'">
         <div>单项填空</div>
-        <div>多项填空</div>
         <div>矩阵填空</div>
       </div>
     </template>
@@ -32,7 +31,9 @@
           <question-selector>
             <template v-slot:sortWrapper>排序功能选项框</template>
           </question-selector>
-          <question-input />
+          <question-input>
+            <template v-slot:sortWrapper>排序功能选项框</template>
+          </question-input>
         </div>
 
         <!-- 标题弹出框 -->

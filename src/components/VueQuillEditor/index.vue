@@ -11,28 +11,11 @@
     />
 
     <!-- 图片上传弹出框 -->
-    <el-dialog
-      title="上传图片"
-      :visible.sync="imgUploadVisible"
-      >
-      <div>
-        <el-input placeholder="可直接粘贴图片地址" style="width: 60%;margin-right: 20px;" />
-        <el-button type="primary" size="mini">确定</el-button>
-      </div>
-      <div class="upload-container">
-        <div class="upload-wrapper">
-          <i class="upload-img-icon el-icon-plus" />
-          <p>点击上传图片</p>
-          <div class="upload-img-tip">不超过4M</div>
-        </div>
-        <input type="file" class="input-file" :style="`width:${uploadImgWidth};height:${uploadImgHeight};`" name="avator" ref="avatorInput" accept="image/gif, image/jpg, image/jpeg, image/png" @change="uploadImgChange($event)">
-      </div>
-      <div class="upload-status-tip"></div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="imgUploadVisible = false">取消</el-button>
-        <el-button type="primary" @click="imgUploadVisible = false">确定</el-button>
-      </span>
-    </el-dialog>
+    <img-upload-dialog
+      :show="imgUploadVisible"
+      @comfirmSubmit="imgSubmit"
+      @cancelSubmit="cancelSubmit"
+    />
   </div>
 </template>
 
@@ -40,6 +23,7 @@
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.snow.css'
 import * as Quill from 'quill'
+import ImgUploadDialog from '@/components/Upload/ImgUploadDialog'
 
 //  自定义字体
 const fonts = ['SimSun', 'SimHei', 'Microsoft-YaHei', 'KaiTi', 'FangSong', 'Arial', 'Times-New-Roman', 'sans-serif']
@@ -68,7 +52,8 @@ Quill.register(Size, true)
 export default {
   name: 'VueQuillEditor',
   components: {
-    quillEditor
+    quillEditor,
+    ImgUploadDialog
   },
   props: {
     defaultContent: {
@@ -85,8 +70,6 @@ export default {
       imgUploadVisible: false,
       editor: null,
       content: this.defaultContent,
-      uploadImgWidth: '70px',
-      uploadImgHeight: '70px',
       editorOptions: {
         modules: {
           // imageDrop: true,
@@ -161,11 +144,17 @@ export default {
       this.$emit('handleEditorChange', editor)
     },
     /**
-     * @method 上传图片更改事件
+     * @method 确认提交图片
      */
-    uploadImgChange(e) {
-      const file = e.target.files[0]
-      console.log(file)
+    imgSubmit(img) {
+      if (img.src) this.content = this.content + '<img src="' + img.src + '}" style="width: ' + img.width + ';height: ' + img.height + '" alt="上传图片">'
+      this.imgUploadVisible = false
+    },
+    /**
+     * @method 取消提交图片
+     */
+    cancelSubmit() {
+      this.imgUploadVisible = false
     }
   }
 }
@@ -178,41 +167,5 @@ export default {
         min-height: 50px;
       }
     }
-  }
-  .el-dialog__footer {
-    text-align: center;
-  }
-  .upload-container {
-    overflow: hidden;
-    width: 100%;
-    margin-top: 15px;
-    text-align: center;
-    height: 284px;
-    border-radius: 4px;
-    border: solid 1px #d7d8d9;
-    background-color: #f7f8f9;
-    position: relative;
-    .upload-wrapper {
-      margin-top: 85px;
-      .upload-img-icon {
-        font-size: 70px;
-      }
-      p {
-        font-size: 16px;
-      }
-      .upload-img-tip {
-        font-size: 12px;
-      }
-    }
-    .input-file {
-      position: absolute;
-      top: 85px;
-      transform: translateX(-50%);
-      opacity: 0;
-      cursor: pointer;
-    }
-  }
-  .upload-status-tip {
-    color: red;
   }
 </style>

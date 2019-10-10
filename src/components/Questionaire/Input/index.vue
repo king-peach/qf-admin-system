@@ -1,6 +1,6 @@
 <template>
-  <div id="questionaire-options-wrapper">
-    <div class="div_preview">
+  <div id="questionaire-options-wrapper" :class="editOptionsVisible ? '' : 'hover-bg'">
+    <div class="div_preview" @click="editOptionsVisible = true">
       <div class="question_title">
         <span v-show="required" class="required">*</span>
         <span class="m-title" v-html="titleEditorValue" />
@@ -34,7 +34,10 @@
         </template>
       </div>
     </div>
-    <div class="questionaire-editor-wrapper">
+    <div class="sort-wrapper">
+      <slot name="sortWrapper" />
+    </div>
+    <div v-show="editOptionsVisible" class="questionaire-editor-wrapper">
       <span class="m-trangle" />
       <vue-quill-editor
         editorId="twoRowEditor"
@@ -126,6 +129,8 @@
         </table>
       </template>
 
+      <div class="complete-button" @click="editOptionsVisible = false">完成编辑</div>
+
       <!-- 提示弹出框 -->
       <el-dialog
         title="标题提示"
@@ -167,13 +172,11 @@ export default {
         html: null,
         text: null
       },
+      editOptionsVisible: true,
       required: true,
       typeOptions: [{
         value: 'singleInput',
         label: '单项填空'
-      }, {
-        value: 'multipleInput',
-        label: '多项填空'
       }, {
         value: 'arrayInput',
         label: '矩阵填空'
