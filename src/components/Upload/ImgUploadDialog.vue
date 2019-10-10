@@ -51,24 +51,42 @@ export default {
     index: {
       type: Number,
       default: null
+    },
+    imgData: {
+      type: Object,
+      default: () => {
+        return {
+          src: false,
+          width: 'auto',
+          height: 'auto'
+        }
+      }
     }
   },
   data() {
     return {
       imgUploadVisible: this.show,
       scale: '',
-      uploadImgWidth: '70px',
-      uploadImgHeight: '70px',
+      uploadImgWidth: this.imgData.width,
+      uploadImgHeight: this.imgData.height,
       imgOriginWidth: '',
       imgOriginHeight: '',
       imgFile: '',
-      avator: false,
+      avator: this.imgData.src,
       uploadStatusTip: ''
     }
   },
   watch: {
     show() {
       this.imgUploadVisible = this.show
+    },
+    uploadStatusTip() {
+      return this.avator ? '上传成功, 点击图片可以重新上传' : ''
+    },
+    imgData() {
+      this.avator = this.imgData.src
+      this.uploadImgWidth = this.imgData.width
+      this.uploadImgHeight = this.imgData.height
     }
   },
   methods: {
@@ -102,7 +120,7 @@ export default {
         img.width = this.uploadImgWidth
         img.height = this.uploadImgHeight
         this.$emit('comfirmSubmit', img, index)
-        this.avator = ''
+        this.avator = false
       } else {
         this.$notify({
           type: 'warning',
@@ -150,12 +168,20 @@ export default {
     imgSrcChange(val) {
       const img = new Image()
       img.src = val
+      const that = this
 
-      console.log(img.width)
-      if (img.fileSize > 0 || img.width > 0 || img.height > 0) {
-        this.avator = val
-        this.uploadImgWidth = 'auto'
-        this.uploadImgHeight = 'auto'
+      img.onload = function() {
+        if (img.fileSize > 0 || img.width > 0 || img.height > 0) {
+          that.avator = val
+          that.uploadImgWidth = 'auto'
+          that.uploadImgHeight = 'auto'
+        } else {
+          that.avator = ''
+          that.$notify({
+            type: 'warning',
+            message: '获取线上图片失败, 请重新上传'
+          })
+        }
       }
     }
   }

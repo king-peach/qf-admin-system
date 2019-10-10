@@ -9,11 +9,13 @@
       <div class="title-tip" v-html="titleTipContent.html" />
       <div class="question-container">
         <template v-if="currentType === 'radio'">
-          <div v-for="(item, index) in tableOptions" :key="index" class="option-item" :style="`width: calc(100% / ${currentRows})`">
+          <div v-for="(item, index) in tableOptions" :key="index" :style="`width: calc(100% / ${currentRows} - 10px);`" :class="item.questionImg.src ? 'option-item box-border' : 'option-item'">
+            <img v-show="item.questionImg.src" :src="item.questionImg.src" :style="`width: ${item.questionImg.width};height: ${item.questionImg.height}`" alt="展示图片">
+            <div v-show="item.questionImg.src" class="imgOption-item-tip" v-html="item.questionTip.html" />
             <el-radio v-model="defaultSelected" disabled :border="false" :label="index + 1">
               {{ item.questionTxt }}
             </el-radio>
-            <div v-html="item.questionTip.html" />
+            <div v-show="!item.questionImg.src" class="option-item-tip" v-html="item.questionTip.html" />
           </div>
         </template>
         <template v-else-if="currentType === 'checkBox'">
@@ -85,7 +87,10 @@
               </span>
             </td>
             <td v-show="currentType !== 'select'">
-              <svg-icon icon-class="file-image" class="file-image" />
+              <span @click="uploadItemImg(index)" >
+                <svg-icon v-if="!item.questionImg.src" icon-class="file-image" class="file-image"/>
+                <img v-else :src="item.questionImg.src" alt="缩略图" class="scale-img">
+              </span>
             </td>
             <td v-show="currentType !== 'select'">
               <span @click="handleOptionTip(index)">
@@ -125,6 +130,15 @@
         </span>
       </el-dialog>
 
+      <!-- 上传图片弹出框 -->
+      <img-upload-dialog
+        :imgData="itemImg"
+        :index="selectedIndex"
+        :show="imgUploadVisible"
+        @comfirmSubmit="itemImgSubmit"
+        @cancelSubmit="itemCancelSubmit"
+      />
+
       <div class="complete-button" @click="handleSwitchEditOptions">完成编辑</div>
     </div>
   </div>
@@ -133,10 +147,12 @@
 <script>
 import VueQuillEditor from '@/components/VueQuillEditor'
 import { zIndexDown, zIndexUp } from '@/utils/arrMove.js'
+import ImgUploadDialog from '@/components/Upload/ImgUploadDialog'
 export default {
   name: 'SelectorQuestionaire',
   components: {
-    VueQuillEditor
+    VueQuillEditor,
+    ImgUploadDialog
   },
   props: {
     type: {
@@ -150,10 +166,10 @@ export default {
       defaultSelected: null,
       titleEditorValue: '标题',
       tableOptions: [
-        { questionTxt: '选项1', placeholder: '选项1', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项2', placeholder: '选项2', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项3', placeholder: '选项3', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项4', placeholder: '选项4', questionImage: null, questionTip: { html: null, text: null }, questionChecked: false }
+        { questionTxt: '选项1', placeholder: '选项1', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项2', placeholder: '选项2', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项3', placeholder: '选项3', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTxt: '选项4', placeholder: '选项4', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false }
       ],
       selectVal: '',
       typeOptions: [{
@@ -212,7 +228,13 @@ export default {
       }, {
         value: 10,
         label: '每行10列'
-      }]
+      }],
+      imgUploadVisible: false,
+      itemImg: {
+        src: false,
+        width: 'auto',
+        height: 'auto'
+      }
     }
   },
   watch: {
@@ -271,7 +293,7 @@ export default {
       const defaultObj = {}
       defaultObj.questionTxt = `选项1`
       defaultObj.placeholder = null
-      defaultObj.questionImage = null
+      defaultObj.questionImg = { src: false, width: 'auto', height: 'auto' }
       defaultObj.questionTip = {
         html: null,
         text: null
@@ -381,6 +403,28 @@ export default {
         this.tableOptions[this.selectedIndex].questionTip.text = this.currentEditorValue.text
       }
       this.tipEditorVisible = false
+    },
+    /**
+     * @method 点击上传图片
+     */
+    uploadItemImg(index) {
+      this.selecedIndex = index
+      this.itemImg = { ...this.tableOptions[this.selecedIndex].questionImg }
+      this.imgUploadVisible = true
+    },
+    /**
+     * @method 选项图片提交
+     */
+    itemImgSubmit(img) {
+      console.log(img)
+      this.imgUploadVisible = false
+      this.tableOptions[this.selecedIndex].questionImg = { ...img }
+    },
+    /**
+     * @method 取消图片提交
+     */
+    itemCancelSubmit() {
+      this.imgUploadVisible = false
     }
   }
 }
@@ -425,6 +469,18 @@ export default {
       }
     }
   }
+.option-item {
+  margin-right: 10px;
+  padding-bottom: 5px;
+  text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+  &.option-item {
+    img {
+      width: 90%;
+    }
+  }
+}
 .svg-icon {
   display: inline-block;
   vertical-align: middle;
@@ -437,5 +493,9 @@ export default {
   &.isChecked {
     fill: #409eFF;
   }
+}
+.scale-img {
+  width: 25px;
+  height: 25px;
 }
 </style>

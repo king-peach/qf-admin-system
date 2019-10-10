@@ -2,7 +2,7 @@
   <!-- 两列自适应布局 -->
   <two-column-layout :leftColumnTitle="leftColumnTitle">
     <template v-slot:left-content>
-      <h4 @click="handleSelectedShowBox">
+      <h4 @click="selectedShowBox = !selectedShowBox">
         <i :class="selectedShowBox ? 'icon-down' : 'icon-left'" />
         选择题
       </h4>
@@ -11,7 +11,7 @@
         <div>多选</div>
         <div>下拉框</div>
       </div>
-      <h4 @click="handleFillShowBox">
+      <h4 @click="fillShowBox = !fillShowBox">
         <i :class="fillShowBox ? 'icon-down' : 'icon-left'" />
         填空题
       </h4>
@@ -22,7 +22,7 @@
     </template>
     <template v-slot:right-content>
       <div id="questionaire-conntainer">
-        <div class="title-box" @click="handleSwitchTitleEditDialog">
+        <div class="title-box" @click="titleVisible = true">
           <h3>{{ title }}</h3>
           <div class="questionaire-explain" v-html="questionaireDescription.html" />
         </div>
@@ -40,13 +40,13 @@
         <el-dialog
           :visible.sync="titleVisible"
           width="50%"
-          :before-close="handleTitleEditorDialogClose"
           center
+          @close="titleVisible = false"
         >
           <tr class="m-tr">
             <td class="m-td-label">标题: </td>
             <td>
-              <input v-model="title" type="text" class="title-input">
+              <input v-model="title" type="text" class="title-input" @change="titleChange">
             </td>
           </tr>
           <tr class="gap" />
@@ -97,23 +97,32 @@ export default {
     }
   },
   methods: {
-    handleSelectedShowBox(e) {
-      this.selectedShowBox ? this.selectedShowBox = false : this.selectedShowBox = true
+    /**
+     * @method 标题内容改变
+     */
+    titleChange() {
+      this.title = !this.title ? '问卷标题' : this.title
     },
-    handleFillShowBox(e) {
-      this.fillShowBox ? this.fillShowBox = false : this.fillShowBox = true
-    },
+    /**
+     * @method 将弹出框中富文本内容暂存在变量中
+     * @param {String} e 富文本当前内容
+     */
     titleEditorChange(e) {
       this.questionaireDescriptionChangeVal = e
     },
-    handleTitleEditorDialogClose() {
-      this.titleVisible = false
-    },
-    handleSwitchTitleEditDialog() {
-      this.titleVisible = true
-    },
+    /**
+     * @method 关闭弹出框給问卷标题说明赋值
+     */
     handleTitleEditorDialogConfirm() {
       this.questionaireDescription = { ...this.questionaireDescriptionChangeVal }
+      const e = this.questionaireDescription
+      if (e.html !== '' && Object.keys(e).length > 0) {
+        let text = e.html.replace(/<\/p>/g, '<br>')
+        text = text.replace(/\s{2}/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+        this.questionaireDescription.html = text.replace(/<p\>/g, '')
+      } else {
+        this.questionaireDescription.html = '请填写问卷说明'
+      }
       this.titleVisible = false
     }
   }

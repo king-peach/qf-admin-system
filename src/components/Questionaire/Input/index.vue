@@ -172,7 +172,7 @@ export default {
         html: null,
         text: null
       },
-      editOptionsVisible: true,
+      editOptionsVisible: false,
       required: true,
       typeOptions: [{
         value: 'singleInput',
