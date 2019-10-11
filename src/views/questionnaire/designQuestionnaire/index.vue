@@ -28,12 +28,32 @@
         </div>
 
         <div class="question-box">
-          <question-selector>
-            <template v-slot:sortWrapper>排序功能选项框</template>
-          </question-selector>
-          <question-input>
-            <template v-slot:sortWrapper>排序功能选项框</template>
-          </question-input>
+          <template v-for="(item, index) in questionaireData">
+            <template v-if="['radio', 'select', 'checkBox'].includes(item.type)">
+              <question-selector :key="index" :data="item" :type="item.type" @done="itemEditDone">
+                <template v-slot:sortWrapper>
+                  <el-button size="mini" icon="el-icon-edit" @click="edit">编辑</el-button>
+                  <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="del">删除</el-button>
+                  <el-button size="mini" icon="el-icon-arrow-up">上移</el-button>
+                  <el-button size="mini" icon="el-icon-arrow-down">下移</el-button>
+                  <el-button size="mini" icon="el-icon-sort-up">最前</el-button>
+                  <el-button size="mini" icon="el-icon-sort-down">最后</el-button>
+                </template>
+              </question-selector>
+            </template>
+            <template v-else-if="['singleInput', 'multipleInput'].includes(item.type)">
+              <question-input :key="index" :data="item" :type="item.type">
+                <template v-slot:sortWrapper>
+                  <el-button size="mini" icon="el-icon-edit">编辑</el-button>
+                  <el-button type="danger" size="mini" plain icon="el-icon-delete">删除</el-button>
+                  <el-button size="mini" icon="el-icon-arrow-up">上移</el-button>
+                  <el-button size="mini" icon="el-icon-arrow-down">下移</el-button>
+                  <el-button size="mini" icon="el-icon-sort-up">最前</el-button>
+                  <el-button size="mini" icon="el-icon-sort-down">最后</el-button>
+                </template>
+              </question-input>
+            </template>
+          </template>
         </div>
 
         <!-- 标题弹出框 -->
@@ -93,7 +113,35 @@ export default {
         text: '请填写问卷说明'
       },
       titleVisible: false,
-      questionaireDescriptionChangeVal: null
+      questionaireDescriptionChangeVal: null,
+      questionaireData: [
+        {
+          type: 'radio',
+          index: 0,
+          itemTitle: '',
+          required: true,
+          titleTip: '',
+          currentRows: 4,
+          tableOptions: [
+            { questionTitle: '选项1', placeholder: '选项1', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+            { questionTitle: '选项2', placeholder: '选项2', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+            { questionTitle: '选项3', placeholder: '选项3', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+            { questionTitle: '选项4', placeholder: '选项4', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false }
+          ]
+        },
+        {
+          type: 'singleInput',
+          index: 1,
+          itemTitle: '',
+          required: true,
+          titleTip: '',
+          minLimit: '',
+          maxLimit: '',
+          singleTextarea: '',
+          currentWidth: null,
+          currentHeight: null
+        }
+      ]
     }
   },
   methods: {
@@ -124,7 +172,25 @@ export default {
         this.questionaireDescription.html = '请填写问卷说明'
       }
       this.titleVisible = false
-    }
+    },
+    /**
+     * @method 完成选项编辑,更新当前问卷数据
+     */
+    itemEditDone(data) {
+      if (data.index < this.questionaireData.length) {
+        this.questionaireData[data.index] = data
+      } else {
+        this.questionaireData.push(data)
+      }
+    },
+    /**
+     * @method 编辑当前问题选项
+     */
+    edit() {},
+    /**
+     * @method 删除当前选项
+     */
+    del() {}
   }
 }
 </script>

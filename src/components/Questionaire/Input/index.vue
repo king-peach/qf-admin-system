@@ -3,7 +3,8 @@
     <div class="div_preview" @click="editOptionsVisible = true">
       <div class="question_title">
         <span v-show="required" class="required">*</span>
-        <span class="m-title" v-html="titleEditorValue" />
+        <span>{{ data.index + 1 }}.  </span>
+        <span class="m-title" v-html="title" />
         &nbsp;&nbsp;
         <span class="limit-tip">{{ limitTip }}</span>
         <span v-show="currentType === 'multipleInput'" class="title_tip">[矩阵填空]</span>
@@ -27,6 +28,7 @@
               type="textarea"
               rows="1"
               class="m-input"
+              disabled
             />
             <span>{{ item.limitTip }}</span>
             <span v-show="!required && item.required" class="m-required-wrapper">*</span>
@@ -158,9 +160,19 @@ export default {
   components: {
     VueQuillEditor
   },
+  props: {
+    type: {
+      required: true,
+      type: String
+    },
+    data: {
+      required: true,
+      type: Object
+    }
+  },
   data() {
     return {
-      titleEditorValue: '标题',
+      title: '标题',
       singleTextarea: '',
       titleTipContent: {
         html: null,
@@ -260,9 +272,9 @@ export default {
       if (e.html !== ``) {
         let text = e.html.replace(/<\/p>/g, `<br>`)
         text = text.replace(/\s{2}/g, `&nbsp;&nbsp;`)
-        this.titleEditorValue = text.replace(/<p\>/g, ``)
+        this.title = text.replace(/<p\>/g, ``)
       } else {
-        this.titleEditorValue = `标题`
+        this.title = `标题`
       }
     },
     /**

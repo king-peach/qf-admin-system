@@ -3,7 +3,8 @@
     <div class="div_preview" @click="editOptionsVisible = true">
       <div class="question_title">
         <span v-show="required" class="required">*</span>
-        <span class="m-title" v-html="titleEditorValue" />
+        <span>{{ data.index + 1 }}. </span>
+        <span class="m-title" v-html="title" />
         <span v-show="currentType === 'checkBox'" class="title_tip">[多选题]</span>
       </div>
       <div class="title-tip" v-html="titleTipContent.html" />
@@ -13,14 +14,14 @@
             <img v-show="item.questionImg.src" :src="item.questionImg.src" :style="`width: ${item.questionImg.width};height: ${item.questionImg.height}`" alt="展示图片">
             <div v-show="item.questionImg.src" class="imgOption-item-tip" v-html="item.questionTip.html" />
             <el-radio v-model="defaultSelected" disabled :border="false" :label="index + 1">
-              {{ item.questionTxt }}
+              {{ item.questionTitle }}
             </el-radio>
             <div v-show="!item.questionImg.src" class="option-item-tip" v-html="item.questionTip.html" />
           </div>
         </template>
         <template v-else-if="currentType === 'checkBox'">
           <div v-for="(item, index) in tableOptions" :key="index" class="option-item checkBox-item" :style="`width: calc(100% / ${currentRows})`">
-            <el-checkbox v-model="item.questionChecked" disabled>{{ item.questionTxt }}</el-checkbox>
+            <el-checkbox v-model="item.questionChecked" disabled>{{ item.questionTitle }}</el-checkbox>
             <div v-html="item.questionTip.html" />
           </div>
         </template>
@@ -28,9 +29,9 @@
           <el-select v-model="selectVal" placeholder="请选择" disabled>
             <el-option
               v-for="item in tableOptions"
-              :key="item.questionTxt"
+              :key="item.questionTitle"
               :label="item.placeholder"
-              :value="item.questionTxt"
+              :value="item.questionTitle"
             />
           </el-select>
         </template>
@@ -78,7 +79,7 @@
           </tr>
           <tr v-for="(item, index) in tableOptions" :key="index">
             <td>
-              <el-input v-model="item.questionTxt" :placeholder="item.placeholder" style="width: 70%;" />
+              <el-input v-model="item.questionTitle" :placeholder="item.placeholder" style="width: 70%;" />
               <span @click="handleAddOption(index)">
                 <svg-icon icon-class="plus-circle" />
               </span>
@@ -87,8 +88,8 @@
               </span>
             </td>
             <td v-show="currentType !== 'select'">
-              <span @click="uploadItemImg(index)" >
-                <svg-icon v-if="!item.questionImg.src" icon-class="file-image" class="file-image"/>
+              <span @click="uploadItemImg(index)">
+                <svg-icon v-if="!item.questionImg.src" icon-class="file-image" class="file-image" />
                 <img v-else :src="item.questionImg.src" alt="缩略图" class="scale-img">
               </span>
             </td>
@@ -115,7 +116,7 @@
       <!-- 提示弹出框 -->
       <el-dialog
         v-if="refresh"
-        :title="tipTitle"
+        :title="titleTip"
         :visible.sync="tipEditorVisible"
         width="50%"
         center
@@ -148,6 +149,7 @@
 import VueQuillEditor from '@/components/VueQuillEditor'
 import { zIndexDown, zIndexUp } from '@/utils/arrMove.js'
 import ImgUploadDialog from '@/components/Upload/ImgUploadDialog'
+import { deepClone } from '@/utils/deepClone'
 export default {
   name: 'SelectorQuestionaire',
   components: {
@@ -157,19 +159,22 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'radio'
+      required: true
+    },
+    data: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       editOptionsVisible: false,
       defaultSelected: null,
-      titleEditorValue: '标题',
+      title: '标题',
       tableOptions: [
-        { questionTxt: '选项1', placeholder: '选项1', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项2', placeholder: '选项2', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项3', placeholder: '选项3', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
-        { questionTxt: '选项4', placeholder: '选项4', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false }
+        { questionTitle: '选项1', placeholder: '选项1', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTitle: '选项2', placeholder: '选项2', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
+        { questionTitle: '选项3', placeholder: '选项3', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false }
       ],
       selectVal: '',
       typeOptions: [{
@@ -184,7 +189,7 @@ export default {
       }],
       required: true,
       currentType: this.type,
-      tipTitle: null,
+      titleTip: null,
       tipEditorVisible: false,
       refresh: true,
       titleTipContent: {
@@ -245,12 +250,32 @@ export default {
       })
     }
   },
+  /**
+   * @method 组件初始化赋值 (若父组件存在对应值则进行赋值)
+   */
+  created() {
+    if (this.data.required) this.required = this.data.required
+    if (this.data.itemTitle) this.title = this.data.itemTitle
+    if (this.data.titleTip) this.titleTipContent.html = this.data.titleTip
+    if (this.data.currentRows) this.currentRows = this.data.currentRows
+    if (this.data.tableOptions.length > 0) this.tableOptions = deepClone(this.data.tableOptions)
+  },
   methods: {
     /**
-     * @method 点击区块展示编辑选项盒子
+     * @method 点击完成编辑并提交当前编辑内容到父组件
      */
     handleSwitchEditOptions() {
       this.editOptionsVisible = !this.editOptionsVisible
+      let data = {}
+      data.index = this.data.index
+      data.type = this.currentType
+      data.itemTitle = this.title
+      data.required = this.required
+      data.titleTip = this.titleTipContent.html
+      data.currentRows = this.currentRows
+      data.tableOptions = deepClone(this.tableOptions)
+      this.$emit('done', data)
+      data = null
     },
     /**
      * @method 类型下拉框选项值改变时修改对应数据
@@ -275,7 +300,7 @@ export default {
 
       this.defaultSelected = selectedIndex + 1
 
-      if (this.currentType === 'select') this.selectVal = this.tableOptions[selectedIndex].questionTxt
+      if (this.currentType === 'select') this.selectVal = this.tableOptions[selectedIndex].questionTitle
 
       if (this.currentType === 'radio' || this.currentType === 'select') {
         this.tableOptions.forEach((item, index) => {
@@ -291,7 +316,7 @@ export default {
      */
     handleAddOption(selecedIndex) {
       const defaultObj = {}
-      defaultObj.questionTxt = `选项1`
+      defaultObj.questionTitle = `选项1`
       defaultObj.placeholder = null
       defaultObj.questionImg = { src: false, width: 'auto', height: 'auto' }
       defaultObj.questionTip = {
@@ -302,8 +327,8 @@ export default {
       this.tableOptions.splice(selecedIndex + 1, 0, defaultObj)
       this.tableOptions.forEach((item, index) => {
         item.placeholder = `选项${index + 1}`
-        if (item.questionTxt.indexOf('选项') > -1 && item.questionTxt.length === 3) {
-          item.questionTxt = `选项${index + 1}`
+        if (item.questionTitle.indexOf('选项') > -1 && item.questionTitle.length === 3) {
+          item.questionTitle = `选项${index + 1}`
         }
       })
     },
@@ -361,16 +386,16 @@ export default {
       if (e.html !== '') {
         let text = e.html.replace(/<\/p>/g, '<br>')
         text = text.replace(/\s{2}/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
-        this.titleEditorValue = text.replace(/<p\>/g, '')
+        this.title = text.replace(/<p\>/g, '')
       } else {
-        this.titleEditorValue = `标题`
+        this.title = `标题`
       }
     },
     /**
      * @method 点击弹出标题提示编辑
      */
     handleTitleTip() {
-      this.tipTitle = `标题提示`
+      this.titleTip = `标题提示`
       this.tipContent = this.titleTipContent.html
       this.tipEditorVisible = true
     },
@@ -389,16 +414,16 @@ export default {
     handleOptionTip(selectedIndex) {
       this.tipContent = this.tableOptions[selectedIndex].questionTip.html
       this.selectedIndex = selectedIndex
-      this.tipTitle = `选项提示`
+      this.titleTip = `选项提示`
       this.tipEditorVisible = true
     },
     /**
      * @method 确认提交提示信息
      */
     handleEditorConfirm() {
-      if (this.tipTitle === `标题提示`) {
+      if (this.titleTip === `标题提示`) {
         this.titleTipContent = { ...this.currentEditorValue }
-      } else if (this.tipTitle === `选项提示`) {
+      } else if (this.titleTip === `选项提示`) {
         this.tableOptions[this.selectedIndex].questionTip.html = this.currentEditorValue.html
         this.tableOptions[this.selectedIndex].questionTip.text = this.currentEditorValue.text
       }
@@ -416,7 +441,6 @@ export default {
      * @method 选项图片提交
      */
     itemImgSubmit(img) {
-      console.log(img)
       this.imgUploadVisible = false
       this.tableOptions[this.selecedIndex].questionImg = { ...img }
     },
