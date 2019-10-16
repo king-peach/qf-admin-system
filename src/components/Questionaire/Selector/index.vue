@@ -20,9 +20,11 @@
           </div>
         </template>
         <template v-else-if="currentType === 'checkBox'">
-          <div v-for="(item, index) in tableOptions" :key="index" class="option-item checkBox-item" :style="`width: calc(100% / ${currentRows})`">
+          <div v-for="(item, index) in tableOptions" :key="index" :class="['option-item', 'checkBox-item', item.questionImg.src ? 'box-border' : '']" :style="`width: calc(100% / ${currentRows})`">
+          <img v-show="item.questionImg.src" :src="item.questionImg.src" :style="`width: ${item.questionImg.width};height: ${item.questionImg.height}`" alt="展示图片">
+            <div v-show="item.questionImg.src" class="imgOption-item-tip" v-html="item.questionTip.html" />
             <el-checkbox v-model="item.questionChecked" disabled>{{ item.questionTitle }}</el-checkbox>
-            <div v-html="item.questionTip.html" />
+            <div v-show="!item.questionImg.src" class="option-item-tip" v-html="item.questionTip.html" />
           </div>
         </template>
         <template v-else>
@@ -38,7 +40,12 @@
       </div>
     </div>
     <div class="sort-wrapper">
-      <slot name="sortWrapper" />
+      <el-button size="mini" icon="el-icon-edit" @click="editOptionsVisible = true">编辑</el-button>
+      <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="$emit('del')">删除</el-button>
+      <el-button size="mini" icon="el-icon-arrow-up" @click="$emit('up')">上移</el-button>
+      <el-button size="mini" icon="el-icon-arrow-down" @click="$emit('down')">下移</el-button>
+      <el-button size="mini" icon="el-icon-sort-up" @click="$emit('top')">最前</el-button>
+      <el-button size="mini" icon="el-icon-sort-down" @click="$emit('bottom')">最后</el-button>
     </div>
     <div v-show="editOptionsVisible" class="questionaire-editor-wrapper">
       <span class="m-trangle" />
@@ -164,11 +171,15 @@ export default {
     data: {
       type: Object,
       required: true
+    },
+    editVisible: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      editOptionsVisible: false,
+      editOptionsVisible: this.data.editVisible,
       defaultSelected: null,
       title: '标题',
       tableOptions: [
@@ -248,6 +259,14 @@ export default {
       this.$nextTick(() => {
         this.refresh = true
       })
+    },
+    newType(val) {
+      this.currentType = val
+    }
+  },
+  computed: {
+    newType() {
+      return this.data.type
     }
   },
   /**

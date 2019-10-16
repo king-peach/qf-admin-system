@@ -102,6 +102,7 @@ export default {
         this.uploadImgWidth = 'auto'
         this.uploadImgHeight = 'auto'
         this.uploadStatusTip = '上传成功, 点击图片可以重新上传'
+        this.scale = 100
       } else {
         this.$notify({
           type: 'error',

@@ -37,7 +37,12 @@
       </div>
     </div>
     <div class="sort-wrapper">
-      <slot name="sortWrapper" />
+      <el-button size="mini" icon="el-icon-edit" @click="editOptionsVisible = true">编辑</el-button>
+      <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="$emit('del')">删除</el-button>
+      <el-button size="mini" icon="el-icon-arrow-up" @click="$emit('up')">上移</el-button>
+      <el-button size="mini" icon="el-icon-arrow-down" @click="$emit('down')">下移</el-button>
+      <el-button size="mini" icon="el-icon-sort-up" @click="$emit('top')">最前</el-button>
+      <el-button size="mini" icon="el-icon-sort-down" @click="$emit('bottom')">最后</el-button>
     </div>
     <div v-show="editOptionsVisible" class="questionaire-editor-wrapper">
       <span class="m-trangle" />
@@ -131,7 +136,7 @@
         </table>
       </template>
 
-      <div class="complete-button" @click="editOptionsVisible = false">完成编辑</div>
+      <div class="complete-button" @click="questinaireEditDone">完成编辑</div>
 
       <!-- 提示弹出框 -->
       <el-dialog
@@ -155,6 +160,7 @@
 
 <script>
 import VueQuillEditor from '@/components/VueQuillEditor'
+import { deepClone } from '@/utils/deepClone'
 export default {
   name: 'InputQuestionaire',
   components: {
@@ -186,6 +192,7 @@ export default {
       },
       editOptionsVisible: false,
       required: true,
+      index: 0,
       typeOptions: [{
         value: 'singleInput',
         label: '单项填空'
@@ -250,7 +257,52 @@ export default {
       ]
     }
   },
+  watch: {
+    newEditVisible(val) {
+      this.editOptionsVisible = val
+      console.log('变化值', val)
+    },
+    newType(val) {
+      this.currentType = val
+    },
+    newTitle(val) {
+      this.title = val
+    },
+    newSingleTextarea(val) {
+      this.singleTextarea = val
+    },
+    newRequired(val) {
+      this.required = val
+    },
+    newTitleTip(val) {
+      this.titleTipContent.html = val
+    },
+    newIndex(val) {
+      this.index = val
+    }
+  },
   computed: {
+    newEditVisible() {
+      return this.data.editVisible
+    },
+    newType() {
+      return this.data.type
+    },
+    newTitle() {
+      return this.data.itemTitle
+    },
+    newSingleTextarea() {
+      return this.data.singleTextarea
+    },
+    newRequired() {
+      return this.data.required
+    },
+    newTitleTip() {
+      return this.data.titleTip
+    },
+    newIndex() {
+      return this.data.index
+    },
     limitTip() {
       if (this.maxLimit === '' && this.minLimit === '') {
         return ``
@@ -263,7 +315,50 @@ export default {
       }
     }
   },
+  /**
+   * @method 初始化子组件数据
+   */
+  created() {
+    if (this.data.type) this.currentType = this.data.type
+    if (this.data.index) this.index = this.data.index
+    if (this.data.required) this.required = this.data.required
+    if (this.data.itemTitle) this.title = this.data.itemTitle
+    if (this.data.titleTip) this.titleTipContent.html = this.data.titleTip
+    if (this.data.editVisible) this.editOptionsVisible = this.data.editVisible
+    if (this.data.type === 'singleInput') {
+      if (this.data.singleTextarea) this.singleTextarea = this.data.singleTextarea
+      if (this.data.minLimit) this.minLimit = this.data.minLimit
+      if (this.data.maxLimit) this.maxLimit = this.data.maxLimit
+      if (this.data.currentWidth) this.currentWidth = this.data.currentWidth
+      if (this.data.currentHeight) this.currentHeight = this.data.currentHeight
+    } else {
+      if (this.data.arrayInputData.length > 0) this.arrayInputData = deepClone(this.data.arrayInputData)
+    }
+  },
   methods: {
+    /**
+     * @method 完成编辑
+     */
+    questinaireEditDone() {
+      let data = {}
+      data.type = this.currentType
+      data.index = this.index
+      data.required = this.required
+      data.itemTitle = this.title
+      data.titleTip = this.titleTipContent.html
+      if (this.currentType === 'singleInput') {
+        data.singleTextarea = this.singleTextarea
+        data.minLimit = this.minLimit
+        data.maxLimit = this.maxLimit
+        data.currentWidth = this.currentWidth
+        data.currentHeight = this.currentHeight
+      } else if (this.currentType === 'arrayInput') {
+        data.arrayInputData = deepClone(this.arrayInputData)
+      }
+      this.$emit('done', data)
+      this.editOptionsVisible = false
+      data = null
+    },
     /**
      * @method 编辑标题
      * @param {String} e 动态编辑数据
