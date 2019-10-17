@@ -6,6 +6,7 @@ import getters from './getters'
 import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import setTimeout from './modules/setTimeout'
+import questionnaire from './modules/questionnaire'
 
 Vue.use(Vuex)
 
@@ -15,7 +16,8 @@ const store = new Vuex.Store({
     user,
     permission,
     tagsView,
-    setTimeout
+    setTimeout,
+    questionnaire
   },
   getters
 })

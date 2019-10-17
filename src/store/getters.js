@@ -9,6 +9,7 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
-  set_timeout: state => state.setTimeout.count
+  set_timeout: state => state.setTimeout.count,
+  update_questionnaire: state => state.questionnaire.data
 }
 export default getters

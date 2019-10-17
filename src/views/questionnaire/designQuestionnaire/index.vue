@@ -28,7 +28,7 @@
         </div>
 
         <div class="question-box">
-          <template v-for="(item, index) in questionaireData">
+          <template v-for="(item, index) in questionnaireData">
             <template v-if="['radio', 'select', 'checkBox'].includes(item.type)">
               <question-selector
                 :key="index"
@@ -90,7 +90,7 @@
 
         <!-- 预览、完成编辑 -->
         <div class="done-wrapper">
-          <div class="preview">
+          <div class="preview" @click="handlePreview">
             <svg-icon icon-class="preview" />
             预览
           </div>
@@ -131,13 +131,14 @@ export default {
       },
       titleVisible: false,
       questionaireDescriptionChangeVal: null,
-      questionaireData: [
+      questionnaireData: [
         {
           type: 'radio',
           index: 0,
           itemTitle: '',
           required: true,
           titleTip: '',
+          defaultSelected: 2,
           currentRows: 4,
           tableOptions: [
             { questionTitle: '选项1', placeholder: '选项1', questionImg: { src: false, width: 'auto', height: 'auto' }, questionTip: { html: null, text: null }, questionChecked: false },
@@ -146,10 +147,11 @@ export default {
           ]
         },
         {
-          type: 'radio',
+          type: 'select',
           index: 1,
           itemTitle: '',
           required: true,
+          selectVal: '',
           titleTip: '',
           currentRows: 4,
           tableOptions: [
@@ -190,7 +192,7 @@ export default {
    * @method 給问卷列表元素添加编辑状态
    */
   created() {
-    this.questionaireData.forEach(item => {
+    this.questionnaireData.forEach(item => {
       if (!item.editVisible) {
         item.editVisible = false
       }
@@ -230,24 +232,24 @@ export default {
      */
     itemEditDone(data) {
       data.editVisible = false
-      if (data.index < this.questionaireData.length) {
-        this.questionaireData[data.index] = data
+      if (data.index < this.questionnaireData.length) {
+        this.questionnaireData[data.index] = data
       } else {
-        this.questionaireData.push(data)
+        this.questionnaireData.push(data)
       }
     },
     /**
      * @method 编辑当前问题选项
      */
     edit(index) {
-      this.questionaireData[index].editVisible = true
+      this.questionnaireData[index].editVisible = true
     },
     /**
      * @method 删除当前选项
      * @param {String} index 当前选中项索引
      */
     del(index) {
-      if (this.questionaireData.length < 2) {
+      if (this.questionnaireData.length < 2) {
         this.$notify({
           type: 'error',
           message: '该问卷最少保留一项'
@@ -255,9 +257,9 @@ export default {
         return false
       }
 
-      this.questionaireData.splice(index, 1)
-      if (index < this.questionaireData.length) {
-        this.questionaireData[index].index = index
+      this.questionnaireData.splice(index, 1)
+      if (index < this.questionnaireData.length) {
+        this.questionnaireData[index].index = index
       }
     },
     /**
@@ -265,10 +267,10 @@ export default {
      * @param {String} index 当前选中项索引
      */
     up(index) {
-      const flag = zIndexUp(this.questionaireData, index)
+      const flag = zIndexUp(this.questionnaireData, index)
       if (flag === undefined) {
-        this.questionaireData[index].index = index
-        this.questionaireData[index - 1].index = index - 1
+        this.questionnaireData[index].index = index
+        this.questionnaireData[index - 1].index = index - 1
       } else {
         this.$notify({
           type: 'warning',
@@ -281,10 +283,10 @@ export default {
      * @param {String} index 当前选中项索引
      */
     down(index) {
-      const flag = zIndexDown(this.questionaireData, index)
+      const flag = zIndexDown(this.questionnaireData, index)
       if (flag === undefined) {
-        this.questionaireData[index].index = index
-        this.questionaireData[index + 1].index = index + 1
+        this.questionnaireData[index].index = index
+        this.questionnaireData[index + 1].index = index + 1
       } else {
         this.$notify({
           type: 'warning',
@@ -297,10 +299,10 @@ export default {
      * @param {String} index 当前选中项索引
      */
     top(index) {
-      const flag = zIndexTop(this.questionaireData, index)
+      const flag = zIndexTop(this.questionnaireData, index)
       if (flag === undefined) {
-        this.questionaireData[0].index = 0
-        this.questionaireData[index].index = index
+        this.questionnaireData[0].index = 0
+        this.questionnaireData[index].index = index
       } else {
         this.$notify({
           type: 'warning',
@@ -308,19 +310,19 @@ export default {
         })
       }
       // 视图不更新, 置空后重新赋值
-      const temp = deepClone(this.questionaireData)
-      this.questionaireData = []
-      this.questionaireData = temp
+      const temp = deepClone(this.questionnaireData)
+      this.questionnaireData = []
+      this.questionnaireData = temp
     },
     /**
      * @method 移至最后
      * @param {String} index 当前选中项索引
      */
     bottom(index) {
-      const flag = zIndexBottom(this.questionaireData, index)
+      const flag = zIndexBottom(this.questionnaireData, index)
       if (flag === undefined) {
-        this.questionaireData[index].index = index
-        this.questionaireData[this.questionaireData.length - 1].index = this.questionaireData.length - 1
+        this.questionnaireData[index].index = index
+        this.questionnaireData[this.questionnaireData.length - 1].index = this.questionnaireData.length - 1
       } else {
         this.$notify({
           type: 'warning',
@@ -328,9 +330,9 @@ export default {
         })
       }
       // 与上一致, 解决视图不更新问题
-      const temp = deepClone(this.questionaireData)
-      this.questionaireData = []
-      this.questionaireData = temp
+      const temp = deepClone(this.questionnaireData)
+      this.questionnaireData = []
+      this.questionnaireData = temp
     },
     /**
      * @method 点击添加问题
@@ -343,7 +345,7 @@ export default {
       data.itemTitle = ''
       data.editVisible = false
       data.titleTip = ''
-      data.index = this.questionaireData.length
+      data.index = this.questionnaireData.length
 
       if (['radio', 'checkBox', 'select'].indexOf(type) > -1) {
         data.currentRows = 4
@@ -365,7 +367,21 @@ export default {
         ]
       }
 
-      this.questionaireData.push(data)
+      this.questionnaireData.push(data)
+    },
+    /**
+     * @method 点击预览
+     */
+    handlePreview() {
+      let data = {}
+      data.title = this.title
+      data.titleTip = this.questionaireDescription.html
+      data.questionnaireData = deepClone(this.questionnaireData)
+      this.$store.dispatch('UpdateQuestionnaire', data)
+      this.$router.push({
+        path: '/questionnairePreview',
+      })
+      // data = null
     }
   }
 }

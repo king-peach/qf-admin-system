@@ -10,7 +10,7 @@
       <div class="title-tip" v-html="titleTipContent.html" />
       <div class="question-container">
         <template v-if="currentType === 'radio'">
-          <div v-for="(item, index) in tableOptions" :key="index" :style="`width: calc(100% / ${currentRows} - 10px);`" :class="item.questionImg.src ? 'option-item box-border' : 'option-item'">
+          <div v-for="(item, index) in tableOptions" :key="index" :style="`width: calc(100% / ${currentRows} - 10px);`" :class="item.questionImg.src ? 'option-item box-border center' : 'option-item'">
             <img v-show="item.questionImg.src" :src="item.questionImg.src" :style="`width: ${item.questionImg.width};height: ${item.questionImg.height}`" alt="展示图片">
             <div v-show="item.questionImg.src" class="imgOption-item-tip" v-html="item.questionTip.html" />
             <el-radio v-model="defaultSelected" disabled :border="false" :label="index + 1">
@@ -273,6 +273,8 @@ export default {
    * @method 组件初始化赋值 (若父组件存在对应值则进行赋值)
    */
   created() {
+    if (this.data.defaultSelected) this.defaultSelected = this.data.defaultSelected
+    if (this.data.selectVal) this.selectVal = this.data.selectVal
     if (this.data.required) this.required = this.data.required
     if (this.data.itemTitle) this.title = this.data.itemTitle
     if (this.data.titleTip) this.titleTipContent.html = this.data.titleTip
@@ -292,6 +294,11 @@ export default {
       data.required = this.required
       data.titleTip = this.titleTipContent.html
       data.currentRows = this.currentRows
+      if (this.currentType === 'radio') {
+        data.defaultSelected = this.defaultSelected
+      } else if (this.currentType === 'select') {
+        data.selectVal = this.selectVal
+      }
       data.tableOptions = deepClone(this.tableOptions)
       this.$emit('done', data)
       data = null
@@ -312,14 +319,23 @@ export default {
      */
     handleSelectedChange(selectedIndex, selected) {
       // 单选框组件逻辑
-      if (!selected) {
+      if (!selected && this.currentType !== 'select') {
         this.defaultSelected = null
         return false
       }
 
       this.defaultSelected = selectedIndex + 1
 
-      if (this.currentType === 'select') this.selectVal = this.tableOptions[selectedIndex].questionTitle
+      if (this.currentType === 'select') {
+        let flag = true
+        if (!selected) {
+          flag = this.tableOptions.every(item => {
+            return item.questionChecked === true
+          })
+        }
+
+        this.selectVal = flag ? this.tableOptions[selectedIndex].questionTitle : ''
+      }
 
       if (this.currentType === 'radio' || this.currentType === 'select') {
         this.tableOptions.forEach((item, index) => {
@@ -515,13 +531,10 @@ export default {
 .option-item {
   margin-right: 10px;
   padding-bottom: 5px;
-  text-align: center;
   border-radius: 5px;
   overflow: hidden;
-  &.option-item {
-    img {
-      width: 90%;
-    }
+  &.center {
+    text-align: center;
   }
 }
 .svg-icon {
